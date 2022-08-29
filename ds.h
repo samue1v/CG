@@ -1,12 +1,25 @@
 #ifndef DataStructHeader
 #define DataStructHeader
 
+const long unsigned int INF = 10e18;
+
 struct coordinate
 {
     int x;
     int y;
     int z;
 
+};
+
+//lembra de substituir
+class Color{
+
+};
+
+class Scene{
+  private:
+    Polygon *polygon;
+  
 };
 
 class Matrix{
