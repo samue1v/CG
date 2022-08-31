@@ -7,28 +7,30 @@ class Circle : Polygon {
 private:
   Color color;
   int radius;
-  coordinate center;
+  Coordinate center;
 
 public:
-  Circle(coordinate center, int radius, Color color);
+  Circle(Coordinate center, int radius, Color color);
+  Color getColor();
+  bool setColor(Color color);
   bool setRadius(int newRadius);
   int getRadius();
-  bool setCenter(coordinate newCenter);
-  coordinate getCenter();
+  bool setCenter(Coordinate newCenter);
+  Coordinate getCenter();
 };
 
-Circle::Circle(coordinate center, int radius, Color color) {
+Circle::Circle(Coordinate center, int radius, Color color) {
   this->center = center;
   this->radius = radius;
   this->color = color;
 }
 
-bool Circle::setCenter(coordinate newCenter) {
+bool Circle::setCenter(Coordinate newCenter) {
   this->center = newCenter;
   return true;
 }
 
-coordinate Circle::getCenter() { return this->center; }
+Coordinate Circle::getCenter() { return this->center; }
 
 bool Circle::setRadius(int newRadius) {
   if (newRadius > 0) {
@@ -39,3 +41,12 @@ bool Circle::setRadius(int newRadius) {
 }
 
 int Circle::getRadius() { return this->radius; }
+
+bool Circle::setColor(Color color){
+  this->color = color;
+  return true;
+}
+
+Color Circle::getColor(){
+  return this->color;
+}
