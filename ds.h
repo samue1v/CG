@@ -3,7 +3,18 @@
 
 const long unsigned int INF = 10e18;
 
-struct coordinate
+template <typename T> struct Pair{
+    T left;
+    T right;
+};
+
+struct Color{
+    short int red;
+    short int green;
+    short int blue;
+};
+
+struct Coordinate
 {
     int x;
     int y;
@@ -11,16 +22,7 @@ struct coordinate
 
 };
 
-//lembra de substituir
-class Color{
 
-};
-
-class Scene{
-  private:
-    Polygon *polygon;
-  
-};
 
 class Matrix{
     public:
