@@ -11,6 +11,7 @@
 - testar e corrigir erros se aparecer
 - fazer aparecer as cores na tela
 */
+bool writePPM(Canvas * canvas);
 int main() {
   Coordinate O = Coordinate(0,0,0);
   Coordinate Po = O;
