@@ -4,13 +4,14 @@
 #include "ds.h"
 #include "Scene.cpp"
 #include "canvas.cpp"
-#include "viewport.cpp"
+//#include "viewport.cpp"
 /* coisas pra mudar:
 - trocar int pra float
 - ver os comentarios no codigo e ajeitar as coisas
 - testar e corrigir erros se aparecer
 - fazer aparecer as cores na tela
 */
+bool writePPM(Canvas * canvas);
 int main() {
   Coordinate O = Coordinate(0,0,0);
   Coordinate Po = O;
@@ -42,15 +43,21 @@ int main() {
       canvas.setColorAt(x,y,color);
     }
   }
+  writePPM(&canvas);
   
   return 0;
 }
 
 bool writePPM(Canvas * canvas){
   std::ofstream myfile;
+  Matrix<Color> * m = canvas->getCanvas();
   myfile.open ("image.ppm");
   myfile << "P6\n";
   myfile << 500 <<' '<<500<<"\n";
   myfile << 255 << "\n";
-
+  for(int i=0;i<canvas->getNumberLines();i++){
+    for(int j = 0;j<canvas->getNumberColumns();j++){
+      myfile << m->getVal(i,j).red << m->getVal(i,j).green << m->getVal(i,j).blue;
+    }
+  }
 }
