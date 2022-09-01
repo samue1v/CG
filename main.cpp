@@ -24,11 +24,11 @@ int main() {
   // inicialização da cena e da esfera
   int radius = 50;
   Coordinate center = Coordinate(0, 0, -(distance + radius));
-  Color sphereColor = {'255', '0', '0'};
+  Color sphereColor = {255, 0, 0};
   Circle c = Circle(center, radius, sphereColor);
   Scene scene = Scene(1);
   scene.setPolygon(0, &c);
-  Color bgColor = Color{'100', '100', '100'};
+  Color bgColor = Color{100, 100, 100};
   scene.setBackgroundColor(bgColor);
   // inicialização do canvas
   Canvas canvas = Canvas(); // fazer

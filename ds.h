@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 const int INF = 10e8;
-const unsigned char COLOR_MAX = '255';
-const unsigned char COLOR_MIN = '255';
+const unsigned char COLOR_MAX = 0xFF & 255;
+const unsigned char COLOR_MIN = 0xFF & 255;
 template <typename T> struct Pair {
   T left;
   T right;
@@ -14,6 +14,12 @@ struct Color {
   unsigned char red;
   unsigned char green;
   unsigned char blue;
+  Color(){};
+  Color(int red, int green, int blue){
+    this->red = red & 0xFF;
+    this->green = green & 0xFF;
+    this->blue = blue & 0xFF;
+  }
 };
 
 struct Coordinate {
