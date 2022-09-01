@@ -3,16 +3,17 @@
 #include <stdio.h>
 
 const int INF = 10e8;
-
+const unsigned char COLOR_MAX = '255';
+const unsigned char COLOR_MIN = '255';
 template <typename T> struct Pair {
   T left;
   T right;
 };
 
 struct Color {
-  short int red;
-  short int green;
-  short int blue;
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
 };
 
 struct Coordinate {
