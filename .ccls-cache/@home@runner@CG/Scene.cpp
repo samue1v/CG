@@ -6,7 +6,7 @@ class Scene{
     public:
         Scene(int numPolygons);
         Polygon * getPolygonAt(int index); //olhar depois
-        bool setPolygon(int index, Polygon polygon);
+        bool setPolygon(int index, Polygon *polygon);
         Polygon * getPolygonArray();
         int getNumberOfElements();
         bool setBackgroundColor(Color color);
@@ -25,7 +25,7 @@ Scene::Scene(int numPolygons){
     this->elements = *polygonsArray;
 } 
 Polygon * Scene::getPolygonAt(int index){
-    Polygon * p = this->elements[index]; //ver qual a maneira correta
+    Polygon * p = &(this->elements)[index]; //ver qual a maneira correta
     return p;
 }
 Polygon * Scene::getPolygonArray(){
@@ -33,11 +33,11 @@ Polygon * Scene::getPolygonArray(){
     return p;
 }
 
-bool Scene::setPolygon(int index,Polygon polygon){
+bool Scene::setPolygon(int index,Polygon * polygon){
     if(index >=numPolygons || index<0){
         return false;
     }
-    this->elements[index] = polygon;
+    this->elements[index] = *(polygon);
 }
 
 int Scene::getNumberOfElements(){
@@ -45,7 +45,7 @@ int Scene::getNumberOfElements(){
 }
 
 bool Scene::setBackgroundColor(Color color){
-    if(color.red>255 || color.red<0 || color.green>255 || color.green<0 || color.blue>0 || color.blue>255){
+    if(color.red>COLOR_MAX|| color.red<COLOR_MIN || color.green>COLOR_MAX || color.green<COLOR_MIN || color.blue<COLOR_MIN || color.blue>COLOR_MAX){
         return false;
     }
     this->backgroud_color = color;

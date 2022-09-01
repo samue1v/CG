@@ -8,7 +8,7 @@ public:
 };
 Polygon::Polygon(){};
 
-class Circle : Polygon {
+class Circle : public Polygon {
 private:
   Color color;
   float radius;
