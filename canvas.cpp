@@ -3,13 +3,16 @@
 
 class Canvas{
     public:
-      Canvas(Matrix *rgb);
+      Canvas(Matrix<Color> *rgb);
       Canvas();
+      bool setColorAt(int x, int y, Color c);
+      Matrix<Color> * getCanvas();
     private:
-      Matrix canvas;
-        
+      Matrix<Color> canvas;
 };
 
-Canvas::Canvas(Matrix *rgb){
+
+
+Canvas::Canvas(Matrix<Color> *rgb){
   this->canvas = *(rgb);
 }
