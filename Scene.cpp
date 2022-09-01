@@ -6,7 +6,7 @@ class Scene{
     public:
         Scene(int numPolygons);
         Polygon * getPolygonAt(int index); //olhar depois
-        bool setPolygon(int index, Polygon polygon);
+        bool setPolygon(int index, Polygon *polygon);
         Polygon * getPolygonArray();
         int getNumberOfElements();
         bool setBackgroundColor(Color color);
@@ -33,11 +33,11 @@ Polygon * Scene::getPolygonArray(){
     return p;
 }
 
-bool Scene::setPolygon(int index,Polygon polygon){
+bool Scene::setPolygon(int index,Polygon * polygon){
     if(index >=numPolygons || index<0){
         return false;
     }
-    this->elements[index] = polygon;
+    this->elements[index] = *(polygon);
 }
 
 int Scene::getNumberOfElements(){

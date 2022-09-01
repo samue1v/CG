@@ -40,6 +40,7 @@ struct Coordinate {
 class Matrix {
 public:
   Matrix(int lines, int columns);
+  Matrix(){};
   bool setVal(int x, int y, int val);
   int getVal(int x, int y);
   static float dot(Matrix a, Matrix b);

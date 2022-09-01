@@ -5,7 +5,7 @@
 class Viewport : Matrix {
 public:
   Coordinate canvasToViewport(float x, float y);
-  Color TraceRay(Scene scene, Coordinate O, Vector D, int t_min, int t_max);
+  static Color TraceRay(Scene scene, Coordinate O, Vector D, int t_min, int t_max);
   // private:
 };
 
