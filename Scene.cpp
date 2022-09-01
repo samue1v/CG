@@ -25,7 +25,7 @@ Scene::Scene(int numPolygons){
     this->elements = *polygonsArray;
 } 
 Polygon * Scene::getPolygonAt(int index){
-    Polygon * p = this->elements[index]; //ver qual a maneira correta
+    Polygon * p = &(this->elements)[index]; //ver qual a maneira correta
     return p;
 }
 Polygon * Scene::getPolygonArray(){
