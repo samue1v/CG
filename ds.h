@@ -16,11 +16,11 @@ struct Color {
 };
 
 struct Coordinate {
-  int x;
-  int y;
-  int z;
+  float x;
+  float y;
+  float z;
 
-  Coordinate(int x, int y, int z) {
+  Coordinate(float x, float y, float z) {
     this->x = x;
     this->y = y;
     this->z = z;
@@ -73,8 +73,7 @@ bool Matrix::setVal(int x, int y, int val) {
 
 float Matrix::dot(Matrix a, Matrix b) {
   if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
-    printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: "
-           "(%d,%d)",
+    printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: (%d,%d)",
            a.nLines, a.nColumns, b.nLines, b.nColumns);
     return 0;
   } else {
@@ -85,17 +84,17 @@ float Matrix::dot(Matrix a, Matrix b) {
 
 class Vector {
 public:
-  Vector(int x, int y, int z);
+  Vector(float x, float y, float z);
   Vector(Coordinate cord);
   int *getVector();
-  bool setVector(int x, int y, int z);
+  bool setVector(float x, float y, float z);
   bool setVector(Coordinate cord);
   static float dot(Vector a, Vector b); 
 
 private:
   int vector[3];
 };
-Vector::Vector(int x, int y, int z) {
+Vector::Vector(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -116,7 +115,7 @@ bool Vector::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector::setVector(int x, int y, int z) {
+bool Vector::setVector(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;

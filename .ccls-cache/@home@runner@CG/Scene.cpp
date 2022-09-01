@@ -5,7 +5,7 @@
 class Scene{
     public:
         Scene(int numPolygons);
-        Polygon * getPolygonAt(int index);
+        Polygon * getPolygonAt(int index); //olhar depois
         bool setPolygon(int index, Polygon polygon);
         Polygon * getPolygonArray();
         int getNumberOfElements();
@@ -25,8 +25,8 @@ Scene::Scene(int numPolygons){
     this->elements = *polygonsArray;
 } 
 Polygon * Scene::getPolygonAt(int index){
-    Polygon p = this->elements[index];
-
+    Polygon * p = this->elements[index]; //ver qual a maneira correta
+    return p;
 }
 Polygon * Scene::getPolygonArray(){
     Polygon * p = this->elements;
