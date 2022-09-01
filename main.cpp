@@ -1,5 +1,6 @@
 #include <iostream>
 #include "ds.h"
+#include "Scene.cpp"
 /* coisas pra mudar:
 - trocar int pra float
 - ver os comentarios no codigo e ajeitar as coisas
@@ -16,7 +17,16 @@ int main() {
   float dx = wj/nColumns;
   float dy = hj/nLines;
   int distance = 100;
-  Scene scene = Scene(); //fazer
+  //inicialização da cena e da esfera
+  int radius = 50;
+  Coordinate center = Coordinate(0,0,-(distance + radius))
+  Color sphereColor = Color(255,0,0);
+  Circle c = Circle(center, radius, sphereColor);
+  Scene scene = Scene(1); 
+  scene.setPolygon(0, c);
+  Color bgColor = Color(100,100,100);
+  scene.setBackgroundColor(bgColor);
+  //inicialização do canvas
   Canvas canvas = Canvas(); //fazer
   
   for (int l = 0; l < nLines; l++ ){
