@@ -48,9 +48,14 @@ int main() {
 
 bool writePPM(Canvas * canvas){
   std::ofstream myfile;
+  Matrix<Color> * m = canvas->getCanvas();
   myfile.open ("image.ppm");
   myfile << "P6\n";
   myfile << 500 <<' '<<500<<"\n";
   myfile << 255 << "\n";
-
+  for(int i=0;i<canvas->getNumberLines();i++){
+    for(int j = 0;j<canvas->getNumberColumns();j++){
+      myfile << m->getVal(i,j).red << m->getVal(i,j).green << m->getVal(i,j).blue;
+    }
+  }
 }

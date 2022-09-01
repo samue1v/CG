@@ -42,7 +42,7 @@ public:
   Matrix(int lines, int columns);
   Matrix(){};
   bool setVal(int x, int y, T val);
-  int getVal(int x, int y);
+  T getVal(int x, int y);
   static float dot(Matrix a, Matrix b);
 
 private:
@@ -63,7 +63,7 @@ template <typename T> Matrix<T>::Matrix(int lines, int columns) {
   }
 }
 
-template <typename T> int Matrix<T>::getVal(int x, int y) { return (this->matrix)[x][y]; }
+template <typename T> T Matrix<T>::getVal(int x, int y) { return (this->matrix)[x][y]; }
 
 template <typename T> bool Matrix<T>::setVal(int x, int y, T val) {
     (this->matrix)[x][y] = val;
