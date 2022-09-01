@@ -37,21 +37,21 @@ struct Coordinate {
   }
 };
 
-class Matrix {
+template <typename T >class Matrix {
 public:
   Matrix(int lines, int columns);
   Matrix(){};
-  bool setVal(int x, int y, int val);
+  bool setVal(int x, int y, T val);
   int getVal(int x, int y);
   static float dot(Matrix a, Matrix b);
 
 private:
   int nLines;
   int nColumns;
-  int **matrix;
+  T **matrix;
 };
 
-Matrix::Matrix(int lines, int columns) {
+template <typename T> Matrix<T>::Matrix(int lines, int columns) {
   this->nLines = lines;
   this->nColumns = columns;
   int **m[lines];
@@ -63,17 +63,14 @@ Matrix::Matrix(int lines, int columns) {
   }
 }
 
-int Matrix::getVal(int x, int y) { return (this->matrix)[x][y]; }
+template <typename T> int Matrix<T>::getVal(int x, int y) { return (this->matrix)[x][y]; }
 
-bool Matrix::setVal(int x, int y, int val) {
-  if (val >= 0) {
+template <typename T> bool Matrix<T>::setVal(int x, int y, T val) {
     (this->matrix)[x][y] = val;
     return true;
-  }
-  return false;
 }
 
-float Matrix::dot(Matrix a, Matrix b) {
+template <typename T> float Matrix<T>::dot(Matrix a, Matrix b) {
   if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
     printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: (%d,%d)",
            a.nLines, a.nColumns, b.nLines, b.nColumns);

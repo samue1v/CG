@@ -6,7 +6,7 @@ class Canvas{
       Canvas(Matrix<Color> *rgb);
       Canvas();
       bool setColorAt(int x, int y, Color c);
-      Matrix<Color> * getCanvas();
+      Matrix<Color> & getCanvas();
     private:
       Matrix<Color> canvas;
 };
@@ -15,4 +15,12 @@ class Canvas{
 
 Canvas::Canvas(Matrix<Color> *rgb){
   this->canvas = *(rgb);
+}
+
+Matrix<Color> & Canvas::getCanvas(){
+  return this->canvas;
+}
+
+bool Canvas::setColorAt(int x, int y, Color c){
+  this->canvas.setVal(x,y,c);
 }

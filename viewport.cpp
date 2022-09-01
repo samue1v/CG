@@ -2,14 +2,14 @@
 #include "ds.h"
 #include <stdio.h>
 
-class Viewport : Matrix {
+template <typename T> class Viewport : Matrix<T> {
 public:
   Coordinate canvasToViewport(float x, float y);
   static Color TraceRay(Scene scene, Coordinate O, Vector D, int t_min, int t_max);
   // private:
 };
 
-Color Viewport::TraceRay(Scene scene, Coordinate O, Vector D, int t_min,
+template <typename T> Color Viewport<T>::TraceRay(Scene scene, Coordinate O, Vector D, int t_min,
                          int t_max) {
   long unsigned int closest_t = INF;
   Circle *closest_poly;

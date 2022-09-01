@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iostream>
+#include <fstream>
 #include "ds.h"
 #include "Scene.cpp"
 #include "canvas.cpp"
@@ -26,7 +28,7 @@ int main() {
   Circle c = Circle(center, radius, sphereColor);
   Scene scene = Scene(1); 
   scene.setPolygon(0,&c);
-  Color bgColor = Color{100,100,100};
+  Color bgColor = Color{'100','100','100'};
   scene.setBackgroundColor(bgColor);
   //inicialização do canvas
   Canvas canvas = Canvas(); //fazer
@@ -36,10 +38,19 @@ int main() {
     for (int c = 0; c < nColumns; c++ ){
       float x = -wj/2 + dx/2 + c*dx;
       Vector dr = Vector(Coordinate(x,y,-distance) - Po);
-      Color color = Viewport::TraceRay(scene, O, dr, 1, INF);
-      canvas.PutPixel(x, y, color);
+      Color color = Viewport<float>::TraceRay(scene, O, dr, 1, INF);//lembra de perguntar
+      canvas.setColorAt(x,y,color);
     }
   }
   
   return 0;
+}
+
+bool writePPM(Canvas * canvas){
+  std::ofstream myfile;
+  myfile.open ("image.ppm");
+  myfile << "P6\n";
+  myfile << 500 <<' '<<500<<"\n";
+  myfile << 255 << "\n";
+
 }
