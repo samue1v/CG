@@ -8,24 +8,24 @@ public:
 };
 Polygon::Polygon(){};
 
-class Circle : Polygon {
+class Circle : public Polygon {
 private:
   Color color;
-  int radius;
+  float radius;
   Coordinate center;
 
 public:
-  Circle(Coordinate center, int radius, Color color);
+  Circle(Coordinate center, float radius, Color color);
   Color getColor();
   bool setColor(Color color);
-  bool setRadius(int newRadius);
+  bool setRadius(float newRadius);
   int getRadius();
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
-  static Pair<int> IntersectRaySphere(Coordinate O, Coordinate D, Circle sphere);
+  static Pair<float> IntersectRaySphere(Coordinate O, Vector D, Circle sphere);
 };
 
-Circle::Circle(Coordinate center, int radius, Color color) : Polygon(){
+Circle::Circle(Coordinate center, float radius, Color color) : Polygon(){
 
   this->center = center;
   this->radius = radius;
@@ -39,7 +39,7 @@ bool Circle::setCenter(Coordinate newCenter) {
 
 Coordinate Circle::getCenter() { return this->center; }
 
-bool Circle::setRadius(int newRadius) {
+bool Circle::setRadius(float newRadius) {
   if (newRadius > 0) {
     this->radius = newRadius;
     return true;
@@ -56,8 +56,8 @@ bool Circle::setColor(Color color) {
 
 Color Circle::getColor() { return this->color; }
 
-Pair<int> Circle::IntersectRaySphere(Coordinate O, Vector D, Circle sphere) {
-  int r = sphere.getRadius();
+Pair<float> Circle::IntersectRaySphere(Coordinate O, Vector D, Circle sphere) {
+  float r = sphere.getRadius();
   Vector c_minus_o = Vector(O - sphere.getCenter());
   float a = Vector::dot(D, D);
   float b = 2 * Vector::dot(c_minus_o, D);
@@ -68,7 +68,7 @@ Pair<int> Circle::IntersectRaySphere(Coordinate O, Vector D, Circle sphere) {
     return {INF,INF};
   }
 
-  int t1 = (-b + sqrt(discriminant)) / (2*a);
-  int t2 = (-b + sqrt(discriminant)) / (2*a);
+  float t1 = (-b + sqrt(discriminant)) / (2*a);
+  float t2 = (-b + sqrt(discriminant)) / (2*a);
   return {t1, t2};
 }

@@ -3,24 +3,25 @@
 #include <stdio.h>
 
 const int INF = 10e8;
-
+const unsigned char COLOR_MAX = '255';
+const unsigned char COLOR_MIN = '255';
 template <typename T> struct Pair {
   T left;
   T right;
 };
 
 struct Color {
-  short int red;
-  short int green;
-  short int blue;
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
 };
 
 struct Coordinate {
-  int x;
-  int y;
-  int z;
+  float x;
+  float y;
+  float z;
 
-  Coordinate(int x, int y, int z) {
+  Coordinate(float x, float y, float z) {
     this->x = x;
     this->y = y;
     this->z = z;
@@ -36,20 +37,21 @@ struct Coordinate {
   }
 };
 
-class Matrix {
+template <typename T >class Matrix {
 public:
   Matrix(int lines, int columns);
-  bool setVal(int x, int y, int val);
-  int getVal(int x, int y);
+  Matrix(){};
+  bool setVal(int x, int y, T val);
+  T getVal(int x, int y);
   static float dot(Matrix a, Matrix b);
 
 private:
   int nLines;
   int nColumns;
-  int **matrix;
+  T **matrix;
 };
 
-Matrix::Matrix(int lines, int columns) {
+template <typename T> Matrix<T>::Matrix(int lines, int columns) {
   this->nLines = lines;
   this->nColumns = columns;
   int **m[lines];
@@ -61,20 +63,16 @@ Matrix::Matrix(int lines, int columns) {
   }
 }
 
-int Matrix::getVal(int x, int y) { return (this->matrix)[x][y]; }
+template <typename T> T Matrix<T>::getVal(int x, int y) { return (this->matrix)[x][y]; }
 
-bool Matrix::setVal(int x, int y, int val) {
-  if (val >= 0) {
+template <typename T> bool Matrix<T>::setVal(int x, int y, T val) {
     (this->matrix)[x][y] = val;
     return true;
-  }
-  return false;
 }
 
-float Matrix::dot(Matrix a, Matrix b) {
+template <typename T> float Matrix<T>::dot(Matrix a, Matrix b) {
   if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
-    printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: "
-           "(%d,%d)",
+    printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: (%d,%d)",
            a.nLines, a.nColumns, b.nLines, b.nColumns);
     return 0;
   } else {
@@ -85,17 +83,17 @@ float Matrix::dot(Matrix a, Matrix b) {
 
 class Vector {
 public:
-  Vector(int x, int y, int z);
+  Vector(float x, float y, float z);
   Vector(Coordinate cord);
   int *getVector();
-  bool setVector(int x, int y, int z);
+  bool setVector(float x, float y, float z);
   bool setVector(Coordinate cord);
   static float dot(Vector a, Vector b); 
 
 private:
   int vector[3];
 };
-Vector::Vector(int x, int y, int z) {
+Vector::Vector(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -116,7 +114,7 @@ bool Vector::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector::setVector(int x, int y, int z) {
+bool Vector::setVector(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
