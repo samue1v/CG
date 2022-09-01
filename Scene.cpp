@@ -45,7 +45,7 @@ int Scene::getNumberOfElements(){
 }
 
 bool Scene::setBackgroundColor(Color color){
-    if(color.red>255 || color.red<0 || color.green>255 || color.green<0 || color.blue>0 || color.blue>255){
+    if(color.red>255 || color.red<0 || color.green>255 || color.green<0 || color.blue<0 || color.blue>255){
         return false;
     }
     this->backgroud_color = color;
