@@ -42,6 +42,7 @@ int main() {
       canvas.setColorAt(x,y,color);
     }
   }
+  writePPM(&canvas);
   
   return 0;
 }
