@@ -1,4 +1,5 @@
 #include "ds.h"
+#include "Vector.cpp"
 #include <stdio.h>
 #include <math.h>
 

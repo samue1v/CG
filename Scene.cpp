@@ -50,3 +50,6 @@ bool Scene::setBackgroundColor(Color color){
     }
     this->backgroud_color = color;
 }
+Color Scene::getBackgroundColor(){
+    return this->backgroud_color;
+}

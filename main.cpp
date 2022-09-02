@@ -12,6 +12,7 @@
 */
 bool writePPM(Canvas *canvas);
 int main() {
+  std::cout<<"aqui";
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = O;
   int hj = 500;
@@ -43,6 +44,7 @@ int main() {
       canvas.setColorAt(x, y, color);
     }
   }
+  
   writePPM(&canvas);
 
   return 0;

@@ -1,2 +1,0 @@
-# CG
-Image processing study.
