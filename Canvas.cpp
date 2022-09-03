@@ -1,21 +1,8 @@
 #include <stdio.h>
-#include "ds.h"
-#include "Matrix.cpp"
+#include "Canvas.h"
 
-class Canvas{
-    public:
-      Canvas(Matrix<Color> *rgb,int l, int c);
-      Canvas(){};
-      bool setColorAt(int x, int y, Color c);
-      Matrix<Color> * getCanvas();
-      int getNumberLines();
-      int getNumberColumns();
-    private:
-      int l;
-      int c;
-      Matrix<Color> canvas;
-};
 
+Canvas::Canvas(){}
 
 int Canvas::getNumberLines(){
   return this->l;

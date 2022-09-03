@@ -1,9 +1,15 @@
 //#include "Scene.cpp"
-#include "canvas.cpp"
-#include "ds.h"
-#include "viewport.cpp"
 #include <fstream>
 #include <iostream>
+#include "Canvas.h"
+#include "DataConsts.h"
+#include "Polygons.h"
+#include "Coordinate.h"
+#include "Viewport.h"
+#include "Scene.h"
+#include "Color.h"
+#include "Vector.h"
+#include "Matrix.h"
 /* coisas pra mudar:
 - trocar int pra float
 - ver os comentarios no codigo e ajeitar as coisas
@@ -34,7 +40,7 @@ int main() {
   // inicialização do canvas
   Canvas canvas =
       Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
-  std::cout << "aqui\n";
+
   for (int l = 0; l < nLines; l++) {
     float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {

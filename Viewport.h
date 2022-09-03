@@ -1,16 +1,16 @@
-#include "Scene.cpp"
-#include "ds.h"
-#include <stdio.h>
+#ifndef VIEWPORT_H
+#define VIEWPORT_H
+
+#include "Scene.h"
+#include "Coordinate.h"
+#include "Vector.h"
+#include "Matrix.h"
+#include "Color.h"
 
 template <typename T> class Viewport : Matrix<T> {
 public:
   Coordinate canvasToViewport(float x, float y);
-  static Color TraceRay(Scene scene, Coordinate O, Vector D, int t_min, int t_max);
-  // private:
-};
-
-template <typename T> Color Viewport<T>::TraceRay(Scene scene, Coordinate O, Vector D, int t_min,
-                         int t_max) {
+  static Color TraceRay(Scene scene, Coordinate O, Vector D, int t_min, int t_max) {
   long unsigned int closest_t = INF;
   Circle *closest_poly;
 
@@ -33,3 +33,7 @@ template <typename T> Color Viewport<T>::TraceRay(Scene scene, Coordinate O, Vec
   }
   return closest_poly->getColor();
 }
+  // private:
+};
+
+#endif

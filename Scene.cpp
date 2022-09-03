@@ -1,22 +1,8 @@
-#include "ds.h"
-#include "polygons.cpp"
 #include <stdio.h>
+#include "DataConsts.h"
+#include "Polygons.h"
+#include "Scene.h"
 
-class Scene {
-public:
-  Scene(int numPolygons);
-  Polygon *getPolygonAt(int index); // olhar depois
-  bool setPolygon(int index, Polygon *polygon);
-  Polygon *getPolygonArray();
-  int getNumberOfElements();
-  bool setBackgroundColor(Color color);
-  Color getBackgroundColor();
-
-private:
-  Color backgroud_color;
-  int numPolygons;
-  Polygon *elements;
-};
 
 Scene::Scene(int numPolygons) {
   Polygon *p;
