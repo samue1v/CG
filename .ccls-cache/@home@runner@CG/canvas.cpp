@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include "ds.h"
+#include "Matrix.cpp"
 
 class Canvas{
     public:
       Canvas(Matrix<Color> *rgb,int l, int c);
-      Canvas();
+      Canvas(){};
       bool setColorAt(int x, int y, Color c);
       Matrix<Color> * getCanvas();
       int getNumberLines();

@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 const int INF = 10e8;
-const unsigned char COLOR_MAX = '255';
-const unsigned char COLOR_MIN = '255';
+const unsigned char COLOR_MAX = 0xFF & 255;
+const unsigned char COLOR_MIN = 0xFF & 255;
 template <typename T> struct Pair {
   T left;
   T right;
@@ -14,6 +14,12 @@ struct Color {
   unsigned char red;
   unsigned char green;
   unsigned char blue;
+  Color(){};
+  Color(int red, int green, int blue){
+    this->red = red & 0xFF;
+    this->green = green & 0xFF;
+    this->blue = blue & 0xFF;
+  }
 };
 
 struct Coordinate {
@@ -51,35 +57,6 @@ private:
   T **matrix;
 };
 
-template <typename T> Matrix<T>::Matrix(int lines, int columns) {
-  this->nLines = lines;
-  this->nColumns = columns;
-  int **m[lines];
-  this->matrix = *m;
-  for (int i = 0; i < lines; i++) {
-    int c[columns];
-    int *l = c;
-    this->matrix[i] = l;
-  }
-}
-
-template <typename T> T Matrix<T>::getVal(int x, int y) { return (this->matrix)[x][y]; }
-
-template <typename T> bool Matrix<T>::setVal(int x, int y, T val) {
-    (this->matrix)[x][y] = val;
-    return true;
-}
-
-template <typename T> float Matrix<T>::dot(Matrix a, Matrix b) {
-  if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
-    printf("Erro na definição dos vetores: left_side: (%d,%d); right_side: (%d,%d)",
-           a.nLines, a.nColumns, b.nLines, b.nColumns);
-    return 0;
-  } else {
-    return a.getVal(0, 0) * b.getVal(0, 0) + a.getVal(1, 0) * b.getVal(1, 0) +
-           a.getVal(2, 0) * b.getVal(2, 0);
-  }
-}
 
 class Vector {
 public:
@@ -93,38 +70,5 @@ public:
 private:
   int vector[3];
 };
-Vector::Vector(float x, float y, float z) {
-  this->vector[0] = x;
-  this->vector[1] = y;
-  this->vector[2] = z;
-}
 
-Vector::Vector(Coordinate cord) {
-  this->vector[0] = cord.x;
-  this->vector[1] = cord.y;
-  this->vector[2] = cord.z;
-}
-
-int *Vector::getVector() { return this->vector; }
-
-bool Vector::setVector(Coordinate cord) {
-  this->vector[0] = cord.x;
-  this->vector[1] = cord.y;
-  this->vector[2] = cord.z;
-  return true;
-}
-
-bool Vector::setVector(float x, float y, float z) {
-  this->vector[0] = x;
-  this->vector[1] = y;
-  this->vector[2] = z;
-  return true;
-}
-
-float Vector::dot(Vector a, Vector b){
-  int * pa = a.getVector();
-  int * pb = b.getVector();
-  
-    return pa[0] * pb[0] + pa[1] * pb[1] + pa[2] * pb[2];
-}
 #endif

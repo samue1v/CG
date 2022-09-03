@@ -12,7 +12,7 @@
 */
 bool writePPM(Canvas *canvas);
 int main() {
-  std::cout<<"aqui";
+
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = O;
   int hj = 500;
@@ -32,8 +32,9 @@ int main() {
   Color bgColor = Color{100, 100, 100};
   scene.setBackgroundColor(bgColor);
   // inicialização do canvas
-  Canvas canvas = Canvas(); // fazer
-
+  Canvas canvas =
+      Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
+  std::cout << "aqui\n";
   for (int l = 0; l < nLines; l++) {
     float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
@@ -44,7 +45,7 @@ int main() {
       canvas.setColorAt(x, y, color);
     }
   }
-  
+
   writePPM(&canvas);
 
   return 0;
@@ -63,4 +64,5 @@ bool writePPM(Canvas *canvas) {
              << m->getVal(i, j).blue;
     }
   }
+  return true;
 }
