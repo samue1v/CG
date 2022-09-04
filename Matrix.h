@@ -24,21 +24,19 @@ private:
   int nColumns;
   T **matrix;
 };
-template <class T> Matrix<T>::Matrix(int lines, int columns) {
+template <class T> Matrix<T>::Matrix(int lines, int columns) : matrix(new T * [lines]){
   this->nLines = lines;
   this->nColumns = columns;
-  
+  /*
   T **m[lines];
-  this->matrix = *m;
+  this->matrix = *m;*/
   for (int i = 0; i < lines; i++) {
     
     T c[columns];
-    
     T *l = c;
-    
     this->matrix[i] = l;
-    std::cout<< "matrix40\n"; 
   }
+  
 }
 
 template <class T> Matrix<T>::Matrix(){}

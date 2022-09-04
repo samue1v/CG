@@ -15,7 +15,7 @@ class Canvas{
     private:
       int l;
       int c;
-      Matrix<Color> canvas;
+      Matrix<Color> * canvas;
 };
 
 #endif

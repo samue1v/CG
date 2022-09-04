@@ -33,26 +33,28 @@ int main() {
   Coordinate center = Coordinate(0, 0, -(distance + radius));
   Color sphereColor = {255, 0, 0};
   Circle c = Circle(center, radius, sphereColor);
-  Scene scene = Scene(1);
-  scene.setPolygon(0, &c);
+  Scene * scene = new Scene(1);
+  scene->setPolygon(0, &c);
   Color bgColor = Color{100, 100, 100};
-  scene.setBackgroundColor(bgColor);
+  scene->setBackgroundColor(bgColor);
   // inicialização do canvas
-  Canvas canvas =
-      Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
-
+  Canvas *canvas =
+      new Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
   for (int l = 0; l < nLines; l++) {
     float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-      Color color = Viewport<float>::TraceRay(scene, O, dr, 1,
+       std::cout<< "main49 " << c <<"\n"; 
+      Color color = Viewport<float>::TraceRay((scene), O, dr, 1,
                                               INF); // lembra de perguntar
-      canvas.setColorAt(x, y, color);
+      std::cout<< color.red << c <<"\n";                                         
+      canvas->setColorAt(l, c, color);
+      std::cout<< "main54 " << c <<"\n";
     }
   }
 
-  writePPM(&canvas);
+  writePPM(canvas);
 
   return 0;
 }

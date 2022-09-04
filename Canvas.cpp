@@ -15,14 +15,15 @@ int Canvas::getNumberColumns(){
 Canvas::Canvas(Matrix<Color> *rgb,int l,int c){
   this->l = l;
   this->c = c;
-  this->canvas = *(rgb);
+  
+  (this->canvas) = rgb;
 }
 
 Matrix<Color> * Canvas::getCanvas(){
-  Matrix<Color> * m = &(this->canvas);
-  return m;
+  return (this->canvas);
 }
 
 bool Canvas::setColorAt(int x, int y, Color c){
-  return this->canvas.setVal(x,y,c);  //retorna true
+  std::cout << "setcolor/n";
+  return (*this->canvas).setVal(x,y,c);  //retorna true
 }
