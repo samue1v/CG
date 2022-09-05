@@ -30,22 +30,36 @@ int main() {
   int distance = 100;
   // inicialização da cena e da esfera
   int radius = 50;
+  
   Coordinate center = Coordinate(0, 0, -(distance + radius));
   Color sphereColor = {255, 0, 0};
-  Circle c = Circle(center, radius, sphereColor);
+  Circle * circle = new Circle(center, radius, sphereColor);
+  
   Scene * scene = new Scene(1);
-  scene->setPolygon(0, &c);
+  
+  
+  scene->setPolygon(0, circle);
+  
   Color bgColor = Color{100, 100, 100};
+  
   scene->setBackgroundColor(bgColor);
   // inicialização do canvas
-  Canvas *canvas =
-      new Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
+  //Por algum motivo circle não está em scene como deveria
+  //lembrar que o vector deve ser um vector de ponteiros para
+  //Polygons, ou seja ,elements deve ser Polygon ** element
+  
+  Canvas *canvas = new Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
+  //exit(-1);
+  //trocar para vector
   for (int l = 0; l < nLines; l++) {
     float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-      Color color = Viewport<float>::TraceRay((scene), O, dr, 1,INF); // lembra de perguntar                                        
+
+      Color color = Viewport<float>::TraceRay((scene), O, dr, 1, INF);
+
+      // lembra de perguntar                                        
       canvas->setColorAt(l, c, color);
     }
   }
@@ -64,8 +78,8 @@ bool writePPM(Canvas *canvas) {
   myfile << 255 << '\n';
   for (int i = 0; i < canvas->getNumberLines(); i++) {
     for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      myfile << m->getVal(i, j).red << ' ' << m->getVal(i, j).green
-             <<' '<< m->getVal(i, j).blue << '\n';
+      myfile << m->getVal(i, j).red <<  m->getVal(i, j).green
+             <<m->getVal(i, j).blue << '\n';
       
     }
     //  myfile << '\n';

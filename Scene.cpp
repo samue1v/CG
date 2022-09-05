@@ -1,29 +1,28 @@
 #include <stdio.h>
+#include <iostream>
 #include "DataConsts.h"
 #include "Polygons.h"
 #include "Scene.h"
 
 
-Scene::Scene(int numPolygons) {
-  Polygon *p;
-  Polygon *polygonsArray[numPolygons];
-  this->numPolygons = numPolygons;
-  this->elements = *polygonsArray;
-}
+Scene::Scene(int numPolygons) : numPolygons(numPolygons),elements(new  Polygon *[numPolygons]){}
 Polygon *Scene::getPolygonAt(int index) {
-  Polygon *p = &(this->elements)[index]; // ver qual a maneira correta
+  Polygon *p = (this->elements)[index]; // ver qual a maneira correta
   return p;
 }
 Polygon *Scene::getPolygonArray() {
-  Polygon *p = this->elements;
-  return p;
+  return *(this->elements);
 }
 
 bool Scene::setPolygon(int index, Polygon *polygon) {
   if (index >= numPolygons || index < 0) {
     return false;
   }
-  this->elements[index] = *(polygon);
+  
+  
+  this->elements[index] = polygon;
+  std::cout << "l24: getPolygonAt: " << ((Circle*)this->getPolygonAt(0))->getRadius() << "\n";
+
   return true;
 }
 

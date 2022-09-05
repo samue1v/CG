@@ -17,7 +17,7 @@ public:
 private:
   Color backgroud_color;
   int numPolygons;
-  Polygon *elements;
+  Polygon **elements;
 };
 
 

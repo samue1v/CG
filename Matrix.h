@@ -32,8 +32,8 @@ template <class T> Matrix<T>::Matrix(int lines, int columns) : matrix(new T * [l
   this->matrix = *m;*/
   for (int i = 0; i < lines; i++) {
     
-    T c[columns];
-    T *l = c;
+    
+    T *l = new T [columns];
     this->matrix[i] = l;
   }
   

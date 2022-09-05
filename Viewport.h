@@ -1,5 +1,6 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
+#include <stdio.h>
 
 #include "Scene.h"
 #include "Coordinate.h"
@@ -12,11 +13,12 @@ public:
   Coordinate canvasToViewport(float x, float y);
   static Color TraceRay(Scene *scene, Coordinate O, Vector D, int t_min, int t_max) {
     long unsigned int closest_t = INF;
-    Circle *closest_poly;
-
-    for (int i = 0; i < scene->getNumberOfElements(); i++) {
+    Circle *closest_poly=nullptr;
+    for(int i = 0; i < scene->getNumberOfElements(); i++) {
+      
       Circle *sphere = (Circle *)scene->getPolygonAt(i);
-      Pair<float> pair = Circle::IntersectRaySphere(O, D, *sphere); //melhor ser ponteiro pra circle ou nao?
+      Pair<float> pair = Circle::IntersectRaySphere(O, D, sphere); //melhor ser ponteiro pra circle ou nao?
+      
       float t1 = pair.left;
       float t2 = pair.right;
       if (t1 >= t_min && t1 < t_max && t1 < closest_t) {
@@ -28,11 +30,11 @@ public:
         closest_poly = sphere;
       }
     }
-    if (closest_poly == NULL) {
+    if (!closest_poly) {
       return scene->getBackgroundColor();
     }
     return closest_poly->getColor();
-}
+  }
   // private:
 };
 

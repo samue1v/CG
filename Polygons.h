@@ -27,9 +27,10 @@ public:
   int getRadius();
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
-  static Pair<float> IntersectRaySphere(Coordinate O, Vector D, Circle sphere){
-    float r = sphere.getRadius();
-    Vector c_minus_o = Vector(O - sphere.getCenter());
+  
+  static Pair<float> IntersectRaySphere(Coordinate O, Vector D, Circle *sphere){
+    float r = sphere->getRadius();
+    Vector c_minus_o = Vector(O - sphere->getCenter());
     float a = Vector::dot(D, D);
     float b = 2 * Vector::dot(c_minus_o, D);
     float c = Vector::dot(c_minus_o, c_minus_o) - r*r;
