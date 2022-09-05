@@ -24,6 +24,5 @@ Matrix<Color> * Canvas::getCanvas(){
 }
 
 bool Canvas::setColorAt(int x, int y, Color c){
-  std::cout << "setcolor/n";
   return (*this->canvas).setVal(x,y,c);  //retorna true
 }

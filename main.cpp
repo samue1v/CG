@@ -45,12 +45,8 @@ int main() {
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-       std::cout<< "main49 " << c <<"\n"; 
-      Color color = Viewport<float>::TraceRay((scene), O, dr, 1,
-                                              INF); // lembra de perguntar
-      std::cout<< color.red << c <<"\n";                                         
+      Color color = Viewport<float>::TraceRay((scene), O, dr, 1,INF); // lembra de perguntar                                        
       canvas->setColorAt(l, c, color);
-      std::cout<< "main54 " << c <<"\n";
     }
   }
 
@@ -64,13 +60,15 @@ bool writePPM(Canvas *canvas) {
   Matrix<Color> *m = canvas->getCanvas();
   myfile.open("image.ppm");
   myfile << "P6\n";
-  myfile << 500 << ' ' << 500 << "\n";
-  myfile << 255 << "\n";
+  myfile << 500 << ' ' << 500 << '\n';
+  myfile << 255 << '\n';
   for (int i = 0; i < canvas->getNumberLines(); i++) {
     for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      myfile << m->getVal(i, j).red << m->getVal(i, j).green
-             << m->getVal(i, j).blue;
+      myfile << m->getVal(i, j).red << ' ' << m->getVal(i, j).green
+             <<' '<< m->getVal(i, j).blue << '\n';
+      
     }
+    //  myfile << '\n';
   }
   return true;
 }
