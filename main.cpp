@@ -29,11 +29,12 @@ int main()
   int nColumns = 500;
   float dx = wj / nColumns;
   float dy = hj / nLines;
-  int distance = 5;
+  int distance = 100;
+  int sphere_distance =100;
   // inicialização da cena e da esfera
-  int radius = 100;
+  int radius = 5000;
 
-  Coordinate center = Coordinate(0, 0, -(distance + radius));
+  Coordinate center = Coordinate(0, 0, -(sphere_distance + radius));
   Color sphereColor = {255, 0, 0};
   Circle *circle = new Circle(center, radius, sphereColor);
 
@@ -78,7 +79,6 @@ bool writePPM(Canvas *canvas)
   Matrix<Color> *m = canvas->getCanvas();
   myfile.open("image.ppm");
   myfile << "P3\n";
-  myfile << "#Gay balls\n";
   myfile << 500 << ' ' << 500 << '\n';
   myfile << 255 << '\n';
   unsigned char RGBarray[6];
