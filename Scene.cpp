@@ -1,32 +1,29 @@
 #include <stdio.h>
 #include <iostream>
 #include "DataConsts.h"
-#include "Polygons.h"
+#include "Shapes.h"
 #include "Scene.h"
 
 
-Scene::Scene(int numPolygons) : numPolygons(numPolygons),elements(new  Polygon *[numPolygons]){}
-Polygon *Scene::getPolygonAt(int index) {
-  Polygon *p = (this->elements)[index]; // ver qual a maneira correta
+Scene::Scene(int numShapes) : numShapes(numShapes),elements(new  Shape3D *[numShapes]){}
+Shape3D *Scene::getShapeAt(int index) {
+  Shape3D *p = (this->elements)[index]; 
   return p;
 }
-Polygon *Scene::getPolygonArray() {
+Shape3D *Scene::getShapesArray() {
   return *(this->elements);
 }
 
-bool Scene::setPolygon(int index, Polygon *polygon) {
-  if (index >= numPolygons || index < 0) {
+bool Scene::setShapeAt(int index, Shape3D *polygon) {
+  if (index >= numShapes || index < 0) {
     return false;
   }
-  
-  
   this->elements[index] = polygon;
-  std::cout << "l24: getPolygonAt: " << ((Circle*)this->getPolygonAt(0))->getRadius() << "\n";
 
   return true;
 }
 
-int Scene::getNumberOfElements() { return this->numPolygons; }
+int Scene::getNumberOfElements() { return this->numShapes; }
 
 bool Scene::setBackgroundColor(Color color) {
   if (color.red > COLOR_MAX || color.red < COLOR_MIN ||

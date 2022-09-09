@@ -1,5 +1,5 @@
-#ifndef POLYGONS_H
-#define POLYGONS_H
+#ifndef SHAPES_H
+#define SHAPES_H
 #include <math.h>
 #include "Color.h"
 #include "Pair.h"
@@ -7,13 +7,13 @@
 #include "Vector.h"
 #include "DataConsts.h"
 
-class Polygon {
+class Shape3D {
 public:
-  Polygon();
+  Shape3D();
 };
 
 
-class Circle : public Polygon {
+class Circle : public  Shape3D {
 private:
   Color color;
   float radius;

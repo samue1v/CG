@@ -1,23 +1,23 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Polygons.h"
+#include "Shapes.h"
 #include "Color.h"
 
 class Scene {
 public:
-  Scene(int numPolygons);
-  Polygon *getPolygonAt(int index); // olhar depois
-  bool setPolygon(int index, Polygon *polygon);
-  Polygon *getPolygonArray();
+  Scene(int numShapes);
+  Shape3D *getShapeAt(int index); // olhar depois
+  bool setShapeAt(int index, Shape3D *shape);
+  Shape3D *getShapesArray();
   int getNumberOfElements();
   bool setBackgroundColor(Color color);
   Color getBackgroundColor();
 
 private:
   Color backgroud_color;
-  int numPolygons;
-  Polygon **elements;
+  int numShapes;
+  Shape3D **elements;
 };
 
 

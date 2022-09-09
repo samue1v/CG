@@ -1,10 +1,10 @@
 
 #include <stdio.h>
-#include "Polygons.h"
+#include "Shapes.h"
 
-Polygon::Polygon(){}
+Shape3D::Shape3D(){}
 
-Circle::Circle(Coordinate center, float radius, Color color) : Polygon(){
+Circle::Circle(Coordinate center, float radius, Color color) : Shape3D(){
 
   this->center = center;
   this->radius = radius;

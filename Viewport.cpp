@@ -2,7 +2,7 @@
 #include "Viewport.h"
 #include "Coordinate.h"
 #include "Vector.h"
-#include "Polygons.h"
+#include "Shapes.h"
 #include "Pair.h"
 #include "Coordinate.h"
 #include <stdio.h>
