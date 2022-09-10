@@ -5,17 +5,17 @@
 #include "Scene.h"
 
 
-Scene::Scene(int numShapes) : numShapes(numShapes),elements(new  Shape3D *[numShapes]){}
-Shape3D *Scene::getShapeAt(int index) {
-  Shape3D *p = (this->elements)[index]; 
+Scene::Scene(int numObjects) : numObjects(numObjects),elements(new  Object *[numObjects]){}
+Object *Scene::getObjectAt(int index) {
+  Object *p = (this->elements)[index]; 
   return p;
 }
-Shape3D *Scene::getShapesArray() {
+Object *Scene::getObjectsArray() {
   return *(this->elements);
 }
 
-bool Scene::setShapeAt(int index, Shape3D *polygon) {
-  if (index >= numShapes || index < 0) {
+bool Scene::setObjectAt(int index, Object *polygon) {
+  if (index >= numObjects || index < 0) {
     return false;
   }
   this->elements[index] = polygon;
@@ -23,7 +23,7 @@ bool Scene::setShapeAt(int index, Shape3D *polygon) {
   return true;
 }
 
-int Scene::getNumberOfElements() { return this->numShapes; }
+int Scene::getNumberOfElements() { return this->numObjects; }
 
 bool Scene::setBackgroundColor(Color color) {
   if (color.red > COLOR_MAX || color.red < COLOR_MIN ||
@@ -31,7 +31,7 @@ bool Scene::setBackgroundColor(Color color) {
       color.blue < COLOR_MIN || color.blue > COLOR_MAX) {
     return false;
   }
-  this->backgroud_color = color;
+  this->background_color = color;
   return true;
 }
-Color Scene::getBackgroundColor() { return this->backgroud_color; }
+Color Scene::getBackgroundColor() { return this->background_color; }

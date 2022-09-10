@@ -4,11 +4,12 @@
 #include "DataConsts.h"
 #include "Shapes.h"
 #include "Coordinate.h"
-#include "Viewport.h"
+#include "Space3D.h"
 #include "Scene.h"
 #include "Color.h"
 #include "Vector.h"
 #include "Matrix.h"
+#include "Object.h"
 
 bool writePPM(Canvas *canvas);
 int main()
@@ -33,8 +34,12 @@ int main()
   Circle *circle = new Circle(center, radius, sphereColor);
 
   Scene *scene = new Scene(1);
+  char name[] = "circulo";
+  Object *obj = new Object(name,1);
 
-  scene->setShapeAt(0, circle);
+  obj->setShape(circle);
+
+  scene->setObjectAt(0,obj);
 
   Color bgColor = Color{100, 100, 100};
 
@@ -51,7 +56,7 @@ int main()
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
 
-      Color color = Viewport<float>::TraceRay((scene), O, dr, 1, INF);
+      Color color = Space3D::TraceRay(scene, O, dr, 1, INF);
 
       canvas->setColorAt(l, c, color);
     }
