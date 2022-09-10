@@ -9,6 +9,7 @@
 
 class Shape3D {
 public:
+  Vector normal;
   Shape3D();
   virtual Color getColor() = 0;
   virtual Pair<float> IntersectRay(Coordinate, Vector) = 0;

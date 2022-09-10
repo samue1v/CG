@@ -4,8 +4,11 @@
 
 class Vector {
 public:
+  Vector();
   Vector(float x, float y, float z);
   Vector(Coordinate cord);
+  int getLength();
+  bool setLength(int);
   int *getVector();
   bool setVector(float x, float y, float z);
   bool setVector(Coordinate cord);
@@ -18,6 +21,7 @@ public:
 
 private:
   int vector[3];
+  int lenght;
 };
 
 #endif
