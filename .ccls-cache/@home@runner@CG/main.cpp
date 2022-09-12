@@ -43,7 +43,6 @@ int main()
   AmbientLight * ambientLight = new AmbientLight(0.3);
   DirectionalLight * dirLight = new DirectionalLight(0.7,Vector(0, 0, -(sphere_distance + radius)));
 
-  //std::cout << ambientLight->getIntensity();
 
   scene->setObjectAt(0,obj);
 

@@ -1,13 +1,6 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
-#include "Vector.h"
-/*
-Operadores que temos:
-Ponto - Ponto -> Ponto
-Ponto + Ponto -> Ponto
-Ponto + Vetor -> Ponto
-Ponto - Vetor -> Ponto
-*/
+
 struct Coordinate {
   float x;
   float y;
