@@ -24,12 +24,5 @@ struct Coordinate {
   Coordinate operator-(Coordinate right) {
     return Coordinate(x - right.x, y - right.y, z - right.z);
   }
-//vetores:
-  Coordinate operator+(Vector right) {
-    return Coordinate(x + right.getElementAt(0), y + right.getElementAt(1), z + right.getElementAt(2));
-  }
-  Coordinate operator-(Vector right) {
-    return Coordinate(x - right.getElementAt(0), y - right.getElementAt(1), z - right.getElementAt(2));
-  }
 };
 #endif
