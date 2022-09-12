@@ -38,8 +38,8 @@ public:
     float i=0;
     for(int l=0;l<scene->getNumberOfLights();l++){
       i+= scene->getLightAt(l)->calcIntensity(O,D);
-      std::cout<< scene->getLightAt(l)->getIntensity()<<"\n";
-      exit(-1);
+      //std::cout<< scene->getLightAt(l)->getIntensity()<<"\n";
+      //exit(-1);
     }
     //std::cout << i<<"\n";
     return closest_shape->getColor()*i;

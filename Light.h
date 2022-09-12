@@ -8,9 +8,9 @@
 class Light{
     public:
         Light();
-        float getIntensity();
-        bool setIntensity(float);
-        float calcIntensity(Coordinate, Vector);
+        virtual float getIntensity() = 0;
+        virtual bool setIntensity(float) = 0;
+        virtual float calcIntensity(Coordinate, Vector)=0;
         
     private:
         
@@ -22,6 +22,8 @@ class AmbientLight : public Light{
     public:
         AmbientLight();
         AmbientLight(float intensity);
+        float getIntensity();
+        bool setIntensity(float newIntensity);
         float calcIntensity(Coordinate, Vector);
     private:
         float intensity;
@@ -35,6 +37,8 @@ class DirectionalLight : public Light{
         float calcIntensity(Coordinate, Vector);
         Vector getDirection();
         bool setDirection(Vector);
+        float getIntensity();
+        bool setIntensity(float newIntensity);
     private:
         Vector direction;
         float intensity;
@@ -47,6 +51,8 @@ class PointLight : public Light{
         float calcIntensity(Coordinate, Vector);
         Coordinate getPosition();
         bool setPosition(Coordinate);
+        float getIntensity();
+        bool setIntensity(float newIntensity);
     private:
         Coordinate position;
         float intensity;    

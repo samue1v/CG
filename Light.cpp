@@ -19,7 +19,21 @@ float Light::calcIntensity(Coordinate, Vector){return 1.0;}
 
 AmbientLight::AmbientLight(){};
 
+
+
 AmbientLight::AmbientLight(float intensity) : intensity(intensity){}
+
+float AmbientLight::getIntensity(){
+    return this->intensity;
+}
+
+bool AmbientLight::setIntensity(float i){
+    if(i<0){
+        return false;
+    }
+    this->intensity = i;
+    return true;
+}
 
 
 float AmbientLight::calcIntensity(Coordinate P,Vector N){
@@ -37,6 +51,18 @@ float DirectionalLight::calcIntensity(Coordinate P,Vector N){
         return 0;
     }
     return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+}
+
+float DirectionalLight::getIntensity(){
+    return this->intensity;
+}
+
+bool DirectionalLight::setIntensity(float i){
+    if(i<0){
+        return false;
+    }
+    this->intensity = i;
+    return true;
 }
 
 Vector DirectionalLight::getDirection(){
@@ -60,6 +86,18 @@ float PointLight::calcIntensity(Coordinate P,Vector N){
         return 0;
     }
     return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+}
+
+float PointLight::getIntensity(){
+    return this->intensity;
+}
+
+bool PointLight::setIntensity(float i){
+    if(i<0){
+        return false;
+    }
+    this->intensity = i;
+    return true;
 }
 
 Coordinate PointLight::getPosition(){
