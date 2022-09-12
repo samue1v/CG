@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "Vector.h"
-
+#include <math.h>
 Vector::Vector(){};
 
 Vector::Vector(float x, float y, float z) : lenght(1){
@@ -48,4 +48,9 @@ int Vector::getElementAt(int index){
     return false;
   }
   return vector[index];
+}
+
+float Vector::length(){
+  Vector v = *this;
+  return sqrt(Vector::dot(v, v));
 }

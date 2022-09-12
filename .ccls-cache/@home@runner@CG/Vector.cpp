@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "ds.h"
+#include "Vector.h"
+#include <math.h>
+Vector::Vector(){};
 
-
-Vector::Vector(float x, float y, float z) {
+Vector::Vector(float x, float y, float z) : lenght(1){
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -30,9 +31,26 @@ bool Vector::setVector(float x, float y, float z) {
   return true;
 }
 
-float Vector::dot(Vector a, Vector b){
-  int * pa = a.getVector();
-  int * pb = b.getVector();
-  
-    return pa[0] * pb[0] + pa[1] * pb[1] + pa[2] * pb[2];
+int Vector::getLength(){
+  return this->lenght;
+}
+
+bool Vector::setLength(int newLength){
+  if(newLength>0){
+    this->lenght = newLength;
+    return true;
+  }
+  return false;
+}
+
+int Vector::getElementAt(int index){
+  if(index>lenght){
+    return false;
+  }
+  return vector[index];
+}
+
+float Vector::length(){
+  Vector v = *this;
+  return sqrt(Vector::dot(v, v));
 }

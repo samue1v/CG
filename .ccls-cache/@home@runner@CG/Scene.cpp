@@ -1,47 +1,31 @@
-#include "ds.h"
-#include "polygons.cpp"
 #include <stdio.h>
+#include <iostream>
+#include "DataConsts.h"
+#include "Shapes.h"
+#include "Scene.h"
+#include "Light.h"
 
-class Scene {
-public:
-  Scene(int numPolygons);
-  Polygon *getPolygonAt(int index); // olhar depois
-  bool setPolygon(int index, Polygon *polygon);
-  Polygon *getPolygonArray();
-  int getNumberOfElements();
-  bool setBackgroundColor(Color color);
-  Color getBackgroundColor();
 
-private:
-  Color backgroud_color;
-  int numPolygons;
-  Polygon *elements;
-};
 
-Scene::Scene(int numPolygons) {
-  Polygon *p;
-  Polygon *polygonsArray[numPolygons];
-  this->numPolygons = numPolygons;
-  this->elements = *polygonsArray;
-}
-Polygon *Scene::getPolygonAt(int index) {
-  Polygon *p = &(this->elements)[index]; // ver qual a maneira correta
+Scene::Scene(int numObjects,int numLights) : numObjects(numObjects), numLights(numLights), elements(new  Object *[numObjects]), lights(new  Light *[numLights]){}
+Object *Scene::getObjectAt(int index) {
+  Object *p = (this->elements)[index]; 
   return p;
 }
-Polygon *Scene::getPolygonArray() {
-  Polygon *p = this->elements;
-  return p;
+Object *Scene::getObjectsArray() {
+  return *(this->elements);
 }
 
-bool Scene::setPolygon(int index, Polygon *polygon) {
-  if (index >= numPolygons || index < 0) {
+bool Scene::setObjectAt(int index, Object *polygon) {
+  if (index >= numObjects || index < 0) {
     return false;
   }
-  this->elements[index] = *(polygon);
+  this->elements[index] = polygon;
+
   return true;
 }
 
-int Scene::getNumberOfElements() { return this->numPolygons; }
+int Scene::getNumberOfElements() { return this->numObjects; }
 
 bool Scene::setBackgroundColor(Color color) {
   if (color.red > COLOR_MAX || color.red < COLOR_MIN ||
@@ -49,7 +33,27 @@ bool Scene::setBackgroundColor(Color color) {
       color.blue < COLOR_MIN || color.blue > COLOR_MAX) {
     return false;
   }
-  this->backgroud_color = color;
+  this->background_color = color;
   return true;
 }
-Color Scene::getBackgroundColor() { return this->backgroud_color; }
+Color Scene::getBackgroundColor() { return this->background_color; }
+
+bool Scene::setLightAt(int index, Light *light) {
+  if (index >= numLights || index < 0) {
+    return false;
+  }
+  this->lights[index] = light;
+
+  return true;
+}
+
+Light * Scene::getLightAt(int index){
+  if(index>=numLights || index < 0){
+    return nullptr;
+  }
+  return lights[index];
+}
+
+int Scene::getNumberOfLights(){
+  return this->numLights;
+}

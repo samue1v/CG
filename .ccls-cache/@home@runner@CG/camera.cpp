@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "ds.h"
+#include "DataConsts.h"
+#include "Coordinate.h"
 
 class Camera{
     public:
