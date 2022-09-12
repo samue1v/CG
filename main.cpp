@@ -10,6 +10,7 @@
 #include "Vector.h"
 #include "Matrix.h"
 #include "Object.h"
+#include "Light.h"
 
 bool writePPM(Canvas *canvas);
 int main()
@@ -33,15 +34,23 @@ int main()
   Color sphereColor = {255, 0, 0};
   Circle *circle = new Circle(center, radius, sphereColor);
 
-  Scene *scene = new Scene(1);
+  Scene *scene = new Scene(1,2);
   char name[] = "circulo";
   Object *obj = new Object(name,1);
 
   obj->setShape(circle);
 
+  AmbientLight * ambientLight = new AmbientLight(0.3);
+  DirectionalLight * dirLight = new DirectionalLight(0.7,Vector(0, 0, -(sphere_distance + radius)));
+
+  std::cout << ambientLight->getIntensity();
+
   scene->setObjectAt(0,obj);
 
   Color bgColor = Color{100, 100, 100};
+
+  scene->setLightAt(0,ambientLight);
+  scene->setLightAt(1,dirLight);
 
   scene->setBackgroundColor(bgColor);
   // inicialização do canvas
@@ -57,7 +66,6 @@ int main()
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
 
       Color color = Space3D::TraceRay(scene, O, dr, 1, INF);
-
       canvas->setColorAt(l, c, color);
     }
   }

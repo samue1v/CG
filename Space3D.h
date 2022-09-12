@@ -1,12 +1,13 @@
 #ifndef SPACE3D_H
 #define SPACE3D_H
 #include <stdio.h>
-
+#include <iostream>
 #include "Scene.h"
 #include "Coordinate.h"
 #include "Vector.h"
 #include "Matrix.h"
 #include "Color.h"
+#include "Light.h"
 
 class Space3D{
 public:
@@ -34,8 +35,16 @@ public:
     if (!closest_shape) {
       return scene->getBackgroundColor();
     }
-    return closest_shape->getColor();
+    float i=0;
+    for(int l=0;l<scene->getNumberOfLights();l++){
+      i+= scene->getLightAt(l)->calcIntensity(O,D);
+      std::cout<< scene->getLightAt(l)->getIntensity()<<"\n";
+      exit(-1);
+    }
+    //std::cout << i<<"\n";
+    return closest_shape->getColor()*i;
   }
+
 
     
   private:

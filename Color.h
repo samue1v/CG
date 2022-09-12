@@ -7,5 +7,8 @@ struct Color {
   unsigned char blue;
   Color();
   Color(int red, int green, int blue);
+  Color operator*(float right) {
+    return Color(red * right, green * right, blue * right);
+  }
 };
 #endif

@@ -1,6 +1,8 @@
 #include "Light.h"
 #include "Coordinate.h"
 
+Light::Light(){}
+
 float Light::getIntensity(){
     return this->intensity;
 }
@@ -13,21 +15,59 @@ bool Light::setIntensity(float i){
     return true;
 }
 
-Coordinate AmbientLight::getPosition(){
-    return this->position;
-}
+float Light::calcIntensity(Coordinate, Vector){return 1.0;}
 
-bool AmbientLight::setPosition(Coordinate newPosition){
-    this->position = newPosition;
-    return true;
-}
+AmbientLight::AmbientLight(){};
+
+AmbientLight::AmbientLight(float intensity) : intensity(intensity){}
+
 
 float AmbientLight::calcIntensity(Coordinate P,Vector N){
     return this->getIntensity();
 }
 
+DirectionalLight::DirectionalLight(){}
+
+DirectionalLight::DirectionalLight(float intensity,Vector direction) : intensity(intensity),direction(direction){}
+
 float DirectionalLight::calcIntensity(Coordinate P,Vector N){
     Vector L = this->direction;
     float n_dot_l = Vector::dot(N,L);
+    if(n_dot_l<=0){
+        return 0;
+    }
     return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+}
+
+Vector DirectionalLight::getDirection(){
+    return this->direction;
+}
+
+bool DirectionalLight::setDirection(Vector newVector){
+    this->direction = newVector;
+    return true;
+
+}
+
+PointLight::PointLight(){}
+
+PointLight::PointLight(float intensity, Coordinate position) : intensity(intensity),position(position){}
+
+float PointLight::calcIntensity(Coordinate P,Vector N){
+    Vector L = Vector(this->position - P);
+    float n_dot_l = Vector::dot(N,L);
+    if(n_dot_l<=0){
+        return 0;
+    }
+    return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+}
+
+Coordinate PointLight::getPosition(){
+    return this->position;
+}
+
+bool PointLight::setPosition(Coordinate newVector){
+    this->position = newVector;
+    return true;
+
 }

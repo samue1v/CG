@@ -3,9 +3,11 @@
 #include "DataConsts.h"
 #include "Shapes.h"
 #include "Scene.h"
+#include "Light.h"
 
 
-Scene::Scene(int numObjects) : numObjects(numObjects),elements(new  Object *[numObjects]){}
+
+Scene::Scene(int numObjects,int numLights) : numObjects(numObjects), numLights(numLights), elements(new  Object *[numObjects]), lights(new  Light *[numLights]){}
 Object *Scene::getObjectAt(int index) {
   Object *p = (this->elements)[index]; 
   return p;
@@ -35,3 +37,23 @@ bool Scene::setBackgroundColor(Color color) {
   return true;
 }
 Color Scene::getBackgroundColor() { return this->background_color; }
+
+bool Scene::setLightAt(int index, Light *light) {
+  if (index >= numLights || index < 0) {
+    return false;
+  }
+  this->lights[index] = light;
+
+  return true;
+}
+
+Light * Scene::getLightAt(int index){
+  if(index>=numLights || index < 0){
+    return nullptr;
+  }
+  return lights[index];
+}
+
+int Scene::getNumberOfLights(){
+  return this->numLights;
+}

@@ -3,7 +3,7 @@
 
 Vector::Vector(){};
 
-Vector::Vector(float x, float y, float z) {
+Vector::Vector(float x, float y, float z) : lenght(1){
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -41,4 +41,11 @@ bool Vector::setLength(int newLength){
     return true;
   }
   return false;
+}
+
+int Vector::getElementAt(int index){
+  if(index>lenght){
+    return false;
+  }
+  return vector[index];
 }
