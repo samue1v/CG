@@ -1,68 +1,101 @@
-//#include "Scene.cpp"
-#include "canvas.cpp"
-#include "ds.h"
-#include "viewport.cpp"
 #include <fstream>
 #include <iostream>
-/* coisas pra mudar:
-- trocar int pra float
-- ver os comentarios no codigo e ajeitar as coisas
-- testar e corrigir erros se aparecer
-- fazer aparecer as cores na tela
-*/
+#include "Canvas.h"
+#include "DataConsts.h"
+#include "Shapes.h"
+#include "Coordinate.h"
+#include "Space3D.h"
+#include "Scene.h"
+#include "Color.h"
+#include "Vector.h"
+#include "Matrix.h"
+#include "Object.h"
+#include "Light.h"
+
 bool writePPM(Canvas *canvas);
-int main() {
+int main()
+{
 
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = O;
-  int hj = 500;
   int wj = 500;
+  int hj = 500;
+
   int nLines = 500;
   int nColumns = 500;
   float dx = wj / nColumns;
   float dy = hj / nLines;
   int distance = 100;
+  int sphere_distance =100;
   // inicialização da cena e da esfera
-  int radius = 50;
-  Coordinate center = Coordinate(0, 0, -(distance + radius));
+  int radius = 500;
+
+  Coordinate center = Coordinate(0, 0, -(sphere_distance + radius));
   Color sphereColor = {255, 0, 0};
-  Circle c = Circle(center, radius, sphereColor);
-  Scene scene = Scene(1);
-  scene.setPolygon(0, &c);
+  Circle *circle = new Circle(center, radius, sphereColor);
+
+  Scene *scene = new Scene(1,2);
+  char name[] = "circulo";
+  Object *obj = new Object(name,1);
+
+  obj->setShape(circle);
+
+  AmbientLight * ambientLight = new AmbientLight(0.3);
+  DirectionalLight * dirLight = new DirectionalLight(0.7,Vector(0, 0, -(sphere_distance + radius)));
+
+  //std::cout << ambientLight->getIntensity();
+
+  scene->setObjectAt(0,obj);
+
   Color bgColor = Color{100, 100, 100};
-  scene.setBackgroundColor(bgColor);
+
+  scene->setLightAt(0,ambientLight);
+  scene->setLightAt(1,dirLight);
+
+  scene->setBackgroundColor(bgColor);
   // inicialização do canvas
-  Canvas canvas =
-      Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
-  std::cout << "aqui\n";
-  for (int l = 0; l < nLines; l++) {
+
+  Canvas *canvas = new Canvas(new Matrix<Color>(nLines, nColumns), nLines, nColumns); // fazer
+
+  for (int l = 0; l < nLines; l++)
+  {
     float y = hj / 2 - dy / 2 - l * dy;
-    for (int c = 0; c < nColumns; c++) {
+    for (int c = 0; c < nColumns; c++)
+    {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-      Color color = Viewport<float>::TraceRay(scene, O, dr, 1,
-                                              INF); // lembra de perguntar
-      canvas.setColorAt(x, y, color);
+
+      Color color = Space3D::TraceRay(scene, O, dr, 1, INF);
+      canvas->setColorAt(l, c, color);
     }
   }
 
-  writePPM(&canvas);
+  writePPM(canvas);
 
   return 0;
 }
 
-bool writePPM(Canvas *canvas) {
+bool writePPM(Canvas *canvas)
+{
   std::ofstream myfile;
   Matrix<Color> *m = canvas->getCanvas();
   myfile.open("image.ppm");
-  myfile << "P6\n";
-  myfile << 500 << ' ' << 500 << "\n";
-  myfile << 255 << "\n";
-  for (int i = 0; i < canvas->getNumberLines(); i++) {
-    for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      myfile << m->getVal(i, j).red << m->getVal(i, j).green
-             << m->getVal(i, j).blue;
+  myfile << "P3\n";
+  myfile << 500 << ' ' << 500 << '\n';
+  myfile << 255 << '\n';
+  unsigned char RGBarray[6];
+  RGBarray[1] = ' ';
+  RGBarray[3] = ' ';
+  RGBarray[5] = ' ';
+
+  for (int i = 0; i < canvas->getNumberLines(); i++)
+  {
+    for (int j = 0; j < canvas->getNumberColumns(); j++)
+    {
+      myfile << ' ' <<(int)m->getVal(i, j).red << ' ' <<(int)m->getVal(i, j).green << ' '
+             <<(int)m->getVal(i, j).blue << ' ';
     }
+    myfile << '\n';
   }
   return true;
 }
