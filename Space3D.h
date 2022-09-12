@@ -35,9 +35,12 @@ public:
     if (!closest_shape) {
       return scene->getBackgroundColor();
     }
-    float i=0;
+    float i = 0;
+    Coordinate P = (D * closest_t) + O;
+    Vector N = Vector(P - (closest_shape->getCenter()));
+    N = N / N.length();
     for(int l=0;l<scene->getNumberOfLights();l++){
-      i+= scene->getLightAt(l)->calcIntensity(O,D);
+      i+= scene->getLightAt(l)->calcIntensity(P,N);
     }
     return closest_shape->getColor()*i;
   }
