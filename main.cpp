@@ -40,8 +40,7 @@ int main() {
   obj->setShape(circle);
 
   AmbientLight *ambientLight = new AmbientLight(0.3);
-  DirectionalLight *dirLight =
-      new DirectionalLight(0.7, Vector(0, 0, -(sphere_distance + radius)));
+  DirectionalLight *dirLight = new DirectionalLight(0.7, Vector(0, 0, 1));
 
   scene->setObjectAt(0, obj);
 
