@@ -38,10 +38,12 @@ public:
     float i = 0;
     Coordinate P = (D * closest_t) + O;
     Vector N = Vector(P - (closest_shape->getCenter()));
-    N = N / N.length();
+    N.normalize();
     for(int l=0;l<scene->getNumberOfLights();l++){
+      //std::cout << scene->getLightAt(l)->calcIntensity(P,N)<<"\n";
       i+= scene->getLightAt(l)->calcIntensity(P,N);
     }
+    //std::cout<<i;
     return closest_shape->getColor()*i;
   }
 

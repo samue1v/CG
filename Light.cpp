@@ -1,5 +1,6 @@
 #include "Light.h"
 #include "Coordinate.h"
+#include <iostream>
 
 Light::Light(){}
 
@@ -37,6 +38,7 @@ bool AmbientLight::setIntensity(float i){
 
 
 float AmbientLight::calcIntensity(Coordinate P,Vector N){
+    //std::cout << this->intensity;
     return this->getIntensity();
 }
 
@@ -50,6 +52,8 @@ float DirectionalLight::calcIntensity(Coordinate P,Vector N){
     if(n_dot_l<=0){
         return 0;
     }
+    float m = this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+    std::cout << n_dot_l <<'\n';
     return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
 }
 
@@ -81,6 +85,7 @@ PointLight::PointLight(float intensity, Coordinate position) : intensity(intensi
 
 float PointLight::calcIntensity(Coordinate P,Vector N){
     Vector L = Vector(this->position - P);
+    L.normalize();
     float n_dot_l = Vector::dot(N,L);
     if(n_dot_l<=0){
         return 0;

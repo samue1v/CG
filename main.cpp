@@ -29,25 +29,26 @@ int main() {
   // inicialização da cena e da esfera
   int radius = 500;
 
-  Coordinate center = Coordinate(0, 0, -(sphere_distance + radius));
+  Coordinate center = Coordinate(0, 0, -(sphere_distance + radius)*2);
   Color sphereColor = {255, 0, 0};
   Circle *circle = new Circle(center, radius, sphereColor);
 
-  Scene *scene = new Scene(1, 2);
+  Scene *scene = new Scene(1, 1);
   char name[] = "circulo";
   Object *obj = new Object(name, 1);
 
   obj->setShape(circle);
 
-  AmbientLight *ambientLight = new AmbientLight(0.3);
-  DirectionalLight *dirLight = new DirectionalLight(0.7, Vector(0, 0, 1));
-
+  //AmbientLight *ambientLight = new AmbientLight(0.2);
+  // *dirLight = new DirectionalLight(0.2, Vector(0, 0, -1));
+  PointLight *pointLight = new PointLight(1,Coordinate(0,100,0));
   scene->setObjectAt(0, obj);
 
   Color bgColor = Color{100, 100, 100};
 
-  scene->setLightAt(0, ambientLight);
-  scene->setLightAt(1, dirLight);
+  //scene->setLightAt(0, ambientLight);
+  //scene->setLightAt(1, dirLight);
+  scene->setLightAt(0, pointLight);
 
   scene->setBackgroundColor(bgColor);
   // inicialização do canvas
@@ -60,7 +61,7 @@ int main() {
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-
+      dr.normalize();
       Color color = Space3D::TraceRay(scene, O, dr, 1, INF);
       canvas->setColorAt(l, c, color);
     }
