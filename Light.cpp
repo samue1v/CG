@@ -90,7 +90,7 @@ float PointLight::calcIntensity(Coordinate P,Vector N){
     if(n_dot_l<=0){
         return 0;
     }
-    return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+    return this->getIntensity()*n_dot_l; // /(N.getLength()*L.getLength());
 }
 
 float PointLight::getIntensity(){

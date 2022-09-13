@@ -8,11 +8,12 @@
 #include "Matrix.h"
 #include "Color.h"
 #include "Light.h"
+#include "Reflect.h"
 
 class Space3D{
 public:
   Coordinate canvasToViewport(float x, float y);
-  static Color TraceRay(Scene *scene, Coordinate O, Vector D, int t_min, int t_max) {
+  static Reflectiveness TraceRay(Scene *scene, Coordinate O, Vector D, int t_min, int t_max) {
     long unsigned int closest_t = INF;
     Shape3D *closest_shape = nullptr;
     for(int i = 0; i < scene->getNumberOfElements(); i++) {
@@ -44,7 +45,7 @@ public:
       i+= scene->getLightAt(l)->calcIntensity(P,N);
     }
     //std::cout<<i;
-    return closest_shape->getColor()*i;
+    return closest_shape->getReflectiveness()*i;
   }
 
 

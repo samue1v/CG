@@ -1,5 +1,10 @@
+/*
+- criar uma classe para coeficiente/reflectividade, substituindo Color
+- criar uma classe Material
+*/
 #include "Canvas.h"
 #include "Color.h"
+#include "Reflect.h"
 #include "Coordinate.h"
 #include "DataConsts.h"
 #include "Light.h"
@@ -9,6 +14,7 @@
 #include "Shapes.h"
 #include "Space3D.h"
 #include "Vector.h"
+#include "Reflect.h"
 #include <fstream>
 #include <iostream>
 
@@ -17,37 +23,40 @@ int main() {
 
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = O;
-  int wj = 500;
-  int hj = 500;
+  int wj = 60;
+  int hj = 60;
 
   int nLines = 500;
   int nColumns = 500;
   float dx = wj / nColumns;
   float dy = hj / nLines;
-  int distance = 100;
+  int distance = 30;
   int sphere_distance = 100;
   // inicialização da cena e da esfera
-  int radius = 500;
+  int radius = 40;
 
-  Coordinate center = Coordinate(0, 0, -(sphere_distance + radius));
-  Color sphereColor = {255, 0, 0};
-  Circle *circle = new Circle(center, radius, sphereColor);
+  Coordinate center = Coordinate(0, 0, -(distance+radius)*2);
+  
+  Reflectiveness sphereK = {0.7, 0.2, 0.2};
+  
+  Circle *circle = new Circle(center, radius, sphereK);
 
-  Scene *scene = new Scene(1, 2);
+  Scene *scene = new Scene(1, 1);
   char name[] = "circulo";
   Object *obj = new Object(name, 1);
 
   obj->setShape(circle);
 
   AmbientLight *ambientLight = new AmbientLight(0.3);
-  DirectionalLight *dirLight = new DirectionalLight(0.7, Vector(0, 0, 1));
-
+  // *dirLight = new DirectionalLight(0.2, Vector(0, 0, -1));
+  PointLight *pointLight = new PointLight(0.7,Coordinate(0,60,-30));
   scene->setObjectAt(0, obj);
 
   Color bgColor = Color{100, 100, 100};
 
   scene->setLightAt(0, ambientLight);
-  scene->setLightAt(1, dirLight);
+  //scene->setLightAt(1, dirLight);
+  scene->setLightAt(1, pointLight);
 
   scene->setBackgroundColor(bgColor);
   // inicialização do canvas
@@ -60,8 +69,8 @@ int main() {
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
-
-      Color color = Space3D::TraceRay(scene, O, dr, 1, INF);
+      dr.normalize();
+      Color color = Space3D::TraceRay(scene, Po, dr, 1, INF);
       canvas->setColorAt(l, c, color);
     }
   }
