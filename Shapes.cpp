@@ -4,11 +4,11 @@
 
 Shape3D::Shape3D(){}
 
-Circle::Circle(Coordinate center, float radius, Color color) : Shape3D(){
+Circle::Circle(Coordinate center, float radius, Reflectiveness reflectiveness) : Shape3D(){
 
   this->center = center;
   this->radius = radius;
-  this->color = color;
+  this->reflectiveness = reflectiveness;
 }
 
 bool Circle::setCenter(Coordinate newCenter) {
@@ -28,8 +28,8 @@ bool Circle::setRadius(float newRadius) {
 
 int Circle::getRadius() { return this->radius; }
 
-bool Circle::setColor(Color color) {
-  this->color = color;
+bool Circle::setReflectiveness(Reflectiveness reflectiveness) {
+  this->reflectiveness = reflectiveness;
   return true;
 }
 
@@ -50,5 +50,5 @@ Pair<float> Circle::IntersectRay(Coordinate O, Vector D){
     return {t1, t2};
   }
 
-Color Circle::getColor() { return this->color; }
+Reflectiveness Circle::getReflectiveness() { return this->reflectiveness; }
 

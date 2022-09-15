@@ -1,52 +1,58 @@
 #include "Light.h"
 #include "Coordinate.h"
+#include "Intensity.h"
+#include "DataConsts.h"
 #include <iostream>
 
 Light::Light(){}
 
-float Light::getIntensity(){
+Intensity Light::getIntensity(){
     return this->intensity;
 }
 
-bool Light::setIntensity(float i){
-    if(i<0){
-        return false;
+bool Light::setIntensity(Intensity i){
+    if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
+      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
+      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
+    return false;
     }
     this->intensity = i;
     return true;
 }
 
-float Light::calcIntensity(Coordinate, Vector){return 1.0;}
+Intensity Light::calcIntensity(Coordinate, Vector){return 1.0;}
 
 AmbientLight::AmbientLight(){};
 
 
 
-AmbientLight::AmbientLight(float intensity) : intensity(intensity){}
+AmbientLight::AmbientLight(Intensity intensity) : intensity(intensity){}
 
-float AmbientLight::getIntensity(){
+Intensity AmbientLight::getIntensity(){
     return this->intensity;
 }
 
-bool AmbientLight::setIntensity(float i){
-    if(i<0){
-        return false;
+bool AmbientLight::setIntensity(Intensity i){
+    if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
+      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
+      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
+    return false;
     }
     this->intensity = i;
     return true;
 }
 
 
-float AmbientLight::calcIntensity(Coordinate P,Vector N){
+Intensity AmbientLight::calcIntensity(Coordinate P,Vector N){
     //std::cout << this->intensity;
     return this->getIntensity();
 }
 
 DirectionalLight::DirectionalLight(){}
 
-DirectionalLight::DirectionalLight(float intensity,Vector direction) : intensity(intensity),direction(direction){}
+DirectionalLight::DirectionalLight(Intensity intensity,Vector direction) : intensity(intensity),direction(direction){}
 
-float DirectionalLight::calcIntensity(Coordinate P,Vector N){
+Intensity DirectionalLight::calcIntensity(Coordinate P,Vector N){
     Vector L = this->direction;
     float n_dot_l = Vector::dot(N,L);
     if(n_dot_l<=0){
@@ -57,13 +63,15 @@ float DirectionalLight::calcIntensity(Coordinate P,Vector N){
     return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
 }
 
-float DirectionalLight::getIntensity(){
+Intensity DirectionalLight::getIntensity(){
     return this->intensity;
 }
 
-bool DirectionalLight::setIntensity(float i){
-    if(i<0){
-        return false;
+bool DirectionalLight::setIntensity(Intensity i){
+    if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
+      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
+      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
+    return false;
     }
     this->intensity = i;
     return true;
@@ -81,25 +89,27 @@ bool DirectionalLight::setDirection(Vector newVector){
 
 PointLight::PointLight(){}
 
-PointLight::PointLight(float intensity, Coordinate position) : intensity(intensity),position(position){}
+PointLight::PointLight(Intensity intensity, Coordinate position) : intensity(intensity),position(position){}
 
-float PointLight::calcIntensity(Coordinate P,Vector N){
+Intensity PointLight::calcIntensity(Coordinate P,Vector N){
     Vector L = Vector(this->position - P);
     L.normalize();
     float n_dot_l = Vector::dot(N,L);
     if(n_dot_l<=0){
         return 0;
     }
-    return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+    return this->getIntensity()*n_dot_l; // /(N.getLength()*L.getLength());
 }
 
-float PointLight::getIntensity(){
+Intensity PointLight::getIntensity(){
     return this->intensity;
 }
 
-bool PointLight::setIntensity(float i){
-    if(i<0){
-        return false;
+bool PointLight::setIntensity(Intensity i){
+    if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
+      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
+      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
+    return false;
     }
     this->intensity = i;
     return true;
