@@ -9,11 +9,12 @@
 #include "Color.h"
 #include "Light.h"
 #include "Reflect.h"
+#include "Intensity.h"
 
 class Space3D{
 public:
   Coordinate canvasToViewport(float x, float y);
-  static Reflectiveness TraceRay(Scene *scene, Coordinate O, Vector D, int t_min, int t_max) {
+  static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, int t_min, int t_max) {
     long unsigned int closest_t = INF;
     Shape3D *closest_shape = nullptr;
     for(int i = 0; i < scene->getNumberOfElements(); i++) {
@@ -34,18 +35,18 @@ public:
       }
     }
     if (!closest_shape) {
-      return scene->getBackgroundColor();
+      return scene->getBackgroundCoefs();
     }
-    float i = 0;
+    Intensity i = Intensity(); //0,0,0
     Coordinate P = (D * closest_t) + O;
     Vector N = Vector(P - (closest_shape->getCenter()));
     N.normalize();
     for(int l=0;l<scene->getNumberOfLights();l++){
       //std::cout << scene->getLightAt(l)->calcIntensity(P,N)<<"\n";
-      i+= scene->getLightAt(l)->calcIntensity(P,N);
+      i = i + scene->getLightAt(l)->calcIntensity(P,N);
     }
     //std::cout<<i;
-    return closest_shape->getReflectiveness()*i;
+    return i*closest_shape->getReflectiveness();
   }
 
 

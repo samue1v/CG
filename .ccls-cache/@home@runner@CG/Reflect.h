@@ -1,15 +1,21 @@
 #ifndef REFLECT_H
 #define REFLECT_H
 
-struct Reflectiveness {
+//reflexao especular tem shininess
+
+
+class Reflectiveness {
+public:
   float kr;
   float kg;
   float kb;
-  float shininess;
   Reflectiveness();
-  Reflectiveness(float kr, float kg, float kb, float shininess=1);
-  /*Reflectiveness operator*(float right) {
-    return Reflectiveness(kr * right, kg * right, kb * right, shininess);
-  }*/
+  Reflectiveness(float kr, float kg, float kb);
 };
+
+class DifuseReflectiveness : Reflectiveness{
+public:
+  
+  
+}
 #endif

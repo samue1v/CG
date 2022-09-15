@@ -1,20 +1,30 @@
 /*
-- criar uma classe para coeficiente/reflectividade, substituindo Color
+- criar uma classe para coeficiente/reflectividade/intensidade, substituindo
+Color ok
 - criar uma classe Material
+- separar o calculo da intensidade difusa e da especular (precisa de uma
+reflectividade diferente para cada uma das duas)
+- reflectividade para luz ambiente (Ka)
+- verificar a implementação dos operadores @ ok
+- manter os valores referente a cor entre 0 e 1, apenas multiplicar por 255 ok
+
+-- checar na linha 59 e 62 se Intensity precisa ser ponteiro ou não ok
+
+-- checar herança de reflect
 */
 #include "Canvas.h"
 #include "Color.h"
-#include "Reflect.h"
 #include "Coordinate.h"
 #include "DataConsts.h"
+#include "Intensity.h"
 #include "Light.h"
 #include "Matrix.h"
 #include "Object.h"
+#include "Reflect.h"
 #include "Scene.h"
 #include "Shapes.h"
 #include "Space3D.h"
 #include "Vector.h"
-#include "Reflect.h"
 #include <fstream>
 #include <iostream>
 
@@ -23,6 +33,7 @@ int main() {
 
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = O;
+  int whiteColor = 255;
   int wj = 60;
   int hj = 60;
 
@@ -35,10 +46,10 @@ int main() {
   // inicialização da cena e da esfera
   int radius = 40;
 
-  Coordinate center = Coordinate(0, 0, -(distance+radius)*2);
-  
+  Coordinate center = Coordinate(0, 0, -(distance + radius) * 2);
+
   Reflectiveness sphereK = {0.7, 0.2, 0.2};
-  
+
   Circle *circle = new Circle(center, radius, sphereK);
 
   Scene *scene = new Scene(1, 1);
@@ -46,16 +57,18 @@ int main() {
   Object *obj = new Object(name, 1);
 
   obj->setShape(circle);
-
-  AmbientLight *ambientLight = new AmbientLight(0.3);
+  Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
+  AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   // *dirLight = new DirectionalLight(0.2, Vector(0, 0, -1));
-  PointLight *pointLight = new PointLight(0.7,Coordinate(0,60,-30));
+  Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
+  PointLight *pointLight =
+      new PointLight(pointIntensity, Coordinate(0, 60, -30));
   scene->setObjectAt(0, obj);
 
   Color bgColor = Color{100, 100, 100};
 
   scene->setLightAt(0, ambientLight);
-  //scene->setLightAt(1, dirLight);
+  // scene->setLightAt(1, dirLight);
   scene->setLightAt(1, pointLight);
 
   scene->setBackgroundColor(bgColor);
@@ -70,8 +83,8 @@ int main() {
       float x = -wj / 2 + dx / 2 + c * dx;
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
       dr.normalize();
-      Color color = Space3D::TraceRay(scene, Po, dr, 1, INF);
-      canvas->setColorAt(l, c, color);
+      Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
+      canvas->setColorAt(l, c, Color(reflectCoefs * whiteColor));
     }
   }
 

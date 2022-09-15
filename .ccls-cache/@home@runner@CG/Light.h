@@ -3,59 +3,59 @@
 
 #include "Coordinate.h"
 #include "Vector.h"
-
+#include "Intensity.h"
 
 class Light{
     public:
         Light();
-        virtual float getIntensity() = 0;
-        virtual bool setIntensity(float) = 0;
-        virtual float calcIntensity(Coordinate, Vector)=0;
+        virtual Intensity getIntensity() = 0;
+        virtual bool setIntensity(Intensity) = 0;
+        virtual Intensity calcIntensity(Coordinate, Vector)=0;
         
     private:
         
-        float intensity = 1.0;
+        Intensity intensity = Intensity(1.0,1.0,1.0);
 
 };
 
 class AmbientLight : public Light{
     public:
         AmbientLight();
-        AmbientLight(float intensity);
-        float getIntensity();
-        bool setIntensity(float newIntensity);
-        float calcIntensity(Coordinate, Vector);
+        AmbientLight(Intensity intensity);
+        Intensity getIntensity();
+        bool setIntensity(Intensity newIntensity);
+        Intensity calcIntensity(Coordinate, Vector);
     private:
-        float intensity;
+        Intensity intensity;
 };
 
 class DirectionalLight : public Light{
     public:
 
         DirectionalLight();
-        DirectionalLight(float intensity,Vector direction);
-        float calcIntensity(Coordinate, Vector);
+        DirectionalLight(Intensity intensity,Vector direction);
+        Intensity calcIntensity(Coordinate, Vector);
         Vector getDirection();
         bool setDirection(Vector);
-        float getIntensity();
-        bool setIntensity(float newIntensity);
+        Intensity getIntensity();
+        bool setIntensity(Intensity newIntensity);
     private:
         Vector direction;
-        float intensity;
+        Intensity intensity;
 };  
 
 class PointLight : public Light{
     public:
         PointLight();
-        PointLight(float intensity, Coordinate position);
-        float calcIntensity(Coordinate, Vector);
+        PointLight(Intensity intensity, Coordinate position);
+        Intensity calcIntensity(Coordinate, Vector);
         Coordinate getPosition();
         bool setPosition(Coordinate);
-        float getIntensity();
-        bool setIntensity(float newIntensity);
+        Intensity getIntensity();
+        bool setIntensity(Intensity newIntensity);
     private:
         Coordinate position;
-        float intensity;    
+        Intensity intensity;    
 };
 
 #endif
