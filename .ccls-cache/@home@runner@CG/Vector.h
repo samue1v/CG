@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 #include "Coordinate.h"
+#include <iostream>
 
 class Vector {
 public:
@@ -8,18 +9,20 @@ public:
   Vector(float x, float y, float z);
   Vector(Coordinate cord);
   int getLength();
-  int getElementAt(int index);
+  float getElementAt(int index);
   bool setLength(int);
-  int *getVector();
+  float *getVector();
   bool setVector(float x, float y, float z);
   bool setVector(Coordinate cord);
-  float length();
+  float calcLength();
+  void normalize();
   static float dot(Vector a, Vector b){
-    int * pa = a.getVector();
-    int * pb = b.getVector();
+    float * pa = a.getVector();
+    float * pb = b.getVector();
   
     return pa[0] * pb[0] + pa[1] * pb[1] + pa[2] * pb[2];
     }
+
 
   Vector operator/(Vector right) {
     return Vector(vector[0] / right.getElementAt(0), vector[1] / right.getElementAt(1), vector[2] / right.getElementAt(2));
@@ -28,8 +31,12 @@ public:
     return Vector(vector[0] * right, vector[1] * right, vector[2] * right);
   }
   Vector operator/(float right) {
-    return Vector(vector[0] / right, vector[1] / right, vector[2] / right);
+    Vector v = Vector(vector[0] / right, vector[1] / right, vector[2] / right);
+    //Vector v = Vector(1, 1, 1);
+    //::cout<< vector[0] << "/" << right<<"\n";
+    return v;
   }
+    
 /*
 Operadores:
 + : vetor+ponto -> ponto 
@@ -43,7 +50,7 @@ Operadores:
   }
 
 private:
-  int vector[3];
+  float vector[3];
   int lenght;
 };
 

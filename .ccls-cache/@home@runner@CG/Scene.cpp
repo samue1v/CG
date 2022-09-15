@@ -1,20 +1,18 @@
-#include <stdio.h>
-#include <iostream>
-#include "DataConsts.h"
-#include "Shapes.h"
 #include "Scene.h"
+#include "DataConsts.h"
 #include "Light.h"
+#include "Shapes.h"
+#include <iostream>
+#include <stdio.h>
 
-
-
-Scene::Scene(int numObjects,int numLights) : numObjects(numObjects), numLights(numLights), elements(new  Object *[numObjects]), lights(new  Light *[numLights]){}
+Scene::Scene(int numObjects, int numLights)
+    : numObjects(numObjects), numLights(numLights),
+      elements(new Object *[numObjects]), lights(new Light *[numLights]) {}
 Object *Scene::getObjectAt(int index) {
-  Object *p = (this->elements)[index]; 
+  Object *p = (this->elements)[index];
   return p;
 }
-Object *Scene::getObjectsArray() {
-  return *(this->elements);
-}
+Object *Scene::getObjectsArray() { return *(this->elements); }
 
 bool Scene::setObjectAt(int index, Object *polygon) {
   if (index >= numObjects || index < 0) {
@@ -27,16 +25,16 @@ bool Scene::setObjectAt(int index, Object *polygon) {
 
 int Scene::getNumberOfElements() { return this->numObjects; }
 
-bool Scene::setBackgroundColor(Color color) {
-  if (color.red > COLOR_MAX || color.red < COLOR_MIN ||
-      color.green > COLOR_MAX || color.green < COLOR_MIN ||
-      color.blue < COLOR_MIN || color.blue > COLOR_MAX) {
+bool Scene::setBackgroundCoefs(Intensity coefs) {
+  if (coefs.getRed() > INTENSITY_MAX || coefs.getRed() < INTENSITY_MIN ||
+      coefs.getGreen() > INTENSITY_MAX || coefs.getGreen() < INTENSITY_MIN ||
+      coefs.getBlue() > INTENSITY_MAX || coefs.getBlue() < INTENSITY_MIN) {
     return false;
   }
-  this->background_color = color;
+  this->background_coefs = coefs;
   return true;
 }
-Color Scene::getBackgroundColor() { return this->background_color; }
+Intensity Scene::getBackgroundCoefs() { return this->background_coefs; }
 
 bool Scene::setLightAt(int index, Light *light) {
   if (index >= numLights || index < 0) {
@@ -47,13 +45,11 @@ bool Scene::setLightAt(int index, Light *light) {
   return true;
 }
 
-Light * Scene::getLightAt(int index){
-  if(index>=numLights || index < 0){
+Light *Scene::getLightAt(int index) {
+  if (index >= numLights || index < 0) {
     return nullptr;
   }
   return lights[index];
 }
 
-int Scene::getNumberOfLights(){
-  return this->numLights;
-}
+int Scene::getNumberOfLights() { return this->numLights; }
