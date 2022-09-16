@@ -3,11 +3,11 @@
 #include "Reflect.h"
 #include "Intensity.h"
 struct Color {
-  unsigned char red;
-  unsigned char green;
-  unsigned char blue;
+  float red;
+  float green;
+  float blue;
   Color();
-  Color(int red, int green, int blue);
+  Color(float red, float green, float blue);
   Color operator*(float right) {
     return Color(red * right, green * right, blue * right);
   }

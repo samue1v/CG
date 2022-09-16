@@ -1,14 +1,17 @@
 
 #include <stdio.h>
+#include <iostream>
 #include "Shapes.h"
 
 Shape3D::Shape3D(){}
 
-Circle::Circle(Coordinate center, float radius, Reflectiveness reflectiveness) : Shape3D(){
+Circle::Circle(Coordinate center, float radius, Material * material) : Shape3D(){
 
   this->center = center;
   this->radius = radius;
-  this->reflectiveness = reflectiveness;
+  this->material = (material);
+  std::cout << (material)->getKd().coefs.kr;
+  std::cout << material->getKd().coefs.kr <<"\n";
 }
 
 bool Circle::setCenter(Coordinate newCenter) {
@@ -28,8 +31,8 @@ bool Circle::setRadius(float newRadius) {
 
 int Circle::getRadius() { return this->radius; }
 
-bool Circle::setReflectiveness(Reflectiveness reflectiveness) {
-  this->reflectiveness = reflectiveness;
+bool Circle::setMaterial(Material * material) {
+  this->material = material;
   return true;
 }
 
@@ -46,9 +49,9 @@ Pair<float> Circle::IntersectRay(Coordinate O, Vector D){
     }
 
     float t1 = (-b + sqrt(discriminant)) / (2*a);
-    float t2 = (-b + sqrt(discriminant)) / (2*a);
+    float t2 = (-b - sqrt(discriminant)) / (2*a);
     return {t1, t2};
   }
 
-Reflectiveness Circle::getReflectiveness() { return this->reflectiveness; }
+Material * Circle::getMaterial() { return (this->material); }
 

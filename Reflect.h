@@ -2,8 +2,9 @@
 #define REFLECT_H
 
 //reflexao especular tem shininess
-#include "Intensity.h"
 struct Coeficients{
+  Coeficients(){};
+  Coeficients(float kr,float kg,float kb) : kr(kr),kg(kg),kb(kb){};
   float kr;
   float kg;
   float kb;
@@ -12,30 +13,28 @@ struct Coeficients{
 class Reflectiveness {
 public:
   Coeficients coefs;
-  Intensity operator*(Intensity right) {
-    return Intensity(coefs.kr * right.getRed(), coefs.kg * right.getGreen(), coefs.kb * right.getBlue());
-  }
+  Reflectiveness();
 };
 
-class DifuseReflectiveness : Reflectiveness{
+class DifuseReflectiveness : public Reflectiveness{
 public:
   DifuseReflectiveness();
-  DifuseReflectiveness(float kr, float kg, float kb);
+  DifuseReflectiveness(Coeficients coefs);
   
 };
 
 
-class AmbientReflectiveness : Reflectiveness{
+class AmbientReflectiveness : public Reflectiveness{
 public:
   AmbientReflectiveness();
-  AmbientReflectiveness(float kr, float kg, float kb);
+  AmbientReflectiveness(Coeficients coefs);
   
 };
 
-class SpecularReflectiveness : Reflectiveness{
+class SpecularReflectiveness : public Reflectiveness{
 public:
   SpecularReflectiveness();
-  SpecularReflectiveness(float kr, float kg, float kb,int shininess);
+  SpecularReflectiveness(Coeficients coefs,int shininess);
   int shininess;
 };
 #endif

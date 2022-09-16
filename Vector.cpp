@@ -35,11 +35,11 @@ bool Vector::setVector(float x, float y, float z) {
   return true;
 }
 
-int Vector::getLength(){
+float Vector::getLength(){
   return this->lenght;
 }
 
-bool Vector::setLength(int newLength){
+bool Vector::setLength(float newLength){
   if(newLength>0){
     this->lenght = newLength;
     return true;
@@ -63,4 +63,5 @@ void Vector::normalize(){
   this->vector[0] = (this->vector[0])/(this->lenght);
   this->vector[1] = (this->vector[1])/(this->lenght);
   this->vector[2] = (this->vector[2])/(this->lenght);
+  this->lenght = 1;
 }

@@ -8,9 +8,9 @@ public:
   Vector();
   Vector(float x, float y, float z);
   Vector(Coordinate cord);
-  int getLength();
+  float getLength();
   float getElementAt(int index);
-  bool setLength(int);
+  bool setLength(float);
   float *getVector();
   bool setVector(float x, float y, float z);
   bool setVector(Coordinate cord);
@@ -51,7 +51,7 @@ Operadores:
 
 private:
   float vector[3];
-  int lenght;
+  float lenght;
 };
 
 #endif

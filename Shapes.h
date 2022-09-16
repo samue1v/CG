@@ -7,12 +7,13 @@
 #include "Vector.h"
 #include "DataConsts.h"
 #include "Reflect.h"
+#include "Material.h"
 
 class Shape3D {
 public:
   Vector normal;
   Shape3D();
-  virtual Reflectiveness getReflectiveness() = 0;
+  virtual Material * getMaterial() = 0;
   virtual Coordinate getCenter()=0;
   virtual Pair<float> IntersectRay(Coordinate, Vector) = 0;
 };
@@ -20,14 +21,14 @@ public:
 
 class Circle : public  Shape3D {
 private:
-  Reflectiveness reflectiveness;
+  Material * material;
   float radius;
   Coordinate center;
 
 public:
-  Circle(Coordinate center, float radius, Reflectiveness reflectiveness);
-  Reflectiveness getReflectiveness();
-  bool setReflectiveness(Reflectiveness color);
+  Circle(Coordinate center, float radius, Material * material);
+  Material * getMaterial();
+  bool setMaterial(Material * material);
   bool setRadius(float newRadius);
   int getRadius();
   bool setCenter(Coordinate newCenter);

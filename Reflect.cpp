@@ -1,24 +1,20 @@
 #include "Reflect.h"
 
+Reflectiveness::Reflectiveness(){}
+
 DifuseReflectiveness::DifuseReflectiveness() {}
-DifuseReflectiveness::DifuseReflectiveness(float kr, float kg, float kb){
-  this->coefs.kr = kr;  
-  this->coefs.kg = kg; 
-  this->coefs.kb = kb;   
+DifuseReflectiveness::DifuseReflectiveness(Coeficients coefs){
+  this->coefs = coefs;   
 }
 
 AmbientReflectiveness::AmbientReflectiveness() {}
-AmbientReflectiveness::AmbientReflectiveness(float kr, float kg, float kb){
-  this->coefs.kr = kr;  
-  this->coefs.kg = kg; 
-  this->coefs.kb = kb;   
+AmbientReflectiveness::AmbientReflectiveness(Coeficients coefs){
+  this->coefs = coefs;
 }
 
 SpecularReflectiveness::SpecularReflectiveness() {}
-SpecularReflectiveness::SpecularReflectiveness(float kr, float kg, float kb,int shininess){
-  this->coefs.kr = kr;  
-  this->coefs.kg = kg; 
-  this->coefs.kb = kb;   
+SpecularReflectiveness::SpecularReflectiveness(Coeficients coefs,int shininess){
+  this->coefs = coefs;   
   this->shininess = shininess;
 }
 
