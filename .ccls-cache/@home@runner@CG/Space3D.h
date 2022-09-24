@@ -39,14 +39,15 @@ public:
     }
     Intensity i = Intensity(); //0,0,0
     Coordinate P = (D * closest_t) + O;
-    Vector N = Vector(P - (closest_shape->getCenter()));
+    Vector N = Vector(P-(closest_shape->getCenter() ));
     N.normalize();
     for(int l=0;l<scene->getNumberOfLights();l++){
       //std::cout << scene->getLightAt(l)->calcIntensity(P,N)<<"\n";
       i = i + scene->getLightAt(l)->calcIntensity(P,N);
     }
     //std::cout<<i;
-    return i*closest_shape->getReflectiveness();
+    //Material * m = closest_shape->getMaterial();
+    return i*(closest_shape)->getMaterial()->getKd();
   }
 
 

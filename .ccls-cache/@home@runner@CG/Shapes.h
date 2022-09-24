@@ -1,33 +1,33 @@
 #ifndef SHAPES_H
 #define SHAPES_H
-#include <math.h>
 #include "Color.h"
-#include "Pair.h"
 #include "Coordinate.h"
-#include "Vector.h"
 #include "DataConsts.h"
+#include "Material.h"
+#include "Pair.h"
 #include "Reflect.h"
+#include "Vector.h"
+#include <math.h>
 
 class Shape3D {
 public:
   Vector normal;
   Shape3D();
-  virtual Reflectiveness getReflectiveness() = 0;
-  virtual Coordinate getCenter()=0;
+  Material *material;
+  virtual Material *getMaterial() = 0;
+  virtual Coordinate getCenter() = 0;
   virtual Pair<float> IntersectRay(Coordinate, Vector) = 0;
 };
 
-
-class Circle : public  Shape3D {
+class Sphere : public Shape3D {
 private:
-  Reflectiveness reflectiveness;
   float radius;
   Coordinate center;
 
 public:
-  Circle(Coordinate center, float radius, Reflectiveness reflectiveness);
-  Reflectiveness getReflectiveness();
-  bool setReflectiveness(Reflectiveness color);
+  Sphere(Coordinate center, float radius, Material *material);
+  Material *getMaterial();
+  bool setMaterial(Material *material);
   bool setRadius(float newRadius);
   int getRadius();
   bool setCenter(Coordinate newCenter);

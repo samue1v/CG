@@ -1,6 +1,5 @@
 #include "Light.h"
 #include "Coordinate.h"
-#include "Intensity.h"
 #include "DataConsts.h"
 #include <iostream>
 
@@ -55,12 +54,10 @@ DirectionalLight::DirectionalLight(Intensity intensity,Vector direction) : inten
 Intensity DirectionalLight::calcIntensity(Coordinate P,Vector N){
     Vector L = this->direction;
     float n_dot_l = Vector::dot(N,L);
-    if(n_dot_l<=0){
+    if(n_dot_l<0){
         return 0;
     }
-    float m = this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
-    std::cout << n_dot_l <<'\n';
-    return this->getIntensity()*n_dot_l/(N.getLength()*L.getLength());
+    return this->getIntensity()*n_dot_l;
 }
 
 Intensity DirectionalLight::getIntensity(){
@@ -92,11 +89,11 @@ PointLight::PointLight(){}
 PointLight::PointLight(Intensity intensity, Coordinate position) : intensity(intensity),position(position){}
 
 Intensity PointLight::calcIntensity(Coordinate P,Vector N){
-    Vector L = Vector(this->position - P);
+    Vector L = Vector(this->position-P);
     L.normalize();
-    float n_dot_l = Vector::dot(N,L);
-    if(n_dot_l<=0){
-        return 0;
+    float n_dot_l = Vector::dot(N,L);//*-1.0f);
+    if(n_dot_l<0.0){
+        return Intensity();
     }
     return this->getIntensity()*n_dot_l; // /(N.getLength()*L.getLength());
 }
