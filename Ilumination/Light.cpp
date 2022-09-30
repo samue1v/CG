@@ -2,6 +2,7 @@
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/DataConsts.h"
 #include <iostream>
+#include <math.h>
 
 Light::Light() {}
 
@@ -17,7 +18,9 @@ bool Light::setIntensity(Intensity i) {
   return true;
 }
 
-Intensity Light::calcIntensity(Coordinate, Vector) { return 1.0; }
+Intensity Light::calcIntensity(Coordinate, Vector, Vector, Material *) {
+  return 1.0;
+}
 
 AmbientLight::AmbientLight(){};
 
@@ -35,8 +38,8 @@ bool AmbientLight::setIntensity(Intensity i) {
   return true;
 }
 
-Intensity AmbientLight::calcIntensity(Coordinate P, Vector N) {
-  // std::cout << this->intensity;
+Intensity AmbientLight::calcIntensity(Coordinate P, Vector N, Vector V,
+                                      Material *material) {
   return this->getIntensity();
 }
 
@@ -45,13 +48,21 @@ DirectionalLight::DirectionalLight() {}
 DirectionalLight::DirectionalLight(Intensity intensity, Vector direction)
     : intensity(intensity), direction(direction) {}
 
-Intensity DirectionalLight::calcIntensity(Coordinate P, Vector N) {
+Intensity DirectionalLight::calcIntensity(Coordinate P, Vector N, Vector V,
+                                          Material *material) {
   Vector L = this->direction;
+  Intensity i = Intensity();
   float n_dot_l = Vector::dot(N, L);
-  if (n_dot_l < 0) {
-    return 0;
+  if (n_dot_l > 0) {
+    i = i + this->getIntensity() * material->getKd() * n_dot_l;
   }
-  return this->getIntensity() * n_dot_l;
+  Vector R = N * 2.0f * Vector::dot(N, L) - L;
+  float r_dot_l = Vector::dot(R, L);
+  if (r_dot_l > 0) {
+    i = i + this->getIntensity() * material->getKe() * r_dot_l;
+  }
+
+  return i;
 }
 
 Intensity DirectionalLight::getIntensity() { return this->intensity; }
@@ -78,14 +89,24 @@ PointLight::PointLight() {}
 PointLight::PointLight(Intensity intensity, Coordinate position)
     : intensity(intensity), position(position) {}
 
-Intensity PointLight::calcIntensity(Coordinate P, Vector N) {
+Intensity PointLight::calcIntensity(Coordinate P, Vector N, Vector V,
+                                    Material *material) {
+  Intensity i = Intensity();
   Vector L = Vector(this->position - P);
   L.normalize();
-  float n_dot_l = Vector::dot(N, L); //*-1.0f);
-  if (n_dot_l < 0.0) {
-    return Intensity();
+  float n_dot_l = Vector::dot(N, L);
+  if (n_dot_l > 0) {
+    i = i + this->getIntensity() * material->getKd() * n_dot_l;
   }
-  return this->getIntensity() * n_dot_l; // /(N.getLength()*L.getLength());
+  Vector R = N * 2.0f * Vector::dot(N, L) - L;
+  R.normalize();
+  float r_dot_l = Vector::dot(R, L);
+  if (r_dot_l > 0) {
+    i = i + this->getIntensity() * material->getKe() *
+                pow(r_dot_l, material->getKe().shininess);
+  }
+
+  return i;
 }
 
 Intensity PointLight::getIntensity() { return this->intensity; }

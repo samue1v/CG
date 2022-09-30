@@ -1,2 +1,2 @@
 # CG
-Image processing study.
+Computer Graphics from scratch

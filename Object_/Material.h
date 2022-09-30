@@ -20,7 +20,7 @@ struct Material{
 
 struct Rubber : Material{
     public:
-    Rubber() : ka(AmbientReflectiveness(Coeficients{1,1,1})),kd(DifuseReflectiveness(Coeficients(1,0,0))),ke(SpecularReflectiveness(Coeficients(0,0,0),0)){};
+    Rubber() : ka(AmbientReflectiveness(Coeficients{1,1,1})),kd(DifuseReflectiveness(Coeficients(1,0,0))),ke(SpecularReflectiveness(Coeficients(0.5,0,0),500)){};
 
     AmbientReflectiveness getKa();
     DifuseReflectiveness getKd();

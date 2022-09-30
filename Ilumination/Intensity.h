@@ -12,6 +12,7 @@ public:
   bool setGreen(float green);
   float getBlue();
   bool setBlue(float blue);
+	void normalize();
   Intensity operator*(float right) {
     return Intensity(ir * right, ig * right, ib * right);
   }

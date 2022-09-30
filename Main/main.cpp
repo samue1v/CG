@@ -13,9 +13,10 @@ reflectividade diferente para cada uma das duas)
 -- checar herança de reflect
 */
 
-#include "../DataStructures/Matrix.h"
+#include "../Canvas_/Canvas.h"
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/DataConsts.h"
+#include "../DataStructures/Matrix.h"
 #include "../DataStructures/Vector.h"
 #include "../Ilumination/Color.h"
 #include "../Ilumination/Intensity.h"
@@ -25,7 +26,6 @@ reflectividade diferente para cada uma das duas)
 #include "../Object_/Shapes.h"
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
-#include "../Canvas_/Canvas.h"
 #include <fstream>
 #include <iostream>
 
@@ -33,8 +33,8 @@ bool writePPM(Canvas *canvas);
 int main() {
 
   Coordinate O = Coordinate(0, 0, 0);
-  Coordinate Po = Coordinate(0,0,0);
-  Color whiteColor = Color(255,255,255);
+  Coordinate Po = Coordinate(0, 0, 0);
+  Color whiteColor = Color(255, 255, 255);
   float wj = 60;
   float hj = 60;
 
@@ -49,8 +49,8 @@ int main() {
 
   Coordinate center = Coordinate(0, 0, -(distance + radius));
 
-  //Reflectiveness sphereK = {0.7, 0.2, 0.2};
-  Rubber *material =new Rubber();
+  // Reflectiveness sphereK = {0.7, 0.2, 0.2};
+  Rubber *material = new Rubber();
   Sphere *circle = new Sphere(center, radius, material);
 
   Scene *scene = new Scene(1, 2);
@@ -60,13 +60,12 @@ int main() {
   obj->setShape(circle);
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
-  // *dirLight = new DirectionalLight(0.2, Vector(0, 0, -1));
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =
-      new PointLight(pointIntensity, Coordinate(0,-100, 0));
+      new PointLight(pointIntensity, Coordinate(0, 100, 0));
   scene->setObjectAt(0, obj);
 
-  Intensity bgIntensity = Intensity(0.4,0.4,0.4);
+  Intensity bgIntensity = Intensity(0.4, 0.4, 0.4);
 
   scene->setLightAt(0, ambientLight);
   // scene->setLightAt(1, dirLight);
@@ -82,11 +81,12 @@ int main() {
     float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
-      //std::cout <<"dx: " <<dx<<" dy: " << dy <<"\n";
+      // std::cout <<"dx: " <<dx<<" dy: " << dy <<"\n";
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
       dr.normalize();
       Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
-      canvas->setColorAt(l, c, (whiteColor*reflectCoefs));
+			reflectCoefs.normalize();//erro aqui, normalizando tudo
+      canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
     }
   }
 
@@ -100,7 +100,8 @@ bool writePPM(Canvas *canvas) {
   Matrix<Color> *m = canvas->getCanvas();
   myfile.open("image.ppm");
   myfile << "P3\n";
-  myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns() << '\n';
+  myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns()
+         << '\n';
   myfile << 255 << '\n';
   unsigned char RGBarray[6];
   RGBarray[1] = ' ';
@@ -109,7 +110,7 @@ bool writePPM(Canvas *canvas) {
 
   for (int i = 0; i < canvas->getNumberLines(); i++) {
     for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      //std::cout << (int)m->getVal(i, j).red <<"\n";
+      // std::cout << (int)m->getVal(i, j).red <<"\n";
       myfile << ' ' << (int)m->getVal(i, j).red << ' '
              << (int)m->getVal(i, j).green << ' ' << (int)m->getVal(i, j).blue
              << ' ';
