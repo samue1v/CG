@@ -14,7 +14,7 @@
 
 class Shape3D {
 public:
-  Vector normal;
+  //Vector normal;
   Shape3D();
   Material *material;
   virtual Material *getMaterial() = 0;
@@ -38,9 +38,22 @@ public:
   Vector computeNormal(Coordinate P);
   Pair<float> IntersectRay(Coordinate O, Vector D);
 };
-/*
+
 class Plane : public Shape3D{
-	
-};*/
+private:
+	Coordinate topLeftCorner;
+	float height;
+	float width;
+public:
+	Material *getMaterial();
+	Vector computeNormal(Coordinate P);
+  Pair<float> IntersectRay(Coordinate, Vector);
+	Coordinate getTopLeftCorner();
+	bool setTopLeftCorner(Coordinate newTopLeftCorner);
+	float getHeight();
+	bool setHeight(float newHeight);
+	float getWidth();
+	bool setWidth(float newWidth);
+};
 
 #endif

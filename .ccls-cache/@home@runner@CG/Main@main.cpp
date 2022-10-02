@@ -35,8 +35,8 @@ int main() {
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = Coordinate(0, 0, 0);
   Color whiteColor = Color(255, 255, 255);
-  float wj = 60;
-  float hj = 60;
+  float wj = 200;
+  float hj = 200;
 
   int nLines = 500;
   int nColumns = 500;
