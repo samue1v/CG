@@ -1,3 +1,5 @@
+all: program
+
 canvas: 
 	g++ -o ../Links/canvas.o -c ../Canvas_/Canvas.cpp
 
@@ -38,6 +40,5 @@ main:
 	g++ -o ../Links/main.o -c ../Main/main.cpp
 
 program: canvas coordinate vector color intensity light reflect shapes material object scene space main
-	g++ -o program ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/canvas.o
+	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/canvas.o -o program
 
-all: program

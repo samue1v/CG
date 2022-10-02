@@ -18,7 +18,7 @@ public:
   Shape3D();
   Material *material;
   virtual Material *getMaterial() = 0;
-  virtual Coordinate getCenter() = 0;
+	virtual Vector computeNormal(Coordinate P) = 0;
   virtual Pair<float> IntersectRay(Coordinate, Vector) = 0;
 };
 
@@ -35,7 +35,12 @@ public:
   int getRadius();
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
+  Vector computeNormal(Coordinate P);
   Pair<float> IntersectRay(Coordinate O, Vector D);
 };
+/*
+class Plane : public Shape3D{
+	
+};*/
 
 #endif

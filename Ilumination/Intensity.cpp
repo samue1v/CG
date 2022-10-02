@@ -35,7 +35,7 @@ bool Intensity::setBlue(float blue) {
   return true;
 }
 
-void Intensity::normalize() {
+Intensity Intensity::normalize() {
   float bigger = -INF;
   if (ir > bigger) {
     bigger = ir;
@@ -49,4 +49,5 @@ void Intensity::normalize() {
   ir = ir / bigger;
   ig = ig / bigger;
   ib = ib / bigger;
+  return Intensity(ir, ig, ib);
 }

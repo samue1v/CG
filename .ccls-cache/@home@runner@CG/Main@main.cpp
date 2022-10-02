@@ -43,7 +43,7 @@ int main() {
   float dx = wj / nColumns;
   float dy = hj / nLines;
   float distance = 30;
-  float sphere_distance = 100;
+  // float sphere_distance = 100;
   // inicialização da cena e da esfera
   float radius = 40;
 
@@ -58,14 +58,14 @@ int main() {
   Object *obj = new Object(name, 1);
 
   obj->setShape(circle);
-  Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
+  Intensity ambientIntensity = Intensity(0, 0, 0);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =
-      new PointLight(pointIntensity, Coordinate(0, 100, 0));
+      new PointLight(pointIntensity, Coordinate(-40, 60, 0));
   scene->setObjectAt(0, obj);
 
-  Intensity bgIntensity = Intensity(0.4, 0.4, 0.4);
+  Intensity bgIntensity = Intensity(0, 0, 0);
 
   scene->setLightAt(0, ambientLight);
   // scene->setLightAt(1, dirLight);
@@ -85,7 +85,7 @@ int main() {
       Vector dr = Vector(Coordinate(x, y, -distance) - Po);
       dr.normalize();
       Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
-			reflectCoefs.normalize();//erro aqui, normalizando tudo
+      // reflectCoefs.normalize();//erro aqui, normalizando tudo
       canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
     }
   }

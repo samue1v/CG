@@ -17,7 +17,7 @@ public:
   static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, int t_min,
                             int t_max) {
     long unsigned int closest_t = INF;
-    Shape3D *closest_shape = nullptr;
+    Shape3D *closestShape = nullptr;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
@@ -27,27 +27,30 @@ public:
         float t2 = pair.right;
         if (t1 >= t_min && t1 < t_max && t1 < closest_t) {
           closest_t = t1;
-          closest_shape = shape;
+          closestShape = shape;
         }
         if (t2 >= t_min && t2 < t_max && t2 < closest_t) {
           closest_t = t2;
-          closest_shape = shape;
+          closestShape = shape;
         }
       }
     }
-    if (!closest_shape) {
+    if (!closestShape) {
       return scene->getBackgroundCoefs();
     }
     Intensity i = Intensity(); // 0,0,0
     Coordinate P = (D * closest_t) + O;
-    Vector N = Vector(P - (closest_shape->getCenter()));
+    Vector N = closestShape->computeNormal(P);
     Vector V = D;
     V.normalize();
     N.normalize();
     for (int l = 0; l < scene->getNumberOfLights(); l++) {
       i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1,
-                                                  closest_shape->getMaterial());
+                                                  closestShape->getMaterial());
     }
+		if(i.getBlue()>1 || i.getRed()>1 || i.getGreen()>1){
+			i = i.normalize();
+		}
     return i;
   }
 

@@ -19,7 +19,7 @@ bool Light::setIntensity(Intensity i) {
 }
 
 Intensity Light::calcIntensity(Coordinate, Vector, Vector, Material *) {
-  return 1.0;
+  return Intensity();
 }
 
 AmbientLight::AmbientLight(){};
@@ -100,10 +100,10 @@ Intensity PointLight::calcIntensity(Coordinate P, Vector N, Vector V,
   }
   Vector R = N * 2.0f * Vector::dot(N, L) - L;
   R.normalize();
-  float r_dot_l = Vector::dot(R, L);
-  if (r_dot_l > 0) {
+  float r_dot_v = Vector::dot(R, V);
+  if (r_dot_v > 0) {
     i = i + this->getIntensity() * material->getKe() *
-                pow(r_dot_l, material->getKe().shininess);
+                pow(r_dot_v, material->getKe().shininess);
   }
 
   return i;

@@ -6,12 +6,14 @@ public:
   Array(T * value);
   Array();
   bool push(T * value);
-	bool setNext(Array<T> * value);
+	bool setLast(Array<T> * value);
+	bool setPos(int pos);
   Array<T> * getNext();
 
 private:
   int pos;
   T * value;
+	Array<T> *first;
   Array<T> *next;
   Array<T> *last;
 };
@@ -28,20 +30,18 @@ template <class T> bool Array<T>::push(T * value) {
   Array<T> *newItem = new Array<T>(value);
 	this->last->setNext(newItem);
 	this->last = newItem;
+	newItem->setPos((this -> pos)+1);
+	newItem->first = this;
 	return true;
 }
 
-template <class T> bool Array<T>::setNext(Array<T> *next){
-	Array<T> * temp = this->next;
-	if(next->getNext()){
-		next->push(temp);
-	}
-	this->next = next;
-	return true;
-}
 
 template <class T> Array<T> * Array<T>::getNext(){
 	return this->next;
+}
+
+template <class T> bool Array<T>::setPos(int pos){
+	this->pos = pos;
 }
 
 #endif

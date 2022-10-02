@@ -53,3 +53,7 @@ Pair<float> Sphere::IntersectRay(Coordinate O, Vector D) {
 }
 
 Material *Sphere::getMaterial() { return (this->material); }
+
+Vector Sphere::computeNormal(Coordinate P){
+	  return Vector(P - (this->center));
+}
