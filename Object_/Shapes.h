@@ -41,10 +41,13 @@ public:
 
 class Plane : public Shape3D{
 private:
+	Vector normal;
 	Coordinate topLeftCorner;
 	float height;
 	float width;
 public:
+	Plane();
+	Plane(Coordinate topLeftCorner, Vector normal, float width, float height);
 	Material *getMaterial();
 	Vector computeNormal(Coordinate P);
   Pair<float> IntersectRay(Coordinate, Vector);
@@ -54,6 +57,8 @@ public:
 	bool setHeight(float newHeight);
 	float getWidth();
 	bool setWidth(float newWidth);
+	Vector getNormal();
+	bool setNormal(Vector newNormal);
 };
 
 #endif

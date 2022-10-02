@@ -57,3 +57,12 @@ Material *Sphere::getMaterial() { return (this->material); }
 Vector Sphere::computeNormal(Coordinate P){
 	  return Vector(P - (this->center));
 }
+
+Plane::Plane(){}
+
+Plane::Plane(Coordinate topLeftCorner,Vector normal, float width, float height){
+	this->topLeftCorner = topLeftCorner; 
+	this->normal = normal;
+	this->width = width;
+	this->height = height;
+}
