@@ -78,7 +78,7 @@ Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
 	piMinusps.normalize();
 	bool atPlane = Vector::dot(piMinusps,this->normal)==0;
 	if(atPlane){
-		if(piMinusps.getElementAt(0) < this->width && piMinusps.getElementAt(1) < this->height){
+		if(piMinusps.getElementAt(0) + piMinusps.getElementAt(1) + piMinusps.getElementAt(2) <= this->width + this->height){
 			return {t,INF};
 		}
 	}
