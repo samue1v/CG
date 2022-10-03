@@ -7,7 +7,6 @@ Shape3D::Shape3D() {}
 
 Sphere::Sphere(Coordinate center, float radius, Material *material)
     : Shape3D() {
-
   this->center = center;
   this->radius = radius;
   this->material = (material);
@@ -54,15 +53,34 @@ Pair<float> Sphere::IntersectRay(Coordinate O, Vector D) {
 
 Material *Sphere::getMaterial() { return (this->material); }
 
-Vector Sphere::computeNormal(Coordinate P){
-	  return Vector(P - (this->center));
+Vector Sphere::computeNormal(Coordinate P) {
+  return Vector(P - (this->center));
 }
 
-Plane::Plane(){}
+Plane::Plane() {}
 
-Plane::Plane(Coordinate topLeftCorner,Vector normal, float width, float height){
-	this->topLeftCorner = topLeftCorner; 
-	this->normal = normal;
-	this->width = width;
-	this->height = height;
+Plane::Plane(Coordinate topLeftCorner, Vector normal, float width,
+             float height) {
+  this->topLeftCorner = topLeftCorner;
+  this->normal = normal;
+  this->width = width;
+  this->height = height;
+}
+
+Material *Plane::getMaterial() { return this->material; }
+
+Vector Plane::computeNormal(Coordinate P){ return this->normal;}
+
+Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
+	float t = Vector::dot(Vector(this->topLeftCorner - O),this->normal)/(Vector::dot(D,this->normal));
+	Coordinate pIntersection =  (D*t) + O;
+	Vector piMinusps = Vector(pIntersection - this->topLeftCorner);
+	piMinusps.normalize();
+	bool atPlane = Vector::dot(piMinusps,this->normal)==0;
+	if(atPlane){
+		if(piMinusps.getElementAt(0) < this->width && piMinusps.getElementAt(1) < this->height){
+			return {t,INF};
+		}
+	}
+	return {INF,INF};
 }
