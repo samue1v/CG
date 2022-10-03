@@ -48,7 +48,7 @@ private:
 
 public:
   Plane();
-  Plane(Coordinate topLeftCorner, Vector normal, float width, float height);
+  Plane(Coordinate topLeftCorner, Vector normal, float width, float height, Material * material);
   Material *getMaterial();
   Vector computeNormal(Coordinate P);
   Pair<float> IntersectRay(Coordinate, Vector);

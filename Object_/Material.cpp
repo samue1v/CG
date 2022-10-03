@@ -12,3 +12,15 @@ DifuseReflectiveness Rubber::getKd(){
 SpecularReflectiveness Rubber::getKe(){
     return this->ke;
 }
+
+AmbientReflectiveness Metal::getKa(){
+    return this->ka;
+}
+
+DifuseReflectiveness Metal::getKd(){
+    return this->kd;
+}
+
+SpecularReflectiveness Metal::getKe(){
+    return this->ke;
+}

@@ -15,7 +15,7 @@ class Object{
 
 
     private:
-        int shapeNumMax; 
+        int shapeNumMax;
         int shapeCount;
         Shape3D ** shapes;
         char *name;

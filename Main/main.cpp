@@ -42,30 +42,34 @@ int main() {
   int nColumns = 500;
   float dx = wj / nColumns;
   float dy = hj / nLines;
-  float distance = 30;
+  float canvasDistance = 60;
+  float sphereDistance = 300;
   // float sphere_distance = 100;
   // inicialização da cena e da esfera
   float radius = 40;
 
-  Coordinate center = Coordinate(0, 0, -(distance + radius));
+  Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
   Rubber *material = new Rubber();
+  Metal *material1 = new Metal();
   Sphere *circle = new Sphere(center, radius, material);
-	
-	Coordinate topLeftCorner = Coordinate(0,0,-130);
-	Vector planeNormal = Vector(Po - circle->getCenter());
-	float planeW = 200;
-	float planeH = 200;
-	Plane *plane = new Plane(topLeftCorner, planeNormal, planeW, planeH);
+
+	Coordinate topLeftCorner = Coordinate(0,0,-350);
+	Vector planeNormal = Vector(O- circle->getCenter());
+	planeNormal.normalize();
+	float planeW = 50;
+	float planeH = 50;
+	Plane *plane = new Plane(topLeftCorner, planeNormal, planeW, planeH, material1);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
-  Object *obj = new Object(name, 1);
+  Object *obj = new Object(name, 2);
 
   obj->setShape(circle);
-  Intensity ambientIntensity = Intensity(0, 0, 0);
+  obj->setShape(plane);
+  Intensity ambientIntensity = Intensity(0.0, 0.0, 0.0);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =
-      new PointLight(pointIntensity, Coordinate(-40, 60, 0));
+      new PointLight(pointIntensity, Po);
   scene->setObjectAt(0, obj);
 
   Intensity bgIntensity = Intensity(0, 0, 0);
@@ -85,7 +89,7 @@ int main() {
     for (int c = 0; c < nColumns; c++) {
       float x = -wj / 2 + dx / 2 + c * dx;
       // std::cout <<"dx: " <<dx<<" dy: " << dy <<"\n";
-      Vector dr = Vector(Coordinate(x, y, -distance) - Po);
+      Vector dr = Vector(Coordinate(x, y, -canvasDistance) - Po);
       dr.normalize();
       Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
       // reflectCoefs.normalize();//erro aqui, normalizando tudo

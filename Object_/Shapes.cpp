@@ -60,11 +60,12 @@ Vector Sphere::computeNormal(Coordinate P) {
 Plane::Plane() {}
 
 Plane::Plane(Coordinate topLeftCorner, Vector normal, float width,
-             float height) {
+             float height, Material * material) {
   this->topLeftCorner = topLeftCorner;
   this->normal = normal;
   this->width = width;
   this->height = height;
+  this->material = material;
 }
 
 Material *Plane::getMaterial() { return this->material; }
@@ -73,14 +74,14 @@ Vector Plane::computeNormal(Coordinate P){ return this->normal;}
 
 Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
 	float t = Vector::dot(Vector(this->topLeftCorner - O),this->normal)/(Vector::dot(D,this->normal));
-	Coordinate pIntersection =  (D*t) + O;
-	Vector piMinusps = Vector(pIntersection - this->topLeftCorner);
-	piMinusps.normalize();
-	bool atPlane = Vector::dot(piMinusps,this->normal)==0;
-	if(atPlane){
-		if(piMinusps.getElementAt(0) + piMinusps.getElementAt(1) + piMinusps.getElementAt(2) <= this->width + this->height){
-			return {t,INF};
-		}
+	if(t>0){
+  	Coordinate pIntersection =  (D*t) + O;
+  	Vector piMinusps = Vector(pIntersection - this->topLeftCorner);
+  	piMinusps.normalize();
+  	bool atPlane = Vector::dot(piMinusps,this->normal)==0.0f;
+  	if(atPlane){
+      return {t,INF};
+  	}
 	}
 	return {INF,INF};
 }
