@@ -35,8 +35,8 @@ int main() {
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = Coordinate(0, 0, 0);
   Color whiteColor = Color(255, 255, 255);
-  float wj = 200;
-  float hj = 200;
+  float wj = 60;
+  float hj = 60;
 
   int nLines = 500;
   int nColumns = 500;
@@ -48,11 +48,14 @@ int main() {
   float radius = 40;
 
   Coordinate center = Coordinate(0, 0, -(distance + radius));
-
-  // Reflectiveness sphereK = {0.7, 0.2, 0.2};
   Rubber *material = new Rubber();
   Sphere *circle = new Sphere(center, radius, material);
-
+	
+	Coordinate topLeftCorner = Coordinate(0,0,-130);
+	Vector planeNormal = Vector(Po - circle->getCenter());
+	float planeW = 200;
+	float planeH = 200;
+	Plane *plane = new Plane(topLeftCorner, planeNormal, planeW, planeH);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
   Object *obj = new Object(name, 1);
