@@ -33,7 +33,7 @@ bool writePPM(Canvas *canvas);
 int main() {
 
   Coordinate O = Coordinate(0, 0, 0);
-  Coordinate Po = Coordinate(0, 0, 0);
+  Coordinate Po = Coordinate(0,0,0);
   Color whiteColor = Color(255, 255, 255);
   float wj = 60;
   float hj = 60;
@@ -42,34 +42,41 @@ int main() {
   int nColumns = 500;
   float dx = wj / nColumns;
   float dy = hj / nLines;
-  float canvasDistance = 60;
-  float sphereDistance = 300;
+  float canvasDistance = 30;
+  float sphereDistance = 60;
   // float sphere_distance = 100;
   // inicialização da cena e da esfera
   float radius = 40;
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
-  Rubber *material = new Rubber();
-  Metal *material1 = new Metal();
-  Sphere *circle = new Sphere(center, radius, material);
+  Rubber *rubber = new Rubber();
+  Metal *metal = new Metal();
+  Plastic *plastic = new Plastic();
 
-	Coordinate topLeftCorner = Coordinate(0,0,-350);
-	Vector planeNormal = Vector(O- circle->getCenter());
-	planeNormal.normalize();
+  Sphere *circle = new Sphere(center, radius, rubber);
+
+	Coordinate floorPoint = Coordinate(0,-radius,0);
+	Vector floorNormal = Vector(0,1,0);
+
+	Coordinate backPoint = Coordinate(0,0,-200);
+	Vector backNormal = Vector(0,0,1);
+	//planeNormal.normalize();
 	float planeW = 50;
 	float planeH = 50;
-	Plane *plane = new Plane(topLeftCorner, planeNormal, planeW, planeH, material1);
+	Plane *floorPlane = new Plane(floorPoint, floorNormal, planeW, planeH, metal);
+	Plane *backPlane = new Plane(backPoint, backNormal, planeW, planeH, plastic);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
-  Object *obj = new Object(name, 2);
+  Object *obj = new Object(name, 3);
 
   obj->setShape(circle);
-  obj->setShape(plane);
-  Intensity ambientIntensity = Intensity(0.0, 0.0, 0.0);
+  obj->setShape(floorPlane);
+  obj->setShape(backPlane);
+  Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =
-      new PointLight(pointIntensity, Po);
+  PointLight *pointLight = new PointLight(pointIntensity, Coordinate(0,60,-30));
+
   scene->setObjectAt(0, obj);
 
   Intensity bgIntensity = Intensity(0, 0, 0);

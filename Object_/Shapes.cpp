@@ -73,15 +73,18 @@ Material *Plane::getMaterial() { return this->material; }
 Vector Plane::computeNormal(Coordinate P){ return this->normal;}
 
 Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
-	float t = Vector::dot(Vector(this->topLeftCorner - O),this->normal)/(Vector::dot(D,this->normal));
-	if(t>0){
+  Vector p_minusp0 = Vector(this->topLeftCorner - O);//mudei aqui
+  p_minusp0.normalize();
+	float t = Vector::dot(p_minusp0,this->normal)/(Vector::dot(D,this->normal));
+      if(t>=0){
   	Coordinate pIntersection =  (D*t) + O;
   	Vector piMinusps = Vector(pIntersection - this->topLeftCorner);
-  	piMinusps.normalize();
+  	piMinusps.normalize();/*
   	bool atPlane = Vector::dot(piMinusps,this->normal)==0.0f;
   	if(atPlane){
       return {t,INF};
-  	}
-	}
+  	}*/
+  	return {t,INF};
+  }
 	return {INF,INF};
 }

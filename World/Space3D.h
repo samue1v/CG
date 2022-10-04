@@ -16,7 +16,8 @@ public:
   Coordinate canvasToViewport(float x, float y);
   static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, int t_min,
                             int t_max) {
-    long unsigned int closest_t = INF;
+    //float change
+    float closest_t = INF;
     Shape3D *closestShape = nullptr;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);

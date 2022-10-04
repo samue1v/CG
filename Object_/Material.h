@@ -19,9 +19,9 @@ public:
 struct Rubber : Material {
 public:
   Rubber()
-      : ka(AmbientReflectiveness(Coeficients{1, 0, 0})),
-        kd(DifuseReflectiveness(Coeficients(1, 0, 0))),
-        ke(SpecularReflectiveness(Coeficients(1, 0, 0), 500)){};
+      : ka(AmbientReflectiveness(Coeficients{0.7, 0.2, 0.2})),
+        kd(DifuseReflectiveness(Coeficients(0.7, 0.2, 0.2))),
+        ke(SpecularReflectiveness(Coeficients(0.7, 0.2, 0.2), 10)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();
@@ -36,9 +36,26 @@ private:
 struct Metal : Material {
 public:
   Metal()
-      : ka(AmbientReflectiveness(Coeficients{1, 1, 1})),
-        kd(DifuseReflectiveness(Coeficients(1, 1, 1))),
-        ke(SpecularReflectiveness(Coeficients(1, 1, 1), 100)){};
+      : ka(AmbientReflectiveness(Coeficients{0.2, 0.7, 0.2})),
+        kd(DifuseReflectiveness(Coeficients(0.2, 0.7, 0.2))),
+        ke(SpecularReflectiveness(Coeficients(0,0,0), 1)){};
+
+  AmbientReflectiveness getKa();
+  DifuseReflectiveness getKd();
+  SpecularReflectiveness getKe();
+
+private:
+  AmbientReflectiveness ka;
+  DifuseReflectiveness kd;
+  SpecularReflectiveness ke;
+};
+
+struct Plastic : Material {
+public:
+  Plastic()
+      : ka(AmbientReflectiveness(Coeficients{0.3, 0.3, 0.7})),
+        kd(DifuseReflectiveness(Coeficients(0.3, 0.3, 0.7))),
+        ke(SpecularReflectiveness(Coeficients(0,0,0), 1)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();
