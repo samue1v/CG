@@ -32,7 +32,7 @@ public:
   Material *getMaterial();
   bool setMaterial(Material *material);
   bool setRadius(float newRadius);
-  int getRadius();
+  float getRadius();
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
   Vector computeNormal(Coordinate P);
@@ -42,22 +42,16 @@ public:
 class Plane : public Shape3D {
 private:
   Vector normal;
-  Coordinate topLeftCorner;
-  float height;
-  float width;
+  Coordinate planePoint;
 
 public:
   Plane();
-  Plane(Coordinate topLeftCorner, Vector normal, float width, float height, Material * material);
+  Plane(Coordinate planePoint, Vector normal, Material * material);
   Material *getMaterial();
   Vector computeNormal(Coordinate P);
   Pair<float> IntersectRay(Coordinate, Vector);
-  Coordinate getTopLeftCorner();
-  bool setTopLeftCorner(Coordinate newTopLeftCorner);
-  float getHeight();
-  bool setHeight(float newHeight);
-  float getWidth();
-  bool setWidth(float newWidth);
+  Coordinate getplanePoint();
+  bool setplanePoint(Coordinate newplanePoint);
   Vector getNormal();
   bool setNormal(Vector newNormal);
 };

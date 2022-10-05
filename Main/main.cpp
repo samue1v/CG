@@ -61,10 +61,8 @@ int main() {
 	Coordinate backPoint = Coordinate(0,0,-200);
 	Vector backNormal = Vector(0,0,1);
 	//planeNormal.normalize();
-	float planeW = 50;
-	float planeH = 50;
-	Plane *floorPlane = new Plane(floorPoint, floorNormal, planeW, planeH, metal);
-	Plane *backPlane = new Plane(backPoint, backNormal, planeW, planeH, plastic);
+	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
+	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
   Object *obj = new Object(name, 3);
@@ -75,7 +73,7 @@ int main() {
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight = new PointLight(pointIntensity, Coordinate(0,60,-30));
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,60,-30));
 
   scene->setObjectAt(0, obj);
 

@@ -7,7 +7,7 @@
 //lembrar de limpar  a classe base
 
 Light::Light() {}
-
+/*
 Intensity Light::getIntensity() { return this->intensity; }
 
 bool Light::setIntensity(Intensity i) {
@@ -23,7 +23,7 @@ bool Light::setIntensity(Intensity i) {
 Intensity Light::calcIntensity(Coordinate, Vector, Vector, Material *) {
   return Intensity();
 }
-
+*/
 AmbientLight::AmbientLight(){};
 
 AmbientLight::AmbientLight(Intensity intensity) : intensity(intensity) {}
@@ -42,7 +42,7 @@ bool AmbientLight::setIntensity(Intensity i) {
 
 Intensity AmbientLight::calcIntensity(Coordinate P, Vector N, Vector V,
                                       Material *material) {
-  return this->getIntensity()*material->getKa();
+  return this->intensity*material->getKa();
 }//alterei aqui
 
 DirectionalLight::DirectionalLight() {}
@@ -98,13 +98,13 @@ Intensity PointLight::calcIntensity(Coordinate P, Vector N, Vector V,
   L.normalize();
   float n_dot_l = Vector::dot(N, L);
   if (n_dot_l > 0) {
-    i = i + (this->getIntensity() * material->getKd() * n_dot_l);
+    i = i + (this->intensity * material->getKd() * n_dot_l);
   }
   Vector R = (N * 2.0f * Vector::dot(N, L)) - L;
   R.normalize();
   float r_dot_v = Vector::dot(R, V);
   if (r_dot_v > 0) {
-    i = i + (this->getIntensity() * material->getKe() *
+    i = i + (this->intensity * material->getKe() *
                 pow(r_dot_v, material->getKe().shininess));
   }
 

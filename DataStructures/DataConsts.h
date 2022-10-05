@@ -2,10 +2,10 @@
 #define DATACONSTS_H
 
 const float INF = 10e8;
-const unsigned char COLOR_MAX = 255;
-const unsigned char COLOR_MIN = 0;
-const unsigned char INTENSITY_MAX = 1;
-const unsigned char INTENSITY_MIN = 0;
+const float COLOR_MAX = 255;
+const float COLOR_MIN = 0;
+const float INTENSITY_MAX = 1;
+const float INTENSITY_MIN = 0;
 
 
 
