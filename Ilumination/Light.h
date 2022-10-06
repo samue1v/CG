@@ -9,11 +9,12 @@
 class Light {
 public:
   Light();
+
+
+private:
   virtual Intensity getIntensity() = 0;
   virtual bool setIntensity(Intensity) = 0;
   virtual Intensity calcIntensity(Coordinate, Vector, Vector,Material *) = 0;
-
-private:
   Intensity intensity = Intensity(1.0, 1.0, 1.0);
 };
 
