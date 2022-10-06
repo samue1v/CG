@@ -34,7 +34,7 @@ bool Sphere::setMaterial(Material *material) {
   return true;
 }
 
-Pair<float> Sphere::IntersectRay(Coordinate O, Vector D) {
+float Sphere::IntersectRay(Coordinate O, Vector D,float tMin,float tMax) {
   float r = this->getRadius();
   Vector c_minus_o = Vector((O - this->getCenter()));
   float a = Vector::dot(D, D);
@@ -43,12 +43,16 @@ Pair<float> Sphere::IntersectRay(Coordinate O, Vector D) {
 
   float discriminant = b * b - 4 * a * c;
   if (discriminant < 0) {
-    return {INF, INF};
+    return INF;
   }
 
   float t1 = (-b + sqrt(discriminant)) / (2 * a);
   float t2 = (-b - sqrt(discriminant)) / (2 * a);
-  return {t1, t2};
+
+  if(t1>=tMin && t1<=tMax && t1<t2){
+    return t1;
+  }
+  return t2;
 }
 
 Material *Sphere::getMaterial() { return (this->material); }
@@ -69,7 +73,7 @@ Material *Plane::getMaterial() { return this->material; }
 
 Vector Plane::computeNormal(Coordinate P){ return this->normal;}
 
-Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
+float Plane::IntersectRay(Coordinate O, Vector D,float tMin,float tMax){
   Vector p_minusp0 = Vector(this->planePoint - O);//mudei aqui
   //p_minusp0.normalize();
 	float t = Vector::dot(p_minusp0,this->normal)/(Vector::dot(D,this->normal));
@@ -80,9 +84,9 @@ Pair<float> Plane::IntersectRay(Coordinate O, Vector D){
 
   	bool atPlane = Vector::dot(piMinusps,this->normal)==0.0f;
   	if(atPlane){
-      return {t,INF};
+      return t;
   	}
-  	return {t,INF};
+  	return t;
   }
-	return {INF,INF};
+	return INF;
 }

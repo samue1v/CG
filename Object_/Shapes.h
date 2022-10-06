@@ -18,7 +18,7 @@ public:
   Material *material;
   virtual Material *getMaterial() = 0;
   virtual Vector computeNormal(Coordinate P) = 0;
-  virtual Pair<float> IntersectRay(Coordinate, Vector) = 0;
+  virtual float IntersectRay(Coordinate O, Vector D,float, float) = 0;
 };
 
 class Sphere : public Shape3D {
@@ -36,7 +36,7 @@ public:
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
   Vector computeNormal(Coordinate P);
-  Pair<float> IntersectRay(Coordinate O, Vector D);
+  float IntersectRay(Coordinate O, Vector D,float, float);
 };
 
 class Plane : public Shape3D {
@@ -49,7 +49,7 @@ public:
   Plane(Coordinate planePoint, Vector normal, Material * material);
   Material *getMaterial();
   Vector computeNormal(Coordinate P);
-  Pair<float> IntersectRay(Coordinate, Vector);
+  float IntersectRay(Coordinate O, Vector D,float, float);
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector getNormal();

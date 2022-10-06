@@ -14,8 +14,8 @@
 class Space3D {
 public:
   Coordinate canvasToViewport(float x, float y);
-  static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, int t_min,
-                            int t_max) {
+  static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, float t_min,
+                            float t_max) {
     //float change
     float closest_t = INF;
     Shape3D *closestShape = nullptr;
@@ -23,15 +23,9 @@ public:
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
         Shape3D *shape = object->getShapeAt(j);
-        Pair<float> pair = shape->IntersectRay(O, D);
-        float t1 = pair.left;
-        float t2 = pair.right;
-        if (t1 >= t_min && t1 < t_max && t1 < closest_t) {
-          closest_t = t1;
-          closestShape = shape;
-        }
-        if (t2 >= t_min && t2 < t_max && t2 < closest_t) {
-          closest_t = t2;
+        float t = shape->IntersectRay(O, D,t_min,t_max);
+        if (t >= t_min && t <= t_max && t < closest_t) {
+          closest_t = t;
           closestShape = shape;
         }
       }

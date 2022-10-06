@@ -6,4 +6,5 @@ template <typename T> struct Pair {
   T right;
 };
 
+
 #endif
