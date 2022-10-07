@@ -18,25 +18,25 @@ public:
   Material *material;
   virtual Material *getMaterial() = 0;
   virtual Vector computeNormal(Coordinate P) = 0;
-  virtual float IntersectRay(Coordinate O, Vector D,float, float) = 0;
+  virtual double IntersectRay(Coordinate O, Vector D,double, double) = 0;
 };
 
 class Sphere : public Shape3D {
 private:
 	AmbientLight l;
-  float radius;
+  double radius;
   Coordinate center;
 
 public:
-  Sphere(Coordinate center, float radius, Material *material);
+  Sphere(Coordinate center, double radius, Material *material);
   Material *getMaterial();
   bool setMaterial(Material *material);
-  bool setRadius(float newRadius);
-  float getRadius();
+  bool setRadius(double newRadius);
+  double getRadius();
   bool setCenter(Coordinate newCenter);
   Coordinate getCenter();
   Vector computeNormal(Coordinate P);
-  float IntersectRay(Coordinate O, Vector D,float, float);
+  double IntersectRay(Coordinate O, Vector D,double, double);
 };
 
 class Plane : public Shape3D {
@@ -49,7 +49,7 @@ public:
   Plane(Coordinate planePoint, Vector normal, Material * material);
   Material *getMaterial();
   Vector computeNormal(Coordinate P);
-  float IntersectRay(Coordinate O, Vector D,float, float);
+  double IntersectRay(Coordinate O, Vector D,double, double);
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector getNormal();

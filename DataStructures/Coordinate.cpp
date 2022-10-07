@@ -2,7 +2,7 @@
 
 Coordinate::Coordinate() {}
 
-Coordinate::Coordinate(float x, float y, float z) {
+Coordinate::Coordinate(double x, double y, double z) {
     this->x = x;
     this->y = y;
     this->z = z;

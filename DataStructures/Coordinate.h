@@ -2,12 +2,12 @@
 #define COORDINATE_H
 
 struct Coordinate {
-  float x;
-  float y;
-  float z;
+  double x;
+  double y;
+  double z;
   Coordinate();
-  Coordinate(float x, float y, float z);
-  static float dot(Coordinate a, Coordinate b) {
+  Coordinate(double x, double y, double z);
+  static double dot(Coordinate a, Coordinate b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
   }
 //pontos:
@@ -16,6 +16,9 @@ struct Coordinate {
   }
   Coordinate operator-(Coordinate right) {
     return Coordinate(x - right.x, y - right.y, z - right.z);
+  }
+  Coordinate operator*(double right) {
+    return Coordinate(x * right, y * right, z * right);
   }
 };
 #endif

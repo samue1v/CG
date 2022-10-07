@@ -13,17 +13,18 @@
 
 class Space3D {
 public:
-  Coordinate canvasToViewport(float x, float y);
-  static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, float t_min,
-                            float t_max) {
-    //float change
-    float closest_t = INF;
+  Coordinate canvasToViewport(double x, double y);
+
+  static Intensity TraceRay(Scene *scene, Coordinate O, Vector D, double t_min,
+                            double t_max) {
+    //double change
+    double closest_t = INF;
     Shape3D *closestShape = nullptr;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
         Shape3D *shape = object->getShapeAt(j);
-        float t = shape->IntersectRay(O, D,t_min,t_max);
+        double t = shape->IntersectRay(O, D,t_min,t_max);
         if (t >= t_min && t <= t_max && t < closest_t) {
           closest_t = t;
           closestShape = shape;
@@ -39,14 +40,36 @@ public:
     Vector V = D;
     V.normalize();
     N.normalize();
+
     for (int l = 0; l < scene->getNumberOfLights(); l++) {
-      i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1,
-                                                  closestShape->getMaterial());
+      Vector p_lightDir = scene->getLightAt(l)->calcDirection(P);
+      double p_lightDirLength = p_lightDir.getLength();
+      if(!Space3D::isOfuscated(P,p_lightDir,scene,closestShape,p_lightDirLength) || dynamic_cast<AmbientLight*>(scene->getLightAt(l))){
+        i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+      }
     }
+
 		if(i.getBlue()>1 || i.getRed()>1 || i.getGreen()>1){
 			i = i.normalize();
 		}
     return i;
+  }
+
+  static bool isOfuscated(Coordinate O,Vector D,Scene* scene,Shape3D * closestShape,double maxLength){
+      D.normalize();
+     for (int i = 0; i < scene->getNumberOfElements(); i++) {
+      Object *object = scene->getObjectAt(i);
+      for (int j = 0; j < object->getShapeCount(); j++) {
+
+        Shape3D *shape = object->getShapeAt(j);
+        double t = shape->IntersectRay(O, D,1,INF);
+        if(t>=1 && t<=maxLength){
+          return true;
+
+        }
+      }
+    }
+    return false;
   }
 
 private:

@@ -36,7 +36,7 @@ program: ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o .
 ../Links/scene.o:
 	g++ -o ../Links/scene.o ../World/Scene.cpp -c
 
-../Links/space.o:
+../Links/space3D.o:
 	g++ -o ../Links/space3D.o ../World/Space3D.cpp -c
 
 ../Links/main.o:

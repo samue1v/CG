@@ -4,10 +4,10 @@
 //reflexao especular tem shininess
 struct Coeficients{
   Coeficients(){};
-  Coeficients(float kr,float kg,float kb) : kr(kr),kg(kg),kb(kb){};
-  float kr;
-  float kg;
-  float kb;
+  Coeficients(double kr,double kg,double kb) : kr(kr),kg(kg),kb(kb){};
+  double kr;
+  double kg;
+  double kb;
 };
 
 class Reflectiveness {
@@ -20,7 +20,7 @@ class DifuseReflectiveness : public Reflectiveness{
 public:
   DifuseReflectiveness();
   DifuseReflectiveness(Coeficients coefs);
-  
+
 };
 
 
@@ -28,7 +28,7 @@ class AmbientReflectiveness : public Reflectiveness{
 public:
   AmbientReflectiveness();
   AmbientReflectiveness(Coeficients coefs);
-  
+
 };
 
 class SpecularReflectiveness : public Reflectiveness{

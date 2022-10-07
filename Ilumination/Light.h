@@ -1,3 +1,8 @@
+
+
+
+
+
 #ifndef LIGHT_H
 #define LIGHT_H
 
@@ -8,13 +13,15 @@
 
 class Light {
 public:
+  virtual Intensity getIntensity() = 0;
+  virtual bool setIntensity(Intensity) = 0;
+  virtual Intensity calcIntensity(Coordinate, Vector, Vector,Material *) = 0;
+  virtual Vector calcDirection(Coordinate o) = 0;
+  virtual Vector getReference() = 0;
   Light();
 
 
 private:
-  virtual Intensity getIntensity() = 0;
-  virtual bool setIntensity(Intensity) = 0;
-  virtual Intensity calcIntensity(Coordinate, Vector, Vector,Material *) = 0;
   Intensity intensity = Intensity(1.0, 1.0, 1.0);
 };
 
@@ -25,6 +32,8 @@ public:
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
   Intensity calcIntensity(Coordinate, Vector, Vector,Material *);
+  Vector calcDirection(Coordinate o);
+  Vector getReference();
 
 private:
   Intensity intensity;
@@ -39,6 +48,8 @@ public:
   bool setDirection(Vector);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
+  Vector calcDirection(Coordinate o);
+  Vector getReference();
 
 private:
   Vector direction;
@@ -54,6 +65,8 @@ public:
   bool setPosition(Coordinate);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
+  Vector calcDirection(Coordinate o);
+  Vector getReference();
 
 private:
   Coordinate position;

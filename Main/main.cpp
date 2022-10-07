@@ -35,18 +35,18 @@ int main() {
   Coordinate O = Coordinate(0, 0, 0);
   Coordinate Po = Coordinate(0,0,0);
   Color whiteColor = Color(255, 255, 255);
-  float wj = 60;
-  float hj = 60;
+  double wj = 60;
+  double hj = 60;
 
   int nLines = 500;
   int nColumns = 500;
-  float dx = wj / nColumns;
-  float dy = hj / nLines;
-  float canvasDistance = 30;
-  float sphereDistance = 60;
-  // float sphere_distance = 100;
+  double dx = wj / nColumns;
+  double dy = hj / nLines;
+  double canvasDistance = 30;
+  double sphereDistance = 60;
+  // double sphere_distance = 100;
   // inicialização da cena e da esfera
-  float radius = 40;
+  double radius = 40;
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
   Rubber *rubber = new Rubber();
@@ -65,7 +65,7 @@ int main() {
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
-  Object *obj = new Object(name, 3);
+  Object *obj = new Object(name,  3);
 
   obj->setShape(circle);
   obj->setShape(floorPlane);
@@ -74,6 +74,8 @@ int main() {
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,60,-30));
+
+
 
   scene->setObjectAt(0, obj);
 
@@ -90,9 +92,9 @@ int main() {
                               nColumns); // fazer
 
   for (int l = 0; l < nLines; l++) {
-    float y = hj / 2 - dy / 2 - l * dy;
+    double y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
-      float x = -wj / 2 + dx / 2 + c * dx;
+      double x = -wj / 2 + dx / 2 + c * dx;
       // std::cout <<"dx: " <<dx<<" dy: " << dy <<"\n";
       Vector dr = Vector(Coordinate(x, y, -canvasDistance) - Po);
       dr.normalize();

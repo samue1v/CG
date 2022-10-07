@@ -5,15 +5,15 @@
 
 class Intensity {
 public:
-  Intensity(float ir = 0, float ig = 0, float ib = 0);
-  float getRed();
-  bool setRed(float red);
-  float getGreen();
-  bool setGreen(float green);
-  float getBlue();
-  bool setBlue(float blue);
+  Intensity(double ir = 0, double ig = 0, double ib = 0);
+  double getRed();
+  bool setRed(double red);
+  double getGreen();
+  bool setGreen(double green);
+  double getBlue();
+  bool setBlue(double blue);
   Intensity normalize();
-  Intensity operator*(float right) {
+  Intensity operator*(double right) {
     return Intensity(ir * right, ig * right, ib * right);
   }
 
@@ -28,9 +28,9 @@ public:
   }
 
 private:
-  float ir;
-  float ig;
-  float ib;
+  double ir;
+  double ig;
+  double ib;
 };
 
 #endif

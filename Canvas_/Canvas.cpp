@@ -15,7 +15,7 @@ int Canvas::getNumberColumns(){
 Canvas::Canvas(Matrix<Color> *rgb,int l,int c){
   this->l = l;
   this->c = c;
-  
+
   (this->canvas) = rgb;
 }
 

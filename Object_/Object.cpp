@@ -4,7 +4,7 @@
 Object::Object(){};
 
 Object::Object(char *name,int numberOfShapes) : name(name),shapeNumMax(numberOfShapes),shapes(new Shape3D * [numberOfShapes]) ,shapeCount(0){
-    //this->shapes={nullptr};    
+    //this->shapes={nullptr};
 }
 
 

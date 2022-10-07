@@ -2,12 +2,12 @@
 #include "../DataStructures/DataConsts.h"
 #include <stdio.h>
 
-Intensity::Intensity(float red, float green, float blue)
+Intensity::Intensity(double red, double green, double blue)
     : ir(red), ig(green), ib(blue) {}
 
-float Intensity::getRed() { return this->ir; }
+double Intensity::getRed() { return this->ir; }
 
-bool Intensity::setRed(float red) {
+bool Intensity::setRed(double red) {
   if (red < 0 || red > 1) {
     return false;
   }
@@ -15,9 +15,9 @@ bool Intensity::setRed(float red) {
   return true;
 }
 
-float Intensity::getGreen() { return this->ig; }
+double Intensity::getGreen() { return this->ig; }
 
-bool Intensity::setGreen(float green) {
+bool Intensity::setGreen(double green) {
   if (green < 0 || green > 1) {
     return false;
   }
@@ -25,9 +25,9 @@ bool Intensity::setGreen(float green) {
   return true;
 }
 
-float Intensity::getBlue() { return this->ib; }
+double Intensity::getBlue() { return this->ib; }
 
-bool Intensity::setBlue(float blue) {
+bool Intensity::setBlue(double blue) {
   if (blue < 0 || blue > 1) {
     return false;
   }
@@ -36,7 +36,7 @@ bool Intensity::setBlue(float blue) {
 }
 
 Intensity Intensity::normalize() {
-  float bigger = -INF;
+  double bigger = -INF;
   if (ir > bigger) {
     bigger = ir;
   }

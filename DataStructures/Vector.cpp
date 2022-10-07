@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include "Vector.h"
 #include <math.h>
-Vector::Vector(){};
+#include "DataConsts.h"
+Vector::Vector(){
+  this->vector[0] = 0;
+  this->vector[1] = 0;
+  this->vector[2] = 0;
+}
 
-Vector::Vector(float x, float y, float z) {
+Vector::Vector(double x, double y, double z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -17,7 +22,7 @@ Vector::Vector(Coordinate cord) {
   this->lenght = this->calcLength();
 }
 
-float *Vector::getVector() { return this->vector; }
+double *Vector::getVector() { return this->vector; }
 
 bool Vector::setVector(Coordinate cord) {
   this->vector[0] = cord.x;
@@ -27,7 +32,7 @@ bool Vector::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector::setVector(float x, float y, float z) {
+bool Vector::setVector(double x, double y, double z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -35,11 +40,11 @@ bool Vector::setVector(float x, float y, float z) {
   return true;
 }
 
-float Vector::getLength(){
+double Vector::getLength(){
   return this->lenght;
 }
 
-bool Vector::setLength(float newLength){
+bool Vector::setLength(double newLength){
   if(newLength>0){
     this->lenght = newLength;
     return true;
@@ -47,14 +52,14 @@ bool Vector::setLength(float newLength){
   return false;
 }
 
-float Vector::getElementAt(int index){
+double Vector::getElementAt(int index){
   if(index>lenght){
     return false;
   }
   return vector[index];
 }
 
-float Vector::calcLength(){
+double Vector::calcLength(){
   Vector v = *this;
   return sqrt(Vector::dot(v, v));
 }

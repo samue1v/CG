@@ -9,10 +9,10 @@ public:
   Matrix();
   bool setVal(int x, int y, T val);
   T getVal(int x, int y);
-  static float dot(Matrix a, Matrix b){
+  static double dot(Matrix a, Matrix b){
     if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
       return 0;
-    } 
+    }
     else {
       return a.getVal(0, 0) * b.getVal(0, 0) + a.getVal(1, 0) * b.getVal(1, 0) +
             a.getVal(2, 0) * b.getVal(2, 0);
@@ -31,12 +31,12 @@ template <class T> Matrix<T>::Matrix(int lines, int columns) : matrix(new T * [l
   T **m[lines];
   this->matrix = *m;*/
   for (int i = 0; i < lines; i++) {
-    
-    
+
+
     T *l = new T [columns];
     this->matrix[i] = l;
   }
-  
+
 }
 
 template <class T> Matrix<T>::Matrix(){}

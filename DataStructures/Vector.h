@@ -6,19 +6,19 @@
 class Vector {
 public:
   Vector();
-  Vector(float x, float y, float z);
+  Vector(double x, double y, double z);
   Vector(Coordinate cord);
-  float getLength();
-  float getElementAt(int index);
-  bool setLength(float);
-  float *getVector();
-  bool setVector(float x, float y, float z);
+  double getLength();
+  double getElementAt(int index);
+  bool setLength(double);
+  double *getVector();
+  bool setVector(double x, double y, double z);
   bool setVector(Coordinate cord);
-  float calcLength();
+  double calcLength();
   void normalize();
-  static float dot(Vector a, Vector b) {
-    float *pa = a.getVector();
-    float *pb = b.getVector();
+  static double dot(Vector a, Vector b) {
+    double *pa = a.getVector();
+    double *pb = b.getVector();
 
     return pa[0] * pb[0] + pa[1] * pb[1] + pa[2] * pb[2];
   }
@@ -33,11 +33,15 @@ public:
                   vector[1] - right.getElementAt(1),
                   vector[2] - right.getElementAt(2));
   }
-  Vector operator*(float right) {
+  Vector operator*(double right) {
     return Vector(vector[0] * right, vector[1] * right, vector[2] * right);
   }
-  Vector operator/(float right) {
+  Vector operator/(double right) {
     Vector v = Vector(vector[0] / right, vector[1] / right, vector[2] / right);
+    return v;
+  }
+  Vector operator+(double right){
+    Vector v = Vector(vector[0] + right, vector[1] + right, vector[2] + right);
     return v;
   }
 
@@ -56,8 +60,8 @@ public:
   }
 
 private:
-  float vector[3];
-  float lenght;
+  double vector[3];
+  double lenght;
 };
 
 #endif

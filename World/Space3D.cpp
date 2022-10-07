@@ -10,4 +10,4 @@
 #include <stdio.h>
 
 
-Coordinate canvasToViewport(float x, float y){return Coordinate{0,0,0};};
+Coordinate canvasToViewport(double x, double y){return Coordinate{0,0,0};};
