@@ -26,6 +26,7 @@ reflectividade diferente para cada uma das duas)
 #include "../Object_/Shapes.h"
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
+#include <math.h>
 #include <fstream>
 #include <iostream>
 
@@ -52,8 +53,10 @@ int main() {
   Rubber *rubber = new Rubber();
   Metal *metal = new Metal();
   Plastic *plastic = new Plastic();
+  Cooper *cooper = new Cooper();
 
   Sphere *circle = new Sphere(center, radius, rubber);
+  Cylinder * cylinder = new Cylinder(center,Vector(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)),radius/3,3*radius,cooper);
 
 	Coordinate floorPoint = Coordinate(0,-radius,0);
 	Vector floorNormal = Vector(0,1,0);
@@ -67,13 +70,14 @@ int main() {
   char name[] = "circulo";
   Object *obj = new Object(name,  3);
 
-  obj->setShape(circle);
+  //obj->setShape(circle);
   obj->setShape(floorPlane);
   obj->setShape(backPlane);
+  obj->setShape(cylinder);
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,60,-30));
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,60,-30));//Coordinate(0,60,-30))
 
 
 
@@ -87,6 +91,9 @@ int main() {
 
   scene->setBackgroundCoefs(bgIntensity);
   // inicialização do canvas
+
+  Matrix<Color> * m = new Matrix<Color>(nLines, nColumns);
+
 
   Canvas *canvas = new Canvas(new Matrix<Color>(nLines, nColumns), nLines,
                               nColumns); // fazer
@@ -103,7 +110,7 @@ int main() {
       canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
     }
   }
-
+  //std::cout << "passei\n";
   writePPM(canvas);
 
   return 0;

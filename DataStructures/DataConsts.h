@@ -8,7 +8,7 @@ const double COLOR_MIN = 0;
 const double INTENSITY_MAX = 1;
 const double INTENSITY_MIN = 0;
 const double CORRECTION_FACTOR = 0.0001;
-
+enum IntersectFace {BOT,TOP,SURF};
 
 
 #endif

@@ -35,3 +35,14 @@ DifuseReflectiveness Plastic::getKd(){
 SpecularReflectiveness Plastic::getKe(){
     return this->ke;
 }
+AmbientReflectiveness Cooper::getKa(){
+    return this->ka;
+}
+
+DifuseReflectiveness Cooper::getKd(){
+    return this->kd;
+}
+
+SpecularReflectiveness Cooper::getKe(){
+    return this->ke;
+}

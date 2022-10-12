@@ -67,4 +67,21 @@ private:
   SpecularReflectiveness ke;
 };
 
+struct Cooper : Material {
+public:
+  Cooper()
+      : ka(AmbientReflectiveness(Coeficients{0.2, 0.3, 0.8})),
+        kd(DifuseReflectiveness(Coeficients(0.2, 0.3, 0.8))),
+        ke(SpecularReflectiveness(Coeficients(0.2, 0.3, 0.8), 1)){};
+
+  AmbientReflectiveness getKa();
+  DifuseReflectiveness getKd();
+  SpecularReflectiveness getKe();
+
+private:
+  AmbientReflectiveness ka;
+  DifuseReflectiveness kd;
+  SpecularReflectiveness ke;
+};
+
 #endif

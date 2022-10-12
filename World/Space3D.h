@@ -36,7 +36,7 @@ public:
     }
     Intensity i = Intensity(); // 0,0,0
     Coordinate P = (D * closest_t) + O;
-    Vector N = closestShape->computeNormal(P);
+    Vector N = closestShape->computeNormal(P,D);
     Vector V = D;
     V.normalize();
     N.normalize();
@@ -44,7 +44,7 @@ public:
     for (int l = 0; l < scene->getNumberOfLights(); l++) {
       Vector p_lightDir = scene->getLightAt(l)->calcDirection(P);
       double p_lightDirLength = p_lightDir.getLength();
-      if(!Space3D::isOfuscated(P,p_lightDir,scene,closestShape,p_lightDirLength) || dynamic_cast<AmbientLight*>(scene->getLightAt(l))){
+      if(dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,closestShape,p_lightDirLength) ){
         i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestShape->getMaterial());
       }
     }
@@ -62,8 +62,8 @@ public:
       for (int j = 0; j < object->getShapeCount(); j++) {
 
         Shape3D *shape = object->getShapeAt(j);
-        double t = shape->IntersectRay(O, D,1,INF);
-        if(t>=1 && t<=maxLength){
+        double t = shape->IntersectRay(O, D,10e-12,INF);
+        if(t>=10e-12 && t<=maxLength){
           return true;
 
         }
