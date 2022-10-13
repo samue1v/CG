@@ -77,7 +77,7 @@ int main() {
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,60,-30));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,0));//Coordinate(0,60,-30))
 
 
 
