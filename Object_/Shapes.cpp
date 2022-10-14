@@ -99,8 +99,8 @@ Cylinder::Cylinder(Coordinate baseCenter, Vector axis, double radius, double hei
   this->M = (*I) - (* ((*dpMT)*(*dpM)) );
   */
   this->topCenter = (axis*height) + baseCenter;
-  //this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
-  //this->topLid = Plane(topCenter,axis,new Cooper());
+  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
+  this->topLid = Plane(topCenter,axis,new Cooper());
   /*
   delete dpM;
   delete dpMT;
@@ -113,14 +113,14 @@ Material * Cylinder::getMaterial(){
 
 Vector Cylinder::computeNormal(Coordinate P,Vector D){
 
-  /*
+
   if(this->intersectSurf == BOT){
     return this->baseLid.computeNormal(P,D);
   }
   else if(this->intersectSurf == TOP){
-    return this->baseLid.computeNormal(P,D);
+    return this->topLid.computeNormal(P,D);
   }
-  */
+
 
   /*
   Vector n = (*(this->M) * Matrix<double>(P - this->baseCenter))->toVector();
@@ -166,50 +166,51 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   }
   t1 = (-b + std::sqrt(delta)) / (2*a);
   t2 = (-b - std::sqrt(delta)) / (2*a);
-  /*
-  tBase = this->baseLid.IntersectRay(O,D,0.001,INF);
-  tTop = this->topLid.IntersectRay(O,D,0.001,INF);
 
-  Coordinate pi = (D * tBase) + O;
-  double baseTest = Vector(pi - this->baseCenter).getLength();
-  if(baseTest > 0 && baseTest <= this->radius){
-    closest_t = tBase;
-    intersectSurf = BOT;
-  }
+  tBase = this->baseLid.IntersectRay(O,D,1,INF);
+  tTop = this->topLid.IntersectRay(O,D,1,INF);
 
-  pi = (D * tTop) + O;
-  double topTest = Vector(pi - this->topCenter).getLength();
-  if(topTest > 0 && topTest <= this->radius){
-    if(closest_t > tTop){
-      closest_t = tTop;
-      intersectSurf = TOP;
+  Coordinate pi;
+  if(tBase >1 && tBase<INF){
+    pi = (D * tBase) + O;
+    double baseTest = Vector(pi - this->baseCenter).getLength();
+    if(baseTest > 0 && baseTest < this->radius){
+      closest_t = tBase;
+      intersectSurf = BOT;
     }
   }
-  */
-  Vector piSurf1 = Vector(D*t1 +O) - Vector(this->baseCenter);
-  Vector piSurf2 = Vector(D*t2 +O) - Vector(this->baseCenter);
+
+  if(tTop >1 && tTop<INF){
+    pi = (D * tTop) + O;
+    double topTest = Vector(pi - this->topCenter).getLength();
+    if(topTest > 0 && topTest < this->radius){
+      if(closest_t > tTop){
+        closest_t = tTop;
+        intersectSurf = TOP;
+      }
+    }
+  }
+
+  Vector piSurf1 = Vector((D*t1 +O) - this->baseCenter);
+  Vector piSurf2 = Vector((D*t2 +O) - this->baseCenter);
 
   double surfT1 = Vector::dot(piSurf1,this->axis);
   double surfT2 = Vector::dot(piSurf2,this->axis);
   double surfClosest_t;
   if(surfT1 > 0 && surfT1 <= this->height){
-    if(t1 > 0){
-      surfClosest_t = t1;
+    if(t1 > 0 && t1<closest_t){
+      closest_t = t1;
+      this->intersectSurf = SURF;
     }
   }
 
 
   if(surfT2 > 0 && surfT2 <= this->height){
-    if(t2 > 0){
-      surfClosest_t = t2;
+    if(t2 > 0 && t2< closest_t){
+      closest_t = t2;
+      this->intersectSurf = SURF;
     }
   }
-
-  if(surfClosest_t < closest_t){
-    this->intersectSurf = SURF;
-    closest_t = surfClosest_t;
-  }
-  //std::cout << "passei\n";
 
   return closest_t;
 

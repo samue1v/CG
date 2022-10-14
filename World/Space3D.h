@@ -62,8 +62,8 @@ public:
       for (int j = 0; j < object->getShapeCount(); j++) {
 
         Shape3D *shape = object->getShapeAt(j);
-        double t = shape->IntersectRay(O, D,10e-12,INF);
-        if(t>=10e-12 && t<=maxLength){
+        double t = shape->IntersectRay(O, D,1,INF);
+        if(t>=1 && t<=maxLength){
           return true;
 
         }
