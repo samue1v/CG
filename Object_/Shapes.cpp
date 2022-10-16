@@ -89,22 +89,9 @@ Cylinder::Cylinder(Coordinate baseCenter, Vector axis, double radius, double hei
 : baseCenter(baseCenter),  axis(axis), radius(radius), height(height){
 
   this->material = material;
-  /*
-  Matrix<double> * dpM = new Matrix<double>(axis);
-
-  Matrix<double> * dpMT = dpM->transpose();
-
-  Matrix<double> * I = Matrix<double>::identity(3,3);
-
-  this->M = (*I) - (* ((*dpMT)*(*dpM)) );
-  */
   this->topCenter = (axis*height) + baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
   this->topLid = Plane(topCenter,axis,new Cooper());
-  /*
-  delete dpM;
-  delete dpMT;
-  delete I;*/
 }
 
 Material * Cylinder::getMaterial(){
@@ -144,19 +131,6 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   double tBase;
   double tTop;
   Vector w = Vector(O-this->baseCenter);
-  //w.normalize();
-  /*
-  Matrix<double> * matrixD = new Matrix<double>(D);
-
-  Matrix<double> * matrixW2 = new Matrix<double>(w*2);
-  Matrix<double> * matrixW = new Matrix<double>(w);
-  a = (*(*(matrixD) * (*(this->M))) * (*(matrixD->transpose())))->getVal(0,0);
-  b = (*(*(matrixW2) * (*(this->M))) * (*(matrixD->transpose())))->getVal(0,0);
-  c = (* (*(matrixD) * (*(this->M)) ) * ( *(matrixW->transpose()) ))->getVal(0,0) - (this->radius * this->radius);
-  delete matrixD;
-  delete matrixW2;
-  delete matrixW;
-  */
   a = 1-(Vector::dot(D,this->axis)*Vector::dot(D,this->axis));
   b = 2*(Vector::dot(w,D) - (Vector::dot(w,this->axis) * Vector::dot(D,this->axis)));
   c = Vector::dot(w,w) - (Vector::dot(w,this->axis)*Vector::dot(w,this->axis)) - (this->radius * this->radius);
@@ -213,6 +187,87 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   }
 
   return closest_t;
+}
+
+Cone::Cone(){}
+
+Cone::Cone(Coordinate baseCenter,Vector axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
+  this->material = material;
+  this->cosTeta = this->height /(sqrt(radius*radius + height*height));
+  this->vertex = (axis*height)+baseCenter;
+  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
+
+}
+
+Material * Cone::getMaterial(){
+  return this->material;
+}
+
+Vector Cone::computeNormal(Coordinate P,Vector D){
+  Vector pv = Vector(this->vertex - P);
+  double xvLength = pv.getLength()/this->cosTeta; 
+  Coordinate x = (this->axis*(this->height-xvLength)) + this->baseCenter;
+  Vector n = Vector(P - x);
+  n.normalize();
+  return n;
+}
+
+double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
+  double a, b, c, t1, t2;
+  double delta;
+  double beta;
+  double tBase;
+  double closest_t = INF;
+  
+  Matrix<double,3,1> dr = Matrix<double,3,1>(D);
+  Matrix<double,3,1> dc = Matrix<double,3,1>(this->axis);
+  Vector wv = Vector(this->vertex - O);
+  beta = ((this->radius*this->radius)+(this->height*this->height))/(this->height*this->height);
+  Matrix<double,3,1> w = Matrix<double,3,1>(wv);
+  Matrix<double,3,3> dc_dct = dc*dc.transpose();
+  Matrix<double,3,3> M = Matrix<double,3,3>::identity() - ((dc_dct)*beta);
+  a = (dr.transpose()*M*dr).getVal(0,0);
+  b = -2*((dr.transpose()*M*w).getVal(0,0));
+  c = (w.transpose()*M*w).getVal(0,0);
+  delta = (b*b) - (4*a*c);
+  if(delta<0){
+    return closest_t;
+  }
+
+  t1 = (-b + std::sqrt(delta)) / (2*a);
+  t2 = (-b - std::sqrt(delta)) / (2*a);
+
+  tBase = this->baseLid.IntersectRay(O,D,tMin,tMax);
+  if(tBase < closest_t){
+    closest_t = tBase;
+    this->intersectSurf = BOT;
+  }
+
+  Coordinate surfp1  =(D*t1 +O);
+  Coordinate surfp2 = (D*t2 +O);
+
+  Vector vectorPi1V = Vector(this->vertex - surfp1);
+  Vector vectorPi2V = Vector(this->vertex - surfp2);
+
+  double surfProjectionLength1 = Vector::dot(vectorPi1V,D);
+  double surfProjectionLength2 = Vector::dot(vectorPi2V,D);
+  if(surfProjectionLength1 > 0 && surfProjectionLength1<=this->height){
+    if(t1<closest_t){
+      closest_t = t1;
+      this->intersectSurf = SURF;
+    }
+  }
+
+  if(surfProjectionLength2 > 0 && surfProjectionLength2<=this->height){
+    if(t2<closest_t){
+      closest_t = t2;
+      this->intersectSurf = SURF;
+    }
+  }
+
+  return closest_t;
+
+
 
 
 

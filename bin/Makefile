@@ -1,10 +1,10 @@
 all: program
 
-program: ../Links/canvas.o ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/main.o 
-	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/canvas.o -o program
+program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/main.o #../Links/canvas.o
+	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o -o program
 
-../Links/canvas.o: ../Canvas_/Canvas.cpp ../Canvas_/Canvas.h
-	g++ -o ../Links/canvas.o ../Canvas_/Canvas.cpp -c
+#../Links/canvas.o: ../Canvas_/Canvas.cpp ../Canvas_/Canvas.h
+#	g++ -o ../Links/canvas.o ../Canvas_/Canvas.cpp -c
 
 ../Links/coordinate.o: ../DataStructures/Coordinate.cpp ../DataStructures/Coordinate.h
 	g++ -o ../Links/coordinate.o ../DataStructures/Coordinate.cpp -c
@@ -41,3 +41,6 @@ program: ../Links/canvas.o ../Links/coordinate.o ../Links/vector.o ../Links/colo
 
 ../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h
 	g++ -o ../Links/main.o ../Main/main.cpp -c
+
+clean:
+	cd ../Links && rm *.o

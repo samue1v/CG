@@ -30,7 +30,32 @@ reflectividade diferente para cada uma das duas)
 #include <fstream>
 #include <iostream>
 
-bool writePPM(Canvas *canvas);
+template<int l,int k>
+bool writePPM(Canvas<l,k> *canvas) {
+  std::ofstream myfile;
+  Matrix<Color,l,k> *m = canvas->getCanvas();
+  myfile.open("image.ppm");
+  myfile << "P3\n";
+  myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns()
+         << '\n';
+  myfile << 255 << '\n';
+  unsigned char RGBarray[6];
+  RGBarray[1] = ' ';
+  RGBarray[3] = ' ';
+  RGBarray[5] = ' ';
+
+  for (int i = 0; i < canvas->getNumberLines(); i++) {
+    for (int j = 0; j < canvas->getNumberColumns(); j++) {
+      // std::cout << (int)m->getVal(i, j).red <<"\n";
+      myfile << ' ' << (int)m->getVal(i, j).red << ' '
+             << (int)m->getVal(i, j).green << ' ' << (int)m->getVal(i, j).blue
+             << ' ';
+    }
+    myfile << '\n';
+  }
+  return true;
+}
+
 int main() {
 
   Coordinate O = Coordinate(0, 0, 0);
@@ -39,8 +64,8 @@ int main() {
   double wj = 60;
   double hj = 60;
 
-  int nLines = 500;
-  int nColumns = 500;
+  const int nLines = 500;
+  const int nColumns = 500;
   double dx = wj / nColumns;
   double dy = hj / nLines;
   double canvasDistance = 30;
@@ -68,9 +93,9 @@ int main() {
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
-  Object *obj = new Object(name,  3);
+  Object *obj = new Object(name,  4);
 
-  //obj->setShape(circle);
+  obj->setShape(circle);
   obj->setShape(floorPlane);
   obj->setShape(backPlane);
   obj->setShape(cylinder);
@@ -92,11 +117,10 @@ int main() {
   scene->setBackgroundCoefs(bgIntensity);
   // inicialização do canvas
 
-  Matrix<Color> * m = new Matrix<Color>(nLines, nColumns);
+  Matrix<Color,nLines,nColumns> * m = new Matrix<Color,nLines,nColumns>();
 
 
-  Canvas *canvas = new Canvas(new Matrix<Color>(nLines, nColumns), nLines,
-                              nColumns); // fazer
+  Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>(m); // fazer
 
   for (int l = 0; l < nLines; l++) {
     double y = hj / 2 - dy / 2 - l * dy;
@@ -111,32 +135,10 @@ int main() {
     }
   }
   //std::cout << "passei\n";
-  writePPM(canvas);
+  writePPM<nLines,nColumns>(canvas);
 
   return 0;
 }
 
-bool writePPM(Canvas *canvas) {
-  std::ofstream myfile;
-  Matrix<Color> *m = canvas->getCanvas();
-  myfile.open("image.ppm");
-  myfile << "P3\n";
-  myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns()
-         << '\n';
-  myfile << 255 << '\n';
-  unsigned char RGBarray[6];
-  RGBarray[1] = ' ';
-  RGBarray[3] = ' ';
-  RGBarray[5] = ' ';
 
-  for (int i = 0; i < canvas->getNumberLines(); i++) {
-    for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      // std::cout << (int)m->getVal(i, j).red <<"\n";
-      myfile << ' ' << (int)m->getVal(i, j).red << ' '
-             << (int)m->getVal(i, j).green << ' ' << (int)m->getVal(i, j).blue
-             << ' ';
-    }
-    myfile << '\n';
-  }
-  return true;
-}
+

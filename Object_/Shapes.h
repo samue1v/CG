@@ -68,7 +68,7 @@ class Cylinder : public Shape3D{
 
   double height;
   double radius;
-  Matrix<double> * M;
+  Matrix<double,3,3> * M;
   public:
   Cylinder();
   Cylinder(Coordinate, Vector, double, double,Material*);
@@ -76,6 +76,25 @@ class Cylinder : public Shape3D{
   Vector computeNormal(Coordinate P,Vector D);
   double IntersectRay(Coordinate O, Vector D,double, double);
 
+};
+
+class Cone : public Shape3D{
+  private:
+  Coordinate baseCenter;
+  Coordinate vertex;
+  IntersectFace intersectSurf;
+  Vector axis;
+  Plane baseLid;
+  double radius;
+  double cosTeta;
+  double height;
+  double baseRadius;
+  public:
+  Cone();
+  Cone(Coordinate, Vector, double, double,Material*);
+  Material *getMaterial();
+  Vector computeNormal(Coordinate P,Vector D);
+  double IntersectRay(Coordinate O, Vector D,double, double);
 };
 
 #endif

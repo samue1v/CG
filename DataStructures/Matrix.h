@@ -4,154 +4,162 @@
 #include <iostream>
 #include "Vector.h"
 #include "Pair.h"
+#include "DataConsts.h"
 
-template <class T >class Matrix {
-public:
-  Matrix(int lines, int columns);
-  Matrix(Vector v);
-  Matrix();
-  bool setVal(int x, int y, T val);
-  Pair<int> getDimensions();
-  Matrix<T> * transpose();
-
-
-
-  T getVal(int x, int y);
-
-  Vector toVector();
-
-  static double dot(Matrix a, Matrix b){
-    if (!(a.nColumns == b.nColumns && a.nLines == b.nLines)) {
-      return 0;
-    }
-    else {
-      return a.getVal(0, 0) * b.getVal(0, 0) + a.getVal(1, 0) * b.getVal(1, 0) +
-            a.getVal(2, 0) * b.getVal(2, 0);
-    }
-  }
-
-  static Matrix<T> * identity(int nLines,int nColumns){
-    Matrix<T> * t = new Matrix<T>(nColumns,nLines);
-    for(int i = 0;i<nLines;i++){
-      for(int j = 0;j<nColumns;j++){
-         if(i==j){
-           t->setVal(i,j,1);
-         }
-         else{
-           t->setVal(i,j,0);
-         }
-      }
-    }
-  return t;
-  }
-
-  Matrix<T> * operator*(Matrix<T> md){
-    if(this->nColumns != md.getDimensions().left){
-      std::cout<<"fudeu\n";
-      return nullptr;
-    }
-
-    Matrix<T> * m = new Matrix<T>(this->nLines,md.getDimensions().right);
-    for(int i =0;i<this->nLines;i++){
-      for(int j = 0;j<md.getDimensions().right;j++){
-        T r = this->calcSum(md,i,j);
-        //std::cout<<r;
-        //std::cout<<"\n";
-        m->setVal(i,j,r);
-
-      }
-    }
-    return m;
-  }
-  Matrix<T> * operator-(Matrix<T> md){
-    if((this->nLines != md.getDimensions().left)&&(this->nColumns != md.getDimensions().right)){
-      return nullptr;
-    }
-    Matrix<T> * m = new Matrix<T>(this->nLines,md.getDimensions().right);
-    for(int i =0;i<this->nLines;i++){
-      for(int j = 0;j<md.getDimensions().right;j++){
-        m->setVal(i,j,this->getVal(i,j) - md.getVal(i,j));
-
-      }
-    }
-    return m;
-  }
-
+template <class T,int rows, int columns >class Matrix {
 private:
   int nLines;
   int nColumns;
-  T calcSum(Matrix<T>,int,int);
-  T **matrix;
-};
+  //T calcSum(Matrix<T,int,int>,int,int);
+  T matrix[rows][columns];
 
-template <class T> Matrix<T>::Matrix(int lines, int columns) : matrix(new T * [lines]){
-  this->nLines = lines;
-  this->nColumns = columns;
-  for (int i = 0; i < lines; i++) {
+public:
+  Matrix(Vector v);
+  //Matrix<T,columns,rows> transpose();
 
-
-    T *l = new T [columns];
-    this->matrix[i] = l;
+  T * operator[](int i) {
+        return matrix[i];
   }
-}
-
-
-template <class T> Matrix<T>::Matrix(Vector v) : matrix(new double * [1]){
-  this->nLines = 1;
-  this->nColumns =3;
-  for (int i = 0; i < this->nLines; i++) {
-
-
-    T *l = new T [this->nColumns];
-    this->matrix[i] = l;
-  }
-  this->setVal(0,0,v.getElementAt(0));
-  this->setVal(0,1,v.getElementAt(1));
-  this->setVal(0,2,v.getElementAt(2));
-
-}
-
-template <class T> Matrix<T>::Matrix(){}
-
-template <class T> T Matrix<T>::getVal(int x, int y) {
-  return (this->matrix)[x][y];
-}
-
-template <class T> Pair<int> Matrix<T>::getDimensions(){
-  return {this->nLines,this->nColumns};
-}
-
-template <class T> bool Matrix<T>::setVal(int x, int y, T val) {
-  (this->matrix)[x][y] = val;
-  return true;
-}
-
-template <class T> Matrix<T> * Matrix<T>::transpose(){
-    Matrix<T> * t = new Matrix<T>(this->nColumns,this->nLines);
-    for(int i = 0;i<this->nLines;i++){
-      for(int j = 0;j<this->nColumns;j++){
-         t->setVal(j,i,this->getVal(i,j));
+  Matrix(){
+    this->nLines = rows;
+    this->nColumns = columns;
+    for(int i=0;i<rows;i++){
+      for(int j=0;j<columns;j++){
+        this->setVal(i,j,T());
       }
     }
-  return t;
-}
+  }
 
+  T getVal(int x, int y) {
+    return (this->matrix)[x][y];
+  }
 
+  Pair<int> getDimensions(){
+    return {this->nLines,this->nColumns};
+  }
 
-template <class T> T Matrix<T>::calcSum(Matrix<T> md,int line,int column){
+  bool setVal(int x, int y, T val) {
+    matrix[x][y] = val;
+    return true;
+  }
+
+  static Matrix<T,rows,columns> identity(){
+    Matrix<T,rows,columns> t = Matrix<T,rows,columns>();
+    for(int i = 0;i<rows;i++){
+      for(int j = 0;j<columns;j++){
+         if(i==j){
+           t.setVal(i,j,1);
+         }
+         else{
+           t.setVal(i,j,0);
+         }
+      }
+    }
+    return t;
+  }
+  template <class C,int l,int k>
+  Matrix<C,rows,k> operator*(Matrix<C,l,k> md){
+    if(this->nColumns != md.getDimensions().left){
+      return Matrix<C,rows,k>();
+    }
+
+    Matrix<C,rows,k> m = Matrix<C,rows,k>();
+    for(int i =0;i<this->nLines;i++){
+      for(int j = 0;j<md.getDimensions().right;j++){
+        C r = this->calcSum(md,i,j);
+        m.setVal(i,j,r);
+
+      }
+    }
+    return m;
+  }
+  template <int l,int k>
+  T calcSum(Matrix<T,l,k> md,int line,int column){
   T sum = 0;
   for(int i =0;i<this->nColumns;i++){
     sum = sum + (this->getVal(line,i)*md.getVal(i,column));
   }
   return sum;
+  }
+  
+  Matrix<T,rows,columns> operator-(Matrix<T,rows,columns> md){
+    if((this->nLines != md.getDimensions().left)&&(this->nColumns != md.getDimensions().right)){
+      return Matrix<T,rows,columns>();
+    }
+    Matrix<T,rows,columns> m = Matrix<T,rows,columns>();
+    for(int i =0;i<rows;i++){
+      for(int j = 0;j<columns;j++){
+        m.setVal(i,j,this->getVal(i,j) - md.getVal(i,j));
+      }
+    }
+    return m;
+  }
+
+  Matrix<T,rows,columns> operator*(double scalar){
+    Matrix<T,rows,columns> m = Matrix<T,rows,columns>();
+    for(int i =0;i<rows;i++){
+      for(int j = 0;j<columns;j++){
+        m.setVal(i,j,this->getVal(i,j)*scalar);
+      }
+    }
+    return m;
+  }
+
+  Matrix<T,columns,rows> transpose(){
+    Matrix<T,columns,rows> t = Matrix<T,columns,rows>();
+    for(int i = 0;i<this->nLines;i++){
+      for(int j = 0;j<this->nColumns;j++){
+         t.setVal(j,i,this->getVal(i,j));
+      }
+    }
+  return t;
 }
 
+  
+};
+
+template<class T,int n1 ,int n2 > inline std::ostream& operator<<(std::ostream& os, Matrix<T,n1,n2>& m){
+    Pair<int> dim = m.getDimensions(); 
+    T val;
+    for(int i=0;i<dim.left;i++){
+      for(int j=0;j<dim.right;j++){
+        val = m.getVal(i,j);
+        os<<val;
+        os <<"  ";
+      }
+      os<<"\n";
+    }
+    return os;
+}
+
+
+
+
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector v){
+  this->nLines = 3;
+  this->nColumns =1;
+  for (int i = 0; i < this->nLines; i++) {
+    this->matrix[i][0] = v.getElementAt(i);
+  }
+}
+
+
+
+
+
+
+
+
+
+/*
 template <class T> Vector Matrix<T>::toVector(){
-  Matrix<T> *m = this;
+  Matrix<T> m = this;
   if(this->nLines>this->nColumns){
     m = this->transpose();
   }
   return Vector(m->getVal(0,0),m->getVal(0,1),m->getVal(0,2));
 }
+*/
+
 
 #endif

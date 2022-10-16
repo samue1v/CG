@@ -2,6 +2,7 @@
 #define COLOR_H
 #include "Reflect.h"
 #include "Intensity.h"
+#include <iostream>
 struct Color {
   double red;
   double green;
@@ -14,5 +15,6 @@ struct Color {
   Color operator*(Intensity right) {
     return Color(red * right.getRed(), green * right.getGreen(), blue * right.getBlue());
   }
+  friend std::ostream& operator<<(std::ostream& os, Color &c);
 };
 #endif
