@@ -84,4 +84,21 @@ private:
   SpecularReflectiveness ke;
 };
 
+struct Marble : Material {
+public:
+  Marble()
+      : ka(AmbientReflectiveness(Coeficients{0.8, 0.3, 0.2})),
+        kd(DifuseReflectiveness(Coeficients(0.8, 0.3, 0.2))),
+        ke(SpecularReflectiveness(Coeficients(0.8, 0.3, 0.2), 1)){};
+
+  AmbientReflectiveness getKa();
+  DifuseReflectiveness getKd();
+  SpecularReflectiveness getKe();
+
+private:
+  AmbientReflectiveness ka;
+  DifuseReflectiveness kd;
+  SpecularReflectiveness ke;
+};
+
 #endif

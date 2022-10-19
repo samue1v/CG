@@ -135,10 +135,11 @@ template<class T,int n1 ,int n2 > inline std::ostream& operator<<(std::ostream& 
 
 
 
-template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector v){
-  this->nLines = 3;
-  this->nColumns =1;
-  for (int i = 0; i < this->nLines; i++) {
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector v){  
+  //std::cout<<v.getElementAt(2)<<'\n';
+  this->nLines = l;
+  this->nColumns = 1;
+  for (int i = 0; i < l; i++) {
     this->matrix[i][0] = v.getElementAt(i);
   }
 }

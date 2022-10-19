@@ -79,9 +79,15 @@ int main() {
   Metal *metal = new Metal();
   Plastic *plastic = new Plastic();
   Cooper *cooper = new Cooper();
+  Marble *marble = new Marble();
 
   Sphere *circle = new Sphere(center, radius, rubber);
-  Cylinder * cylinder = new Cylinder(center,Vector(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3)),radius/3,3*radius,cooper);
+  Vector cylinderAxis = Vector(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
+  Cylinder * cylinder = new Cylinder(center,cylinderAxis,radius/3,3*radius,cooper);
+  Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
+  double coneRadius = 1.5*radius;
+  Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
+  //Cone * cone = new Cone(Coordinate(0,0,-100),Vector(-1,0,0),radius,radius*2,marble);
 
 	Coordinate floorPoint = Coordinate(0,-radius,0);
 	Vector floorNormal = Vector(0,1,0);
@@ -93,12 +99,13 @@ int main() {
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
   Scene *scene = new Scene(1, 2);
   char name[] = "circulo";
-  Object *obj = new Object(name,  4);
+  Object *obj = new Object(name,  5);
 
   obj->setShape(circle);
   obj->setShape(floorPlane);
   obj->setShape(backPlane);
   obj->setShape(cylinder);
+  obj->setShape(cone);  
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);

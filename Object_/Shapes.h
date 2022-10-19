@@ -88,7 +88,6 @@ class Cone : public Shape3D{
   double radius;
   double cosTeta;
   double height;
-  double baseRadius;
   public:
   Cone();
   Cone(Coordinate, Vector, double, double,Material*);

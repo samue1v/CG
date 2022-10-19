@@ -6,6 +6,7 @@ Vector::Vector(){
   this->vector[0] = 0;
   this->vector[1] = 0;
   this->vector[2] = 0;
+  this->maxIndex = 2;
 }
 
 Vector::Vector(double x, double y, double z) {
@@ -13,6 +14,7 @@ Vector::Vector(double x, double y, double z) {
   this->vector[1] = y;
   this->vector[2] = z;
   this->lenght = this->calcLength();
+  this->maxIndex = 2;
 }
 
 Vector::Vector(Coordinate cord) {
@@ -20,6 +22,7 @@ Vector::Vector(Coordinate cord) {
   this->vector[1] = cord.y;
   this->vector[2] = cord.z;
   this->lenght = this->calcLength();
+  this->maxIndex = 2;
 }
 
 double *Vector::getVector() { return this->vector; }
@@ -53,7 +56,7 @@ bool Vector::setLength(double newLength){
 }
 
 double Vector::getElementAt(int index){
-  if(index>lenght){
+  if(index>this->maxIndex){
     return false;
   }
   return vector[index];

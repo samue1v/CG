@@ -22,6 +22,12 @@ public:
 
     return pa[0] * pb[0] + pa[1] * pb[1] + pa[2] * pb[2];
   }
+  static Vector cross(Vector a, Vector b) {
+    double cx = (a.getElementAt(1)*b.getElementAt(2)) - (a.getElementAt(2)*b.getElementAt(1));
+    double cy = (a.getElementAt(2)*b.getElementAt(0)) - (a.getElementAt(0)*b.getElementAt(2));
+    double cz = (a.getElementAt(0)*b.getElementAt(1)) - (a.getElementAt(1)*b.getElementAt(0));
+    return Vector(cx,cy,cz);
+  }
 
   Vector operator/(Vector right) {
     return Vector(vector[0] / right.getElementAt(0),
@@ -62,6 +68,7 @@ public:
 private:
   double vector[3];
   double lenght;
+  int maxIndex;
 };
 
 #endif

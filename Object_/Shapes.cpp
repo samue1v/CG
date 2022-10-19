@@ -193,7 +193,7 @@ Cone::Cone(){}
 
 Cone::Cone(Coordinate baseCenter,Vector axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
   this->material = material;
-  this->cosTeta = this->height /(sqrt(radius*radius + height*height));
+  this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
   this->vertex = (axis*height)+baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
 
@@ -204,11 +204,20 @@ Material * Cone::getMaterial(){
 }
 
 Vector Cone::computeNormal(Coordinate P,Vector D){
+  if(this->intersectSurf == BOT){
+    return this->axis*-1;
+  }
+  /*
   Vector pv = Vector(this->vertex - P);
   double xvLength = pv.getLength()/this->cosTeta; 
   Coordinate x = (this->axis*(this->height-xvLength)) + this->baseCenter;
   Vector n = Vector(P - x);
   n.normalize();
+  */
+  Vector vp = Vector(this->vertex - P);
+  Vector nbar = Vector::cross(vp,this->axis);
+  Vector n = Vector::cross(nbar,vp);
+  n.normalize();  
   return n;
 }
 
@@ -218,29 +227,54 @@ double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   double beta;
   double tBase;
   double closest_t = INF;
+  Vector wv = Vector(this->vertex - O);
   
   Matrix<double,3,1> dr = Matrix<double,3,1>(D);
   Matrix<double,3,1> dc = Matrix<double,3,1>(this->axis);
-  Vector wv = Vector(this->vertex - O);
+  Matrix<double,1,3> dct = dc.transpose();
+  //t1 norm
+  //wv.normalize();
   beta = ((this->radius*this->radius)+(this->height*this->height))/(this->height*this->height);
   Matrix<double,3,1> w = Matrix<double,3,1>(wv);
-  Matrix<double,3,3> dc_dct = dc*dc.transpose();
+  Matrix<double,3,3> dc_dct = dc*dct;
   Matrix<double,3,3> M = Matrix<double,3,3>::identity() - ((dc_dct)*beta);
+  //std::cout<< this->height <<'\n';
+  //std::cout<< beta <<'\n';
+  //std::cout<< M;
+  //std::cout<< '\n';
+  //exit(-1);
   a = (dr.transpose()*M*dr).getVal(0,0);
   b = -2*((dr.transpose()*M*w).getVal(0,0));
   c = (w.transpose()*M*w).getVal(0,0);
+  
+  /*
+  double drDotdc = Vector::dot(D,this->axis);
+  a = (drDotdc*drDotdc) - Vector::dot(D,D)*(this->cosTeta*this->cosTeta);
+  b = 2*((Vector::dot(wv,D)*(cosTeta*cosTeta)) - (Vector::dot(wv,this->axis) * drDotdc));
+  c = (Vector::dot(wv,this->axis)*Vector::dot(wv,this->axis)) - Vector::dot(wv,wv)*(this->cosTeta*this->cosTeta);
+  */
   delta = (b*b) - (4*a*c);
   if(delta<0){
     return closest_t;
   }
-
-  t1 = (-b + std::sqrt(delta)) / (2*a);
-  t2 = (-b - std::sqrt(delta)) / (2*a);
+  if(a!=0){
+    t1 = (-b + std::sqrt(delta)) / (2*a);
+    t2 = (-b - std::sqrt(delta)) / (2*a);
+  }
+  else{
+    t1 = -c/b;
+    t2 = t1;
+  }
 
   tBase = this->baseLid.IntersectRay(O,D,tMin,tMax);
-  if(tBase < closest_t){
-    closest_t = tBase;
-    this->intersectSurf = BOT;
+  
+  if(tBase <INF && tBase>1){
+    Coordinate pi = (D*tBase) + O;
+    double baseTest = Vector(pi - this->baseCenter).getLength();
+    if(baseTest > 0 && baseTest<=this->radius){
+      closest_t = tBase;
+      this->intersectSurf = BOT;
+    }
   }
 
   Coordinate surfp1  =(D*t1 +O);
@@ -249,28 +283,22 @@ double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   Vector vectorPi1V = Vector(this->vertex - surfp1);
   Vector vectorPi2V = Vector(this->vertex - surfp2);
 
-  double surfProjectionLength1 = Vector::dot(vectorPi1V,D);
-  double surfProjectionLength2 = Vector::dot(vectorPi2V,D);
+  double surfProjectionLength1 = Vector::dot(vectorPi1V,this->axis);
+  double surfProjectionLength2 = Vector::dot(vectorPi2V,this->axis);
   if(surfProjectionLength1 > 0 && surfProjectionLength1<=this->height){
-    if(t1<closest_t){
+    if(t1>0 && t1<closest_t){
       closest_t = t1;
       this->intersectSurf = SURF;
     }
   }
 
   if(surfProjectionLength2 > 0 && surfProjectionLength2<=this->height){
-    if(t2<closest_t){
+    if(t2>0 && t2<closest_t){
       closest_t = t2;
       this->intersectSurf = SURF;
     }
   }
 
   return closest_t;
-
-
-
-
-
-
 
 }

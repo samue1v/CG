@@ -46,3 +46,14 @@ DifuseReflectiveness Cooper::getKd(){
 SpecularReflectiveness Cooper::getKe(){
     return this->ke;
 }
+AmbientReflectiveness Marble::getKa(){
+    return this->ka;
+}
+
+DifuseReflectiveness Marble::getKd(){
+    return this->kd;
+}
+
+SpecularReflectiveness Marble::getKe(){
+    return this->ke;
+}
