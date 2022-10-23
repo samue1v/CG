@@ -29,6 +29,7 @@ reflectividade diferente para cada uma das duas)
 #include <math.h>
 #include <fstream>
 #include <iostream>
+#include <SDL2/SDL.h>
 
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
@@ -54,6 +55,26 @@ bool writePPM(Canvas<l,k> *canvas) {
     myfile << '\n';
   }
   return true;
+}
+
+template<int l,int k>
+bool SDLdraw(Canvas<l,k> *canvas){
+  Matrix<Color,l,k> *m = canvas->getCanvas();
+  SDL_Window * window =nullptr;
+  SDL_Renderer* renderer = nullptr;
+  SDL_Init(SDL_INIT_VIDEO);
+  SDL_CreateWindowAndRenderer(500,500, 0, &window, &renderer);
+  SDL_SetRenderDrawColor(renderer,0,0,0,255);
+  SDL_RenderClear(renderer);
+  for(int i =0;i<l;i++){
+    for(int j = 0;j>k;j++){
+        SDL_SetRenderDrawColor(renderer,(int)m->getVal(i, j).red,(int)m->getVal(i, j).green,(int)m->getVal(i, j).blue,255);
+        SDL_RenderDrawPoint(renderer,i,j);
+
+    }
+  }
+  SDL_RenderPresent(renderer);
+  SDL_Delay(10000);
 }
 
 int main() {

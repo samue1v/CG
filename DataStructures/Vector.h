@@ -51,6 +51,7 @@ public:
     return v;
   }
 
+
   /*
   Operadores:
   + : vetor+ponto -> ponto
