@@ -1,7 +1,7 @@
 all: program
 
-program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/main.o #../Links/canvas.o
-	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o -o program
+program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/meshUtils.o ../Links/main.o #../Links/canvas.o
+	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/meshUtils.o -lSDL2 -o program
 
 #../Links/canvas.o: ../Canvas_/Canvas.cpp ../Canvas_/Canvas.h
 #	g++ -o ../Links/canvas.o ../Canvas_/Canvas.cpp -c
@@ -38,6 +38,9 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 
 ../Links/space3D.o: ../World/Space3D.cpp ../World/Space3D.h ../DataStructures/Coordinate.h
 	g++ -o ../Links/space3D.o ../World/Space3D.cpp -c
+
+../Links/meshUtils.o: ../DataStructures/MeshUtils.cpp ../DataStructures/MeshUtils.h
+	g++ -o ../Links/meshUtils.o ../DataStructures/MeshUtils.cpp -c
 
 ../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h
 	g++ -o ../Links/main.o ../Main/main.cpp -c

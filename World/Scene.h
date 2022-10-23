@@ -8,7 +8,7 @@
 
 class Scene {
 public:
-  Scene(int numObjects, int numLights);
+  Scene(int maxObjects, int numLights);
   Object *getObjectAt(int index); // olhar depois
   bool setObjectAt(int index, Object *obj);
   Object *getObjectsArray();
@@ -22,6 +22,7 @@ public:
 
 private:
   Intensity background_coefs;
+  int maxObjects;
   int numObjects;
   int numLights;
   Object **elements;

@@ -5,9 +5,9 @@
 #include <iostream>
 #include <stdio.h>
 
-Scene::Scene(int numObjects, int numLights)
-    : numObjects(numObjects), numLights(numLights),
-      elements(new Object *[numObjects]), lights(new Light *[numLights]) {}
+Scene::Scene(int maxObjects, int numLights)
+    : maxObjects(maxObjects), numLights(numLights),numObjects(0),
+      elements(new Object *[maxObjects]), lights(new Light *[numLights]) {}
 Object *Scene::getObjectAt(int index) {
   Object *p = (this->elements)[index];
   return p;
@@ -15,11 +15,11 @@ Object *Scene::getObjectAt(int index) {
 Object *Scene::getObjectsArray() { return *(this->elements); }
 
 bool Scene::setObjectAt(int index, Object *polygon) {
-  if (index >= numObjects || index < 0) {
+  if (index >= maxObjects || index < 0) {
     return false;
   }
   this->elements[index] = polygon;
-
+  numObjects++;
   return true;
 }
 

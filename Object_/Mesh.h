@@ -9,7 +9,6 @@
 class Mesh{
     private:
     Array<Vertex> vertexList;
-    //Array<Edge> edgeList;
     Array<Vector> normalList;
     Array<Face> faceList;
     std::ifstream file;
@@ -18,6 +17,7 @@ class Mesh{
     void parseN(const std::string & line);
     void parseF(const std::string & line);
     void parseFile();
+    double IntersectRay();
     public:
     Mesh();
     Mesh(const std::string & filePath);

@@ -7,9 +7,7 @@ reflectividade diferente para cada uma das duas)
 - reflectividade para luz ambiente (Ka)
 - verificar a implementação dos operadores @ ok
 - manter os valores referente a cor entre 0 e 1, apenas multiplicar por 255 ok
-
 -- checar na linha 59 e 62 se Intensity precisa ser ponteiro ou não ok
-
 -- checar herança de reflect
 */
 
@@ -75,6 +73,7 @@ bool SDLdraw(Canvas<l,k> *canvas){
   }
   SDL_RenderPresent(renderer);
   SDL_Delay(10000);
+  return true;
 }
 
 int main() {
@@ -134,7 +133,7 @@ int main() {
 
 
 
-  scene->setObjectAt(0, obj);
+  //scene->setObjectAt(0, obj);
 
   Intensity bgIntensity = Intensity(0, 0, 0);
 
@@ -167,6 +166,5 @@ int main() {
 
   return 0;
 }
-
 
 
