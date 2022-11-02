@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include "Object.h"
+#include "Mesh.h"
 
 Object::Object(){};
 
-Object::Object(char *name,int numberOfShapes) : name(name),shapeNumMax(numberOfShapes),shapes(new Shape3D * [numberOfShapes]) ,shapeCount(0){
+Object::Object(char *name) : name(name){
     //this->shapes={nullptr};
 }
 
 
 int Object::getShapeCount(){
-    return this->shapeCount;
+    return (this->shapes).getSize();
 }
 
+int Object::getMeshCount(){
+    return (this->meshes).getSize();
+}
 char * Object::getName(){
     return this->name;
 }
@@ -22,30 +26,20 @@ bool Object::setName(char * newName){
 }
 
 bool Object::setShape(Shape3D * shape){
-    if(shapeCount<shapeNumMax){
-        this->shapes[shapeCount]=shape;
-        shapeCount++;
-        return true;
-
-    }
-    return false;
+    (this->shapes).push(shape);
+    return true;
 }
 
-bool Object::setShapeAt(Shape3D * shape,int index){
-    if(index<shapeNumMax && index>=0){
-        int temp = shapeCount;
-        if(!shapes[index]){
-            shapeCount++;
-        }
-        this->shapes[temp]=shape;
-        return true;
-    }
-    return false;
+bool Object::setMesh(Mesh * newMesh){
+    (this->meshes).push(newMesh);
+    return true;
+}
+
+Mesh * Object::getMeshAt(int index){
+    return this->meshes.getElementAt(index);
 }
 
 Shape3D * Object::getShapeAt(int index){
-    if(index<shapeNumMax && index>=0){
-        return this->shapes[index];
-    }
-    return nullptr;
+    
+    return (this->shapes).getElementAt(index);
 }

@@ -195,7 +195,7 @@ Cone::Cone(Coordinate baseCenter,Vector axis,double radius,double height,Materia
   this->material = material;
   this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
   this->vertex = (axis*height)+baseCenter;
-  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
+  this->baseLid = Plane(baseCenter,axis*-1,material);
 
 }
 
@@ -214,10 +214,16 @@ Vector Cone::computeNormal(Coordinate P,Vector D){
   Vector n = Vector(P - x);
   n.normalize();
   */
+  /*
   Vector vp = Vector(this->vertex - P);
   Vector nbar = Vector::cross(vp,this->axis);
   Vector n = Vector::cross(nbar,vp);
-  n.normalize();  
+  n.normalize();  */
+  Vector v_pi = Vector(this->vertex - P);
+  v_pi.normalize();
+  Vector nbar = Vector::cross(v_pi,this->axis);
+  Vector n = Vector::cross(nbar,v_pi);
+  n.normalize();
   return n;
 }
 

@@ -20,7 +20,6 @@ private:
   T * container;
 };
 
-
 template <class T> 
 Array<T>::Array() {
   this->capacity = 10;

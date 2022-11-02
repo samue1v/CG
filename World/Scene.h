@@ -8,25 +8,20 @@
 
 class Scene {
 public:
-  Scene(int maxObjects, int numLights);
-  Object *getObjectAt(int index); // olhar depois
-  bool setObjectAt(int index, Object *obj);
-  Object *getObjectsArray();
+  Scene();
+  Object *getObjectAt(int index);
+  bool setObject(Object *obj);
   int getNumberOfElements();
   Light *getLightAt(int index);
-  // bool setLight(Light * l);
+  bool setLight(Light * l);
   int getNumberOfLights();
-  bool setLightAt(int index, Light *l);
   bool setBackgroundCoefs(Intensity coefs);
   Intensity getBackgroundCoefs();
 
 private:
   Intensity background_coefs;
-  int maxObjects;
-  int numObjects;
-  int numLights;
-  Object **elements;
-  Light **lights;
+  Array<Object *> elements;
+  Array<Light *> lights;
 };
 
 #endif

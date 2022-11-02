@@ -49,8 +49,8 @@ Face::Face(int v1, int v2, int v3,int n){
     this->v3 = v3;
     this->n = n;
     edges.push(Edge(v1,v3));
-    edges.push(Edge(v3,v2));
     edges.push(Edge(v2,v1));
+    //edges.push(Edge(v2,v1));
 
 }
 

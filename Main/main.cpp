@@ -106,7 +106,8 @@ int main() {
   Cylinder * cylinder = new Cylinder(center,cylinderAxis,radius/3,3*radius,cooper);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
   double coneRadius = 1.5*radius;
-  Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
+  //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
+  Cone * cone = new Cone(center,cylinderAxis*-1,coneRadius,coneRadius/3,marble);
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector(-1,0,0),radius,radius*2,marble);
 
 	Coordinate floorPoint = Coordinate(0,-radius,0);
@@ -117,13 +118,14 @@ int main() {
 	//planeNormal.normalize();
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
-  Scene *scene = new Scene(1, 2);
+  Scene *scene = new Scene();
   char name[] = "circulo";
-  Object *obj = new Object(name,  5);
+  //Object *obj = new Object(name,  3);
+  Object *obj = new Object(name);
 
-  obj->setShape(circle);
+  //obj->setShape(circle);
   obj->setShape(floorPlane);
-  obj->setShape(backPlane);
+  //obj->setShape(backPlane);
   obj->setShape(cylinder);
   obj->setShape(cone);  
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
@@ -133,13 +135,13 @@ int main() {
 
 
 
-  //scene->setObjectAt(0, obj);
+  scene->setObject(obj);
 
   Intensity bgIntensity = Intensity(0, 0, 0);
 
-  scene->setLightAt(0, ambientLight);
+  scene->setLight(ambientLight);
   // scene->setLightAt(1, dirLight);
-  scene->setLightAt(1, pointLight);
+  scene->setLight(pointLight);
 
   scene->setBackgroundCoefs(bgIntensity);
   // inicialização do canvas
@@ -166,5 +168,3 @@ int main() {
 
   return 0;
 }
-
-

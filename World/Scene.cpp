@@ -5,25 +5,21 @@
 #include <iostream>
 #include <stdio.h>
 
-Scene::Scene(int maxObjects, int numLights)
-    : maxObjects(maxObjects), numLights(numLights),numObjects(0),
-      elements(new Object *[maxObjects]), lights(new Light *[numLights]) {}
-Object *Scene::getObjectAt(int index) {
-  Object *p = (this->elements)[index];
-  return p;
-}
-Object *Scene::getObjectsArray() { return *(this->elements); }
+Scene::Scene(){}
 
-bool Scene::setObjectAt(int index, Object *polygon) {
-  if (index >= maxObjects || index < 0) {
-    return false;
-  }
-  this->elements[index] = polygon;
-  numObjects++;
+Object *Scene::getObjectAt(int index) {
+  return (this->elements).getElementAt(index);
+}
+
+
+
+bool Scene::setObject(Object *polygon){
+  (this->elements).push(polygon);
   return true;
 }
 
-int Scene::getNumberOfElements() { return this->numObjects; }
+
+int Scene::getNumberOfElements() { return (this->elements).getSize(); }
 
 bool Scene::setBackgroundCoefs(Intensity coefs) {
   if (coefs.getRed() > INTENSITY_MAX || coefs.getRed() < INTENSITY_MIN ||
@@ -36,20 +32,12 @@ bool Scene::setBackgroundCoefs(Intensity coefs) {
 }
 Intensity Scene::getBackgroundCoefs() { return this->background_coefs; }
 
-bool Scene::setLightAt(int index, Light *light) {
-  if (index >= numLights || index < 0) {
-    return false;
-  }
-  this->lights[index] = light;
-
+bool Scene::setLight(Light * light){
+  (this->lights).push(light);
   return true;
 }
-
-Light *Scene::getLightAt(int index) {
-  if (index >= numLights || index < 0) {
-    return nullptr;
-  }
-  return lights[index];
+Light *Scene::getLightAt(int index){
+  return (this->lights).getElementAt(index);
 }
 
-int Scene::getNumberOfLights() { return this->numLights; }
+int Scene::getNumberOfLights() { return (this->lights).getSize(); }
