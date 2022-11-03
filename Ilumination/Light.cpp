@@ -24,34 +24,34 @@ bool AmbientLight::setIntensity(Intensity i) {
   return true;
 }
 
-Intensity AmbientLight::calcIntensity(Coordinate P, Vector N, Vector V,
+Intensity AmbientLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                       Material *material) {
   return this->intensity*material->getKa();
 }
 
-Vector AmbientLight::calcDirection(Coordinate O){
-  return Vector();
+Vector3D AmbientLight::calcDirection(Coordinate O){
+  return Vector3D();
 }
 
-Vector AmbientLight::getReference(){
-  return Vector();
+Vector3D AmbientLight::getReference(){
+  return Vector3D();
 }
 
 DirectionalLight::DirectionalLight() {}
 
-DirectionalLight::DirectionalLight(Intensity intensity, Vector direction)
+DirectionalLight::DirectionalLight(Intensity intensity, Vector3D direction)
     : intensity(intensity), direction(direction) {}
 
-Intensity DirectionalLight::calcIntensity(Coordinate P, Vector N, Vector V,
+Intensity DirectionalLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                           Material *material) {
-  Vector L = this->direction;
+  Vector3D L = this->direction;
   Intensity i = Intensity();
-  double n_dot_l = Vector::dot(N, L);
+  double n_dot_l = Vector3D::dot(N, L);
   if (n_dot_l > 0) {
     i = i + this->getIntensity() * material->getKd() * n_dot_l;
   }
-  Vector R = N * 2.0f * Vector::dot(N, L) - L;
-  double r_dot_l = Vector::dot(R, L);
+  Vector3D R = N * 2.0f * Vector3D::dot(N, L) - L;
+  double r_dot_l = Vector3D::dot(R, L);
   if (r_dot_l > 0) {
     i = i + this->getIntensity() * material->getKe() * r_dot_l;
   }
@@ -71,19 +71,19 @@ bool DirectionalLight::setIntensity(Intensity i) {
   return true;
 }
 
-Vector DirectionalLight::getDirection() { return this->direction; }
+Vector3D DirectionalLight::getDirection() { return this->direction; }
 
-bool DirectionalLight::setDirection(Vector newVector) {
+bool DirectionalLight::setDirection(Vector3D newVector) {
   this->direction = newVector;
   return true;
 }
 
-Vector DirectionalLight::calcDirection(Coordinate o){
+Vector3D DirectionalLight::calcDirection(Coordinate o){
   return this->direction*-1.0f;
 }
 
-Vector DirectionalLight::getReference(){
-  return Vector();
+Vector3D DirectionalLight::getReference(){
+  return Vector3D();
 }
 
 PointLight::PointLight() {}
@@ -91,18 +91,18 @@ PointLight::PointLight() {}
 PointLight::PointLight(Intensity intensity, Coordinate position)
     : intensity(intensity), position(position) {}
 
-Intensity PointLight::calcIntensity(Coordinate P, Vector N, Vector V,
+Intensity PointLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                     Material *material) {
   Intensity i = Intensity();
-  Vector L = Vector(this->position - P);
+  Vector3D L = Vector3D(this->position - P);
   L.normalize();
-  double n_dot_l = Vector::dot(N, L);
+  double n_dot_l = Vector3D::dot(N, L);
   if (n_dot_l > 0) {
     i = i + (this->intensity * material->getKd() * n_dot_l);
   }
-  Vector R = (N * 2.0f * Vector::dot(N, L)) - L;
+  Vector3D R = (N * 2.0f * Vector3D::dot(N, L)) - L;
   R.normalize();
-  double r_dot_v = Vector::dot(R, V);
+  double r_dot_v = Vector3D::dot(R, V);
   if (r_dot_v > 0) {
     i = i + (this->intensity * material->getKe() *
                 pow(r_dot_v, material->getKe().shininess));
@@ -130,11 +130,11 @@ bool PointLight::setPosition(Coordinate newVector) {
   return true;
 }
 
-Vector PointLight::calcDirection(Coordinate O){
-  Vector dr = Vector(this->position - O);
+Vector3D PointLight::calcDirection(Coordinate O){
+  Vector3D dr = Vector3D(this->position - O);
   return dr;
 }
 
-Vector PointLight::getReference(){
+Vector3D PointLight::getReference(){
   return this->position;
 }

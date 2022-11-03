@@ -15,9 +15,9 @@ class Light {
 public:
   virtual Intensity getIntensity() = 0;
   virtual bool setIntensity(Intensity) = 0;
-  virtual Intensity calcIntensity(Coordinate, Vector, Vector,Material *) = 0;
-  virtual Vector calcDirection(Coordinate o) = 0;
-  virtual Vector getReference() = 0;
+  virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
+  virtual Vector3D calcDirection(Coordinate o) = 0;
+  virtual Vector3D getReference() = 0;
   Light();
 
 
@@ -31,9 +31,9 @@ public:
   AmbientLight(Intensity intensity);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
-  Intensity calcIntensity(Coordinate, Vector, Vector,Material *);
-  Vector calcDirection(Coordinate o);
-  Vector getReference();
+  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
+  Vector3D calcDirection(Coordinate o);
+  Vector3D getReference();
 
 private:
   Intensity intensity;
@@ -42,17 +42,17 @@ private:
 class DirectionalLight : public Light {
 public:
   DirectionalLight();
-  DirectionalLight(Intensity intensity, Vector direction);
-  Intensity calcIntensity(Coordinate, Vector, Vector,Material *);
-  Vector getDirection();
-  bool setDirection(Vector);
+  DirectionalLight(Intensity intensity, Vector3D direction);
+  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
+  Vector3D getDirection();
+  bool setDirection(Vector3D);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
-  Vector calcDirection(Coordinate o);
-  Vector getReference();
+  Vector3D calcDirection(Coordinate o);
+  Vector3D getReference();
 
 private:
-  Vector direction;
+  Vector3D direction;
   Intensity intensity;
 };
 
@@ -60,13 +60,13 @@ class PointLight : public Light {
 public:
   PointLight();
   PointLight(Intensity intensity, Coordinate position);
-  Intensity calcIntensity(Coordinate, Vector, Vector,Material *);
+  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Coordinate getPosition();
   bool setPosition(Coordinate);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
-  Vector calcDirection(Coordinate o);
-  Vector getReference();
+  Vector3D calcDirection(Coordinate o);
+  Vector3D getReference();
 
 private:
   Coordinate position;

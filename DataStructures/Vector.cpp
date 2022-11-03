@@ -2,14 +2,14 @@
 #include "Vector.h"
 #include <math.h>
 #include "DataConsts.h"
-Vector::Vector(){
+Vector3D::Vector3D(){
   this->vector[0] = 0;
   this->vector[1] = 0;
   this->vector[2] = 0;
   this->maxIndex = 2;
 }
 
-Vector::Vector(double x, double y, double z) {
+Vector3D::Vector3D(double x, double y, double z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -17,7 +17,7 @@ Vector::Vector(double x, double y, double z) {
   this->maxIndex = 2;
 }
 
-Vector::Vector(Coordinate cord) {
+Vector3D::Vector3D(Coordinate cord) {
   this->vector[0] = cord.x;
   this->vector[1] = cord.y;
   this->vector[2] = cord.z;
@@ -25,9 +25,9 @@ Vector::Vector(Coordinate cord) {
   this->maxIndex = 2;
 }
 
-double *Vector::getVector() { return this->vector; }
+double *Vector3D::getVector() { return this->vector; }
 
-bool Vector::setVector(Coordinate cord) {
+bool Vector3D::setVector(Coordinate cord) {
   this->vector[0] = cord.x;
   this->vector[1] = cord.y;
   this->vector[2] = cord.z;
@@ -35,7 +35,7 @@ bool Vector::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector::setVector(double x, double y, double z) {
+bool Vector3D::setVector(double x, double y, double z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -43,11 +43,11 @@ bool Vector::setVector(double x, double y, double z) {
   return true;
 }
 
-double Vector::getLength(){
+double Vector3D::getLength(){
   return this->lenght;
 }
 
-bool Vector::setLength(double newLength){
+bool Vector3D::setLength(double newLength){
   if(newLength>0){
     this->lenght = newLength;
     return true;
@@ -55,19 +55,106 @@ bool Vector::setLength(double newLength){
   return false;
 }
 
-double Vector::getElementAt(int index){
+double Vector3D::getElementAt(int index){
   if(index>this->maxIndex){
     return false;
   }
   return vector[index];
 }
 
-double Vector::calcLength(){
-  Vector v = *this;
-  return sqrt(Vector::dot(v, v));
+double Vector3D::calcLength(){
+  Vector3D v = *this;
+  return sqrt(Vector3D::dot(v, v));
 }
 
-void Vector::normalize(){
+void Vector3D::normalize(){
+  this->vector[0] = (this->vector[0])/(this->lenght);
+  this->vector[1] = (this->vector[1])/(this->lenght);
+  this->vector[2] = (this->vector[2])/(this->lenght);
+  this->lenght = 1;
+}
+
+Vector4D::Vector4D(){
+  this->vector[0] = 0;
+  this->vector[1] = 0;
+  this->vector[2] = 0;
+  this->vector[3] = 1;
+  this->maxIndex = 3;
+}
+
+Vector4D::Vector4D(double x, double y, double z) {
+  this->vector[0] = x;
+  this->vector[1] = y;
+  this->vector[2] = z;
+  this->vector[3] = 1;
+  this->lenght = this->calcLength();
+
+  this->maxIndex = 3;
+}
+
+Vector4D::Vector4D(Vector3D v3d){
+    this->vector[0] = v3d.getElementAt(0);
+    this->vector[1] = v3d.getElementAt(1);
+    this->vector[2] = v3d.getElementAt(2);
+    this->vector[3] = 1;
+    this->lenght = this->calcLength();
+    this->maxIndex = 3;
+}
+
+Vector4D::Vector4D(Coordinate cord) {
+  this->vector[0] = cord.x;
+  this->vector[1] = cord.y;
+  this->vector[2] = cord.z;
+  this->vector[3] = 1;
+  this->lenght = this->calcLength();
+
+  this->maxIndex = 3;
+}
+
+double *Vector4D::getVector() { return this->vector; }
+
+bool Vector4D::setVector(Coordinate cord) {
+  this->vector[0] = cord.x;
+  this->vector[1] = cord.y;
+  this->vector[2] = cord.z;
+  this->lenght = this->calcLength();
+  return true;
+}
+
+bool Vector4D::setVector(double x, double y, double z,double h) {
+  this->vector[0] = x;
+  this->vector[1] = y;
+  this->vector[2] = z;
+  this->vector[3] = h;
+  this->lenght = this->calcLength();
+  return true;
+}
+
+double Vector4D::getLength(){
+  return this->lenght;
+}
+
+bool Vector4D::setLength(double newLength){
+  if(newLength>0){
+    this->lenght = newLength;
+    return true;
+  }
+  return false;
+}
+
+double Vector4D::getElementAt(int index){
+  if(index>this->maxIndex){
+    return false;
+  }
+  return vector[index];
+}
+
+double Vector4D::calcLength(){
+  Vector4D v = *this;
+  return sqrt(Vector4D::dot(v, v));
+}
+
+void Vector4D::normalize(){
   this->vector[0] = (this->vector[0])/(this->lenght);
   this->vector[1] = (this->vector[1])/(this->lenght);
   this->vector[2] = (this->vector[2])/(this->lenght);

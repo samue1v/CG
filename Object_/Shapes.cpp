@@ -34,12 +34,12 @@ bool Sphere::setMaterial(Material *material) {
   return true;
 }
 
-double Sphere::IntersectRay(Coordinate O, Vector D,double tMin,double tMax) {
+double Sphere::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax) {
   double r = this->getRadius();
-  Vector c_minus_o = Vector((O - this->getCenter()));
-  double a = Vector::dot(D, D);
-  double b = 2 * Vector::dot(c_minus_o, D);
-  double c = Vector::dot(c_minus_o, c_minus_o) - r * r;
+  Vector3D c_minus_o = Vector3D((O - this->getCenter()));
+  double a = Vector3D::dot(D, D);
+  double b = 2 * Vector3D::dot(c_minus_o, D);
+  double c = Vector3D::dot(c_minus_o, c_minus_o) - r * r;
 
   double discriminant = b * b - 4 * a * c;
   if (discriminant < 0) {
@@ -57,13 +57,13 @@ double Sphere::IntersectRay(Coordinate O, Vector D,double tMin,double tMax) {
 
 Material *Sphere::getMaterial() { return (this->material); }
 
-Vector Sphere::computeNormal(Coordinate P,Vector D) {
-  return Vector(P - (this->center));
+Vector3D Sphere::computeNormal(Coordinate P,Vector3D D) {
+  return Vector3D(P - (this->center));
 }
 
 Plane::Plane() {}
 
-Plane::Plane(Coordinate planePoint, Vector normal, Material * material) {
+Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material) {
   this->planePoint = planePoint;
   this->normal = normal;
   this->material = material;
@@ -71,12 +71,12 @@ Plane::Plane(Coordinate planePoint, Vector normal, Material * material) {
 
 Material *Plane::getMaterial() { return this->material; }
 
-Vector Plane::computeNormal(Coordinate P,Vector D){ return this->normal;}
+Vector3D Plane::computeNormal(Coordinate P,Vector3D D){ return this->normal;}
 
-double Plane::IntersectRay(Coordinate O, Vector D,double tMin,double tMax){
-  Vector p_minuspi = Vector(this->planePoint - O);//mudei aqui
-  double denom = Vector::dot(D,this->normal);
-    double t = Vector::dot(p_minuspi,this->normal) / denom;
+double Plane::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax){
+  Vector3D p_minuspi = Vector3D(this->planePoint - O);//mudei aqui
+  double denom = Vector3D::dot(D,this->normal);
+    double t = Vector3D::dot(p_minuspi,this->normal) / denom;
     if(t>=tMin && t<tMax){
   	 return t;
     }
@@ -85,7 +85,7 @@ double Plane::IntersectRay(Coordinate O, Vector D,double tMin,double tMax){
 
 Cylinder::Cylinder(){}
 
-Cylinder::Cylinder(Coordinate baseCenter, Vector axis, double radius, double height,Material * material)
+Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double height,Material * material)
 : baseCenter(baseCenter),  axis(axis), radius(radius), height(height){
 
   this->material = material;
@@ -98,7 +98,7 @@ Material * Cylinder::getMaterial(){
   return this->material;
 }
 
-Vector Cylinder::computeNormal(Coordinate P,Vector D){
+Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
 
 
   if(this->intersectSurf == BOT){
@@ -110,30 +110,30 @@ Vector Cylinder::computeNormal(Coordinate P,Vector D){
 
 
   /*
-  Vector n = (*(this->M) * Matrix<double>(P - this->baseCenter))->toVector();
+  Vector3D n = (*(this->M) * Matrix<double>(P - this->baseCenter))->toVector();
   n.normalize();
   */
-  Vector V = Vector(P - this->baseCenter);
+  Vector3D V = Vector3D(P - this->baseCenter);
   double lv = V.getLength();
   double pll = sqrt(lv*lv - (this->radius*this->radius));
   Coordinate Pl = ((this->axis) * pll) + this->baseCenter;
-  Vector N = Vector(P-Pl);
+  Vector3D N = Vector3D(P-Pl);
   N.normalize();
 
   return N;
 }
 
-double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
+double Cylinder::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
   double a,b,c;
   double delta;
   double closest_t = INF;
   double t1, t2;
   double tBase;
   double tTop;
-  Vector w = Vector(O-this->baseCenter);
-  a = 1-(Vector::dot(D,this->axis)*Vector::dot(D,this->axis));
-  b = 2*(Vector::dot(w,D) - (Vector::dot(w,this->axis) * Vector::dot(D,this->axis)));
-  c = Vector::dot(w,w) - (Vector::dot(w,this->axis)*Vector::dot(w,this->axis)) - (this->radius * this->radius);
+  Vector3D w = Vector3D(O-this->baseCenter);
+  a = 1-(Vector3D::dot(D,this->axis)*Vector3D::dot(D,this->axis));
+  b = 2*(Vector3D::dot(w,D) - (Vector3D::dot(w,this->axis) * Vector3D::dot(D,this->axis)));
+  c = Vector3D::dot(w,w) - (Vector3D::dot(w,this->axis)*Vector3D::dot(w,this->axis)) - (this->radius * this->radius);
   delta = (b*b) - (4*a*c);
   if(delta<0){
     return closest_t;
@@ -147,7 +147,7 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   Coordinate pi;
   if(tBase >1 && tBase<INF){
     pi = (D * tBase) + O;
-    double baseTest = Vector(pi - this->baseCenter).getLength();
+    double baseTest = Vector3D(pi - this->baseCenter).getLength();
     if(baseTest > 0 && baseTest < this->radius){
       closest_t = tBase;
       intersectSurf = BOT;
@@ -156,7 +156,7 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
 
   if(tTop >1 && tTop<INF){
     pi = (D * tTop) + O;
-    double topTest = Vector(pi - this->topCenter).getLength();
+    double topTest = Vector3D(pi - this->topCenter).getLength();
     if(topTest > 0 && topTest < this->radius){
       if(closest_t > tTop){
         closest_t = tTop;
@@ -165,11 +165,11 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
     }
   }
 
-  Vector piSurf1 = Vector((D*t1 +O) - this->baseCenter);
-  Vector piSurf2 = Vector((D*t2 +O) - this->baseCenter);
+  Vector3D piSurf1 = Vector3D((D*t1 +O) - this->baseCenter);
+  Vector3D piSurf2 = Vector3D((D*t2 +O) - this->baseCenter);
 
-  double surfT1 = Vector::dot(piSurf1,this->axis);
-  double surfT2 = Vector::dot(piSurf2,this->axis);
+  double surfT1 = Vector3D::dot(piSurf1,this->axis);
+  double surfT2 = Vector3D::dot(piSurf2,this->axis);
   double surfClosest_t;
   if(surfT1 > 0 && surfT1 <= this->height){
     if(t1 > 0 && t1<closest_t){
@@ -191,7 +191,7 @@ double Cylinder::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
 
 Cone::Cone(){}
 
-Cone::Cone(Coordinate baseCenter,Vector axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
+Cone::Cone(Coordinate baseCenter,Vector3D axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
   this->material = material;
   this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
   this->vertex = (axis*height)+baseCenter;
@@ -203,37 +203,37 @@ Material * Cone::getMaterial(){
   return this->material;
 }
 
-Vector Cone::computeNormal(Coordinate P,Vector D){
+Vector3D Cone::computeNormal(Coordinate P,Vector3D D){
   if(this->intersectSurf == BOT){
     return this->axis*-1;
   }
   /*
-  Vector pv = Vector(this->vertex - P);
+  Vector3D pv = Vector3D(this->vertex - P);
   double xvLength = pv.getLength()/this->cosTeta; 
   Coordinate x = (this->axis*(this->height-xvLength)) + this->baseCenter;
-  Vector n = Vector(P - x);
+  Vector3D n = Vector3D(P - x);
   n.normalize();
   */
   /*
-  Vector vp = Vector(this->vertex - P);
-  Vector nbar = Vector::cross(vp,this->axis);
-  Vector n = Vector::cross(nbar,vp);
+  Vector3D vp = Vector3D(this->vertex - P);
+  Vector3D nbar = Vector3D::cross(vp,this->axis);
+  Vector3D n = Vector3D::cross(nbar,vp);
   n.normalize();  */
-  Vector v_pi = Vector(this->vertex - P);
+  Vector3D v_pi = Vector3D(this->vertex - P);
   v_pi.normalize();
-  Vector nbar = Vector::cross(v_pi,this->axis);
-  Vector n = Vector::cross(nbar,v_pi);
+  Vector3D nbar = Vector3D::cross(v_pi,this->axis);
+  Vector3D n = Vector3D::cross(nbar,v_pi);
   n.normalize();
   return n;
 }
 
-double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
+double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
   double a, b, c, t1, t2;
   double delta;
   double beta;
   double tBase;
   double closest_t = INF;
-  Vector wv = Vector(this->vertex - O);
+  Vector3D wv = Vector3D(this->vertex - O);
   
   Matrix<double,3,1> dr = Matrix<double,3,1>(D);
   Matrix<double,3,1> dc = Matrix<double,3,1>(this->axis);
@@ -254,10 +254,10 @@ double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   c = (w.transpose()*M*w).getVal(0,0);
   
   /*
-  double drDotdc = Vector::dot(D,this->axis);
-  a = (drDotdc*drDotdc) - Vector::dot(D,D)*(this->cosTeta*this->cosTeta);
-  b = 2*((Vector::dot(wv,D)*(cosTeta*cosTeta)) - (Vector::dot(wv,this->axis) * drDotdc));
-  c = (Vector::dot(wv,this->axis)*Vector::dot(wv,this->axis)) - Vector::dot(wv,wv)*(this->cosTeta*this->cosTeta);
+  double drDotdc = Vector3D::dot(D,this->axis);
+  a = (drDotdc*drDotdc) - Vector3D::dot(D,D)*(this->cosTeta*this->cosTeta);
+  b = 2*((Vector3D::dot(wv,D)*(cosTeta*cosTeta)) - (Vector3D::dot(wv,this->axis) * drDotdc));
+  c = (Vector3D::dot(wv,this->axis)*Vector3D::dot(wv,this->axis)) - Vector3D::dot(wv,wv)*(this->cosTeta*this->cosTeta);
   */
   delta = (b*b) - (4*a*c);
   if(delta<0){
@@ -276,7 +276,7 @@ double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   
   if(tBase <INF && tBase>1){
     Coordinate pi = (D*tBase) + O;
-    double baseTest = Vector(pi - this->baseCenter).getLength();
+    double baseTest = Vector3D(pi - this->baseCenter).getLength();
     if(baseTest > 0 && baseTest<=this->radius){
       closest_t = tBase;
       this->intersectSurf = BOT;
@@ -286,11 +286,11 @@ double Cone::IntersectRay(Coordinate O, Vector D, double tMin, double tMax){
   Coordinate surfp1  =(D*t1 +O);
   Coordinate surfp2 = (D*t2 +O);
 
-  Vector vectorPi1V = Vector(this->vertex - surfp1);
-  Vector vectorPi2V = Vector(this->vertex - surfp2);
+  Vector3D vectorPi1V = Vector3D(this->vertex - surfp1);
+  Vector3D vectorPi2V = Vector3D(this->vertex - surfp2);
 
-  double surfProjectionLength1 = Vector::dot(vectorPi1V,this->axis);
-  double surfProjectionLength2 = Vector::dot(vectorPi2V,this->axis);
+  double surfProjectionLength1 = Vector3D::dot(vectorPi1V,this->axis);
+  double surfProjectionLength2 = Vector3D::dot(vectorPi2V,this->axis);
   if(surfProjectionLength1 > 0 && surfProjectionLength1<=this->height){
     if(t1>0 && t1<closest_t){
       closest_t = t1;

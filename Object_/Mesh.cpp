@@ -19,6 +19,15 @@ Mesh::Mesh(const std::string & filePath){
     this->inverseMatrix = Matrix<double,4,4>::identity();
 }
 
+Mesh::Mesh(const std::string & filePath,Material * material){
+    std::ifstream file;
+    file.open(filePath);
+    parseFile(file);
+    this->transformMatrix = Matrix<double,4,4>::identity();
+    this->inverseMatrix = Matrix<double,4,4>::identity();
+    this->material = material;
+}
+
 void Mesh::parseFile(std::ifstream & file){
     std::string line;
     while(file){
@@ -101,7 +110,7 @@ void Mesh::parseN(const std::string & line){
         val = std::stod(valueStr);
         a.push(val);
     }
-    this->normalList.push(Vector(a.getElementAt(0),a.getElementAt(1),a.getElementAt(2)));
+    this->normalList.push(Vector3D(a.getElementAt(0),a.getElementAt(1),a.getElementAt(2)));
 }
 
 void Mesh::parseF(const std::string & line){
@@ -132,12 +141,20 @@ void Mesh::parseF(const std::string & line){
     }
 }
 
-double Mesh::IntersectRay(Coordinate O,Vector D,double t_min,double t_max){
+Material * Mesh::getMaterial(){
+    return this->material;
+}
+
+Vector3D Mesh::computeNormal(){
+    return this->intersectedNormal;
+}
+
+double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
     Coordinate V0, V1, V2;
     double b0,b1,b2;
     Plane plane;
     Face current_face;
-    Vector N;
+    Vector3D N;
     double t_plane;
     double closest_t = INF;
     for(int i = 0;i<this->faceList.getSize();i++){
@@ -148,19 +165,20 @@ double Mesh::IntersectRay(Coordinate O,Vector D,double t_min,double t_max){
         V2 = Coordinate(this->vertexList.getElementAt(current_face.v3).x,this->vertexList.getElementAt(current_face.v3).y,this->vertexList.getElementAt(current_face.v3).z);
         plane = Plane(V0,N,NULL);
         t_plane = plane.IntersectRay(O,D,t_min,t_max);
-        if(t_plane < t_min){
+        if(t_plane < t_min || t_plane > t_max){
             continue;
         }
         Coordinate P = D*t_plane + O;
-        Vector V0_P = Vector(V0-P);
-        Vector V1_P = Vector(V1-P);
-        Vector V2_P = Vector(V2-P);
+        Vector3D V0_P = Vector3D(V0-P);
+        Vector3D V1_P = Vector3D(V1-P);
+        Vector3D V2_P = Vector3D(V2-P);
         
-        b0 = Vector::dot(Vector::cross(V0_P,V1_P),N);
-        b1 = Vector::dot(Vector::cross(V2_P,V0_P),N);
-        b1 = Vector::dot(Vector::cross(V1_P,V2_P),N);
+        b0 = Vector3D::dot(Vector3D::cross(V0_P,V1_P),N);
+        b1 = Vector3D::dot(Vector3D::cross(V2_P,V0_P),N);
+        b1 = Vector3D::dot(Vector3D::cross(V1_P,V2_P),N);
         if(b0>0 && b1>0 && b2>0 && t_plane<closest_t){
             closest_t = t_plane;
+            this->intersectedNormal = N;
         }   
     }
     return closest_t;
@@ -175,7 +193,28 @@ bool Mesh::setTransform(Transformation * t){
 }
 
 void Mesh::applyTransform(){
-    
+    Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
+    for(int i=0;i<this->vertexList.getSize();i++){
+        Vertex currentVertex = this->vertexList.getElementAt(i);
+        Matrix<double,4,1> m = Matrix<double,4,1>(currentVertex);
+        Matrix<double,4,1> transformedVertexMatrix = this->transformMatrix * m;
+        Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
+        this->vertexList.setElementAt(i,newVertex);
+    }
+    for(int j = 0;this->normalList.getSize();j++){
+        Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
+        Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
+        Matrix<double,4,1> newNormal = transposeInverse * normalMatrix;
+        normalList.setElementAt(j,Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0)));
+    }
+    //reseting transforms
+    this-> inverseMatrix = Matrix<double,4,4>::identity();
+    this-> transformMatrix = Matrix<double,4,4>::identity();
+    for(int k = 0;k<this->transformList.getSize();k++){
+        delete this->transformList.getElementAt(k);
+        this->transformList.setElementAt(k,nullptr);
+
+    }
 }
 
 

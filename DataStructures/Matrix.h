@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "Vector.h"
+#include "MeshUtils.h"
 #include "Pair.h"
 #include "DataConsts.h"
 
@@ -14,7 +15,10 @@ private:
   T matrix[rows][columns];
 
 public:
-  Matrix(Vector v);
+  Matrix(Vector3D v);
+  Matrix(Vector4D v);
+  
+  Matrix(Vertex v);
   //Matrix<T,columns,rows> transpose();
 
   T * operator[](int i) {
@@ -135,13 +139,32 @@ template<class T,int n1 ,int n2 > inline std::ostream& operator<<(std::ostream& 
 
 
 
-template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector v){  
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector3D v){  
   //std::cout<<v.getElementAt(2)<<'\n';
   this->nLines = l;
   this->nColumns = 1;
   for (int i = 0; i < l; i++) {
     this->matrix[i][0] = v.getElementAt(i);
   }
+}
+
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector4D v){  
+  //std::cout<<v.getElementAt(2)<<'\n';
+  this->nLines = l;
+  this->nColumns = 1;
+  for (int i = 0; i < l; i++) {
+    this->matrix[i][0] = v.getElementAt(i);
+  }
+}
+
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vertex v){  
+  //std::cout<<v.getElementAt(2)<<'\n';
+  this->nLines = l;
+  this->nColumns = 1;
+  this->matrix[0][0] = v.x;
+  this->matrix[1][0] = v.y;
+  this->matrix[2][0] = v.z;
+  this->matrix[3][0] = 1;
 }
 
 
@@ -151,14 +174,13 @@ template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector v){
 
 
 
-
 /*
-template <class T> Vector Matrix<T>::toVector(){
+template <class T> Vector3D Matrix<T>::toVector(){
   Matrix<T> m = this;
   if(this->nLines>this->nColumns){
     m = this->transpose();
   }
-  return Vector(m->getVal(0,0),m->getVal(0,1),m->getVal(0,2));
+  return Vector3D(m->getVal(0,0),m->getVal(0,1),m->getVal(0,2));
 }
 */
 

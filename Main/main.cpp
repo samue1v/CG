@@ -102,19 +102,19 @@ int main() {
   Marble *marble = new Marble();
 
   Sphere *circle = new Sphere(center, radius, rubber);
-  Vector cylinderAxis = Vector(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
+  Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
   Cylinder * cylinder = new Cylinder(center,cylinderAxis,radius/3,3*radius,cooper);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
   Cone * cone = new Cone(center,cylinderAxis*-1,coneRadius,coneRadius/3,marble);
-  //Cone * cone = new Cone(Coordinate(0,0,-100),Vector(-1,0,0),radius,radius*2,marble);
+  //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
 
 	Coordinate floorPoint = Coordinate(0,-radius,0);
-	Vector floorNormal = Vector(0,1,0);
+	Vector3D floorNormal = Vector3D(0,1,0);
 
 	Coordinate backPoint = Coordinate(0,0,-200);
-	Vector backNormal = Vector(0,0,1);
+	Vector3D backNormal = Vector3D(0,0,1);
 	//planeNormal.normalize();
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
@@ -156,7 +156,7 @@ int main() {
     for (int c = 0; c < nColumns; c++) {
       double x = -wj / 2 + dx / 2 + c * dx;
       // std::cout <<"dx: " <<dx<<" dy: " << dy <<"\n";
-      Vector dr = Vector(Coordinate(x, y, -canvasDistance) - Po);
+      Vector3D dr = Vector3D(Coordinate(x, y, -canvasDistance) - Po);
       dr.normalize();
       Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
       // reflectCoefs.normalize();//erro aqui, normalizando tudo

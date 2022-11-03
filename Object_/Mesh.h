@@ -4,6 +4,7 @@
 #include "../DataStructures/Triple.h"
 #include "../DataStructures/Vector.h"
 #include "../DataStructures/Matrix.h"
+#include "Material.h"
 #include <string>
 #include "Transformation.h"
 #include "Shapes.h"
@@ -12,9 +13,11 @@
 class Mesh{
     private:
     Array<Vertex> vertexList;
-    Array<Vector> normalList;
+    Array<Vector3D> normalList;
     Array<Face> faceList;
     Array<Transformation *> transformList;
+    Material * material;
+    Vector3D intersectedNormal;
     Matrix<double,4,4> transformMatrix;
     Matrix<double,4,4> inverseMatrix;
     void applyTransform();
@@ -28,10 +31,13 @@ class Mesh{
     public:
     Mesh();
     Mesh(const std::string & filePath);
-    Face getFaceAt(int index);
-    Vertex getVertexAt(int index);
-    Vector getNormalAt(int inde); 
-    double IntersectRay(Coordinate O,Vector D,double t_min,double t_max);
+    Mesh(const std::string & filePath,Material * material);
+    Vector3D computeNormal();
+    Material * getMaterial();
+    //Face getFaceAt(int index);
+    //Vertex getVertexAt(int index);
+    //Vector3D getNormalAt(int index); 
+    double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
 };
 
 

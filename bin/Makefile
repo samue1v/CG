@@ -30,10 +30,10 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/material.o: ../Object_/Material.cpp ../Object_/Material.h
 	g++ -o ../Links/material.o ../Object_/Material.cpp -c
 
-../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h
+../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h ../DataStructures/MeshUtils.h
 	g++ -o ../Links/object.o ../Object_/Object.cpp -c
 
-../Links/mesh.o: ../Object_/Mesh.cpp ../Object_/Mesh.h ../DataStructures/Triple.h ../DataStructures/Vector.h
+../Links/mesh.o: ../Object_/Mesh.cpp ../Object_/Mesh.h ../DataStructures/Triple.h ../DataStructures/Vector.h ../Object_/Transformation.h ../DataStructures/Matrix.h
 	g++ -o ../Links/mesh.o ../Object_/Mesh.cpp -c
 
 ../Links/scene.o: ../World/Scene.cpp ../World/Scene.h ../Ilumination/Light.h ../Object_/Shapes.h ../DataStructures/DataConsts.h

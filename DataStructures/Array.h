@@ -8,6 +8,7 @@ public:
   Array();
   bool push(T value);
   bool remove(int index);
+  bool setElementAt(int index,T val);
   T getElementAt(int index);
   int getSize();
   
@@ -45,6 +46,15 @@ T Array<T>::getElementAt(int index){
     return T();
   }
   return this->container[index];
+}
+
+template <class T>
+bool Array<T>::setElementAt(int index,T val){
+  if(index>this->size){
+    return false;
+  }
+  this->container[index] = val;
+  return true;
 }
 
 template <class T> 
