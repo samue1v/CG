@@ -116,7 +116,7 @@ int main() {
   //Planes
 	Coordinate floorPoint = Coordinate(0,-radius,0);
 	Vector3D floorNormal = Vector3D(0,1,0);
-  Coordinate backPoint = Coordinate(0,0,-200);
+  Coordinate backPoint = Coordinate(0,0,-100);
 	Vector3D backNormal = Vector3D(0,0,1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
@@ -124,11 +124,11 @@ int main() {
   //Meshes
   std::string path = "../MeshFiles/teste1obj.obj";
   Mesh * mesh = new Mesh(path,rubber);
-  //mesh->setTransform(new Scale(25,20,20));
+  mesh->setTransform(new Scale(2,0.3,1));
   mesh->setTransform(new RotateY(45));
-  mesh->setTransform(new RotateX(45));
-  mesh->setTransform(new RotateZ(45));
-  //mesh->setTransform(new Translate(10,0,-30));
+  mesh->setTransform(new RotateX(120));
+  mesh->setTransform(new RotateZ(270));
+  mesh->setTransform(new Translate(-40,0,40));
   mesh->setTransform(new ShearYX(30));
   
 
@@ -142,7 +142,7 @@ int main() {
 
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
-  //obj->setShape(backPlane);
+  obj->setShape(backPlane);
   obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
@@ -153,7 +153,7 @@ int main() {
   Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,50));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,250));//Coordinate(0,60,-30))
 
   //Creating the scene
   Scene *scene = new Scene();
