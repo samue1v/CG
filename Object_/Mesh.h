@@ -20,6 +20,7 @@ class Mesh{
     Vector3D intersectedNormal;
     Matrix<double,4,4> transformMatrix;
     Matrix<double,4,4> inverseMatrix;
+    void applyTransform();
     Triple<int> parseFaceData(const std::string & line);
     void parseV(const std::string & line);
     void parseN(const std::string & line);
@@ -33,7 +34,7 @@ class Mesh{
     Vector3D computeNormal();
     Material * getMaterial();
     bool setTransform(Transformation * t);
-    void applyTransform();
+
     //Face getFaceAt(int index);
     //Vertex getVertexAt(int index);
     //Vector3D getNormalAt(int index); 

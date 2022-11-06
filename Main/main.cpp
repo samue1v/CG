@@ -127,11 +127,11 @@ int main() {
   //mesh->setTransform(new Scale(25,20,20));
   mesh->setTransform(new RotateY(45));
   mesh->setTransform(new RotateX(45));
-  //mesh->setTransform(new RotateZ(45));
+  mesh->setTransform(new RotateZ(45));
   //mesh->setTransform(new Translate(10,0,-30));
-  //mesh->setTransform(new ShearYX(30));
+  mesh->setTransform(new ShearYX(30));
   
-  //mesh->applyTransform();
+
 
   //Object
   char name[] = "circulo";
