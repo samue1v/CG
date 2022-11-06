@@ -131,7 +131,7 @@ int main() {
   //mesh->setTransform(new Translate(10,0,-30));
   //mesh->setTransform(new ShearYX(30));
   
-  mesh->applyTransform();
+  //mesh->applyTransform();
 
   //Object
   char name[] = "circulo";

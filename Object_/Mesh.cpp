@@ -217,6 +217,7 @@ bool Mesh::setTransform(Transformation * t){
     (this->transformList).push(t); 
     this->transformMatrix = t->getTransform() * (this->transformMatrix);//ja mudei aqiu
     this->inverseMatrix = t->getInverse()*(this->inverseMatrix);
+    applyTransform();
     return true;
     
 }
