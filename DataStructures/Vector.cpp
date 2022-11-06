@@ -74,6 +74,15 @@ void Vector3D::normalize(){
   this->lenght = 1;
 }
 
+std::ostream& operator<<(std::ostream& os,Vector3D& e){
+    os <<"Vector3D:\n";
+    os << "x: "<<e.getElementAt(0)<<" ";
+    os << "y: "<<e.getElementAt(1)<<" ";
+    os << "z: "<<e.getElementAt(2)<<" ";
+    os<<"\n";
+    return os;
+}
+
 Vector4D::Vector4D(){
   this->vector[0] = 0;
   this->vector[1] = 0;
@@ -159,4 +168,14 @@ void Vector4D::normalize(){
   this->vector[1] = (this->vector[1])/(this->lenght);
   this->vector[2] = (this->vector[2])/(this->lenght);
   this->lenght = 1;
+}
+
+std::ostream& operator<<(std::ostream& os,Vector4D& e){
+    os <<"Vector3D:\n";
+    os << "x: "<<e.getElementAt(0)<<" ";
+    os << "y: "<<e.getElementAt(1)<<" ";
+    os << "z: "<<e.getElementAt(2)<<" ";
+    os << "w: "<<e.getElementAt(3)<<" ";
+    os<<"\n";
+    return os;
 }

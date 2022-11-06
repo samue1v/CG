@@ -21,7 +21,7 @@ public:
   Rubber()
       : ka(AmbientReflectiveness(Coeficients{0.7, 0.2, 0.2})),
         kd(DifuseReflectiveness(Coeficients(0.7, 0.2, 0.2))),
-        ke(SpecularReflectiveness(Coeficients(0.7, 0.2, 0.2), 10)){};
+        ke(SpecularReflectiveness(Coeficients(0.7, 0.2, 0.2), 300)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();

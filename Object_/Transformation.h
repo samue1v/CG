@@ -1,5 +1,6 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
+#include <iostream>
 #include "../DataStructures/Matrix.h"
 #include "../DataStructures/DataConsts.h"
 #include <math.h>
@@ -24,6 +25,7 @@ struct Translate : public Transformation{
         (this->inverse).setVal(0,3,-x);
         (this->inverse).setVal(1,3,-y);
         (this->inverse).setVal(2,3,-z);
+        
     }
     
     Matrix<double,4,4> getTransform(){
@@ -71,6 +73,12 @@ struct RotateY : public Transformation{
         (this->transform).setVal(2,2,cosine);
         this->inverse = this->transform.transpose();
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct RotateZ : public Transformation{
@@ -85,7 +93,13 @@ struct RotateZ : public Transformation{
         (this->transform).setVal(0,1,-sine);
         (this->transform).setVal(1,1,cosine);
         this->inverse = this->transform.transpose();
-        this->inverse = Matrix<double,4,4>::identity();
+        
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
     }
 };
 
@@ -101,6 +115,12 @@ struct Scale : public Transformation{
         (this->inverse).setVal(1,1,1.0/y);
         (this->inverse).setVal(2,2,1.0/z);
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ReflectXY : public Transformation{
@@ -109,6 +129,12 @@ struct ReflectXY : public Transformation{
         (this->transform).setVal(2,2,-1);
         this->inverse = this->transform;
 
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
     }
 };
 
@@ -119,6 +145,12 @@ struct ReflectXZ : public Transformation{
         this->inverse = this->transform;
 
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ReflectYZ : public Transformation{
@@ -127,6 +159,12 @@ struct ReflectYZ : public Transformation{
         (this->transform).setVal(0,0,-1);
         this->inverse = this->transform;
 
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
     }
 };
 
@@ -141,6 +179,12 @@ struct ShearXY : public Transformation{
         (this->inverse).setVal(1,0,-tangent);
     
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ShearYX : public Transformation{
@@ -153,6 +197,12 @@ struct ShearYX : public Transformation{
         this->inverse = this->transform;
         (this->inverse).setVal(0,1,-tangent);
     
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
     }
 };
 
@@ -167,6 +217,12 @@ struct ShearXZ : public Transformation{
         (this->inverse).setVal(2,0,-tangent);
     
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ShearZX : public Transformation{
@@ -180,6 +236,12 @@ struct ShearZX : public Transformation{
         (this->inverse).setVal(0,2,-tangent);
     
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ShearYZ : public Transformation{
@@ -192,6 +254,12 @@ struct ShearYZ : public Transformation{
         this->inverse = this->transform;
         (this->inverse).setVal(2,1,-tangent);
     }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
 };
 
 struct ShearZY : public Transformation{
@@ -203,6 +271,12 @@ struct ShearZY : public Transformation{
         (this->transform).setVal(1,2,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(1,2,-tangent);
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
     }
 };
 #endif

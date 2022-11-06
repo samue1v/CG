@@ -16,7 +16,7 @@ Mesh::Mesh(const std::string & filePath){
     file.open(filePath);
     parseFile(file);
     this->transformMatrix = Matrix<double,4,4>::identity();
-    this->inverseMatrix = Matrix<double,4,4>::identity();
+    this->inverseMatrix = this->transformMatrix;
 }
 
 Mesh::Mesh(const std::string & filePath,Material * material){
@@ -24,8 +24,9 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     file.open(filePath);
     parseFile(file);
     this->transformMatrix = Matrix<double,4,4>::identity();
-    this->inverseMatrix = Matrix<double,4,4>::identity();
+    this->inverseMatrix = this->transformMatrix;
     this->material = material;
+    //std::cout << this->faceList;
 }
 
 void Mesh::parseFile(std::ifstream & file){
@@ -158,25 +159,53 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
     double t_plane;
     double closest_t = INF;
     for(int i = 0;i<this->faceList.getSize();i++){
+        //if(i==1){break;}
         current_face = this->faceList.getElementAt(i);
+        //std::cout << this->faceList;
         N = this->normalList.getElementAt(current_face.n);
         V0 = Coordinate(this->vertexList.getElementAt(current_face.v1).x,this->vertexList.getElementAt(current_face.v1).y,this->vertexList.getElementAt(current_face.v1).z);
         V1 = Coordinate(this->vertexList.getElementAt(current_face.v2).x,this->vertexList.getElementAt(current_face.v2).y,this->vertexList.getElementAt(current_face.v2).z);
         V2 = Coordinate(this->vertexList.getElementAt(current_face.v3).x,this->vertexList.getElementAt(current_face.v3).y,this->vertexList.getElementAt(current_face.v3).z);
-        plane = Plane(V0,N,NULL);
+        
+        //std::cout << current_face;
+        //std::cout << N;
+        //exit(-1);
+        
+        plane = Plane(V1,N,nullptr);
         t_plane = plane.IntersectRay(O,D,t_min,t_max);
+        
         if(t_plane < t_min || t_plane > t_max){
             continue;
         }
-        Coordinate P = D*t_plane + O;
-        Vector3D V0_P = Vector3D(V0-P);
-        Vector3D V1_P = Vector3D(V1-P);
-        Vector3D V2_P = Vector3D(V2-P);
         
-        b0 = Vector3D::dot(Vector3D::cross(V0_P,V1_P),N);
-        b1 = Vector3D::dot(Vector3D::cross(V2_P,V0_P),N);
-        b1 = Vector3D::dot(Vector3D::cross(V1_P,V2_P),N);
-        if(b0>0 && b1>0 && b2>0 && t_plane<closest_t){
+       /*
+       if(t_plane > t_min || t_plane < t_max){
+            //std::cout << i << "\n";
+            return t_plane;
+        }
+        else{
+            return INF;
+        }
+        */
+        Coordinate P = D*t_plane + O;
+        Vector3D V1_V0 = Vector3D(V1-V0);
+        Vector3D V2_V1 = Vector3D(V2-V1);
+        Vector3D V0_V2 = Vector3D(V0-V2);
+        Vector3D P_V0 = Vector3D(P-V0);
+        Vector3D P_V1 = Vector3D(P-V1);
+        Vector3D P_V2 = Vector3D(P-V2);
+        
+        b0 = Vector3D::dot(Vector3D::cross(V1_V0,P_V0),N);
+        b1 = Vector3D::dot(Vector3D::cross(V2_V1,P_V1),N);
+        b2 = Vector3D::dot(Vector3D::cross(V0_V2,P_V2),N);
+        /*
+        if(b0<0){
+        std::cout<< "b0:" << b0 <<"\n";
+        std::cout<< "b1:" << b1 <<"\n";
+        std::cout<< "b2:" << b2 <<"\n";
+        }
+        */
+        if(b0>=0 && b1>=0 && b2>=0 && t_plane<closest_t){
             closest_t = t_plane;
             this->intersectedNormal = N;
         }   
@@ -186,7 +215,7 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 
 bool Mesh::setTransform(Transformation * t){
     (this->transformList).push(t); 
-    this->transformMatrix = (this->transformMatrix) * t->getTransform();
+    this->transformMatrix = t->getTransform() * (this->transformMatrix);//ja mudei aqiu
     this->inverseMatrix = t->getInverse()*(this->inverseMatrix);
     return true;
     
@@ -201,11 +230,13 @@ void Mesh::applyTransform(){
         Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
         this->vertexList.setElementAt(i,newVertex);
     }
-    for(int j = 0;this->normalList.getSize();j++){
+    for(int j = 0;j<this->normalList.getSize();j++){
         Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
         Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
         Matrix<double,4,1> newNormal = transposeInverse * normalMatrix;
-        normalList.setElementAt(j,Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0)));
+        Vector3D vecNormal = Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0));
+        vecNormal.normalize();
+        normalList.setElementAt(j,vecNormal);
     }
     //reseting transforms
     this-> inverseMatrix = Matrix<double,4,4>::identity();

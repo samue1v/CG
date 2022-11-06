@@ -1,5 +1,6 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
+#include <iostream>
 
 struct Coordinate {
   double x;
@@ -7,6 +8,7 @@ struct Coordinate {
   double z;
   Coordinate();
   Coordinate(double x, double y, double z);
+  friend std::ostream& operator<<(std::ostream& os,Coordinate& c);
   static double dot(Coordinate a, Coordinate b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
   }

@@ -16,6 +16,7 @@ public:
   bool setVector(Coordinate cord);
   double calcLength();
   void normalize();
+  friend std::ostream& operator<<(std::ostream& os, Vector3D& a);
   static double dot(Vector3D a, Vector3D b) {
     double *pa = a.getVector();
     double *pb = b.getVector();
@@ -86,7 +87,7 @@ public:
   bool setVector(Coordinate cord);
   double calcLength();
   void normalize();
-
+  friend std::ostream& operator<<(std::ostream& os, Vector4D& a);
   static double dot(Vector4D a, Vector4D b) {
     double *pa = a.getVector();
     double *pb = b.getVector();

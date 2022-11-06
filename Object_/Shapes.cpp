@@ -1,6 +1,7 @@
 
 #include "Shapes.h"
 #include <iostream>
+#include "../DataStructures/DataConsts.h"
 #include <stdio.h>
 
 Shape3D::Shape3D() {}
@@ -76,10 +77,13 @@ Vector3D Plane::computeNormal(Coordinate P,Vector3D D){ return this->normal;}
 double Plane::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax){
   Vector3D p_minuspi = Vector3D(this->planePoint - O);//mudei aqui
   double denom = Vector3D::dot(D,this->normal);
-    double t = Vector3D::dot(p_minuspi,this->normal) / denom;
-    if(t>=tMin && t<tMax){
-  	 return t;
-    }
+  if(denom < ZERO_PROX){
+    return INF;
+  }
+  double t = Vector3D::dot(p_minuspi,this->normal) / denom;
+  if(t>=tMin && t<tMax){
+  	return t;
+  }
 	return INF;
 }
 
