@@ -122,6 +122,7 @@ int main() {
 	Vector3D backNormal = Vector3D(0,0,1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
+  backPlane->setTexture("../TextureFiles/kaguya.png");
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
@@ -145,7 +146,7 @@ int main() {
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  //obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
@@ -182,7 +183,8 @@ int main() {
       Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - Po);
       dr.normalize();
       Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
-      canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
+      //canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
+      canvas->setColorAt(l, c, (backPlane->texture->getColorAt(l,c) * reflectCoefs));
     }
   }
   //Write to file(will be changed)

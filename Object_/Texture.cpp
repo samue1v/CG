@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include <SDL2/SDL_image.h>
+#include "../Ilumination/Color.h"
 #include <iostream>
 Texture::Texture(){}
 
@@ -30,4 +31,17 @@ SDL_Surface * Texture::getImage(){
 
 SDL_Texture * Texture::getTexture(){
     return this->texture;
+}
+
+Color Texture::getColorAt(int row,int column){
+    SDL_Color sdlColor;
+    const Uint8 Bpp = (this->image)->format->BytesPerPixel;
+    //might return error
+    Uint8* pPixel = (Uint8*)(this->image)->pixels + row*(this->image)->pitch + column*Bpp;
+    Uint32 PixelData = *(Uint32*)pPixel;
+    sdlColor = {0x00,0x00,0x00,SDL_ALPHA_OPAQUE};
+    SDL_GetRGB(PixelData,this->image->format,&sdlColor.r,&sdlColor.g,&sdlColor.b);
+    return {(double)sdlColor.r,(double)sdlColor.g,(double)sdlColor.b};
+
+
 }

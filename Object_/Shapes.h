@@ -9,6 +9,7 @@
 #include "../Ilumination/Reflect.h"
 #include "../Ilumination/Light.h"
 #include "Material.h"
+#include "Texture.h"
 
 #include <math.h>
 
@@ -17,6 +18,8 @@ public:
   // Vector3D normal;
   Shape3D();
   Material *material;
+  Texture * texture;
+  virtual bool setTexture(const std::string & filePath) = 0;
   virtual Material *getMaterial() = 0;
   virtual Vector3D computeNormal(Coordinate P, Vector3D D) = 0;
   virtual double IntersectRay(Coordinate O, Vector3D D,double, double) = 0;
@@ -27,6 +30,8 @@ private:
 	AmbientLight l;
   double radius;
   Coordinate center;
+  
+  
 
 public:
   Sphere(Coordinate center, double radius, Material *material);
@@ -35,6 +40,7 @@ public:
   bool setRadius(double newRadius);
   double getRadius();
   bool setCenter(Coordinate newCenter);
+  bool setTexture(const std::string & filePath);
   Coordinate getCenter();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
@@ -51,6 +57,7 @@ public:
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
+  bool setTexture(const std::string & filePath);
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector3D getNormal();
@@ -75,6 +82,7 @@ class Cylinder : public Shape3D{
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
+  bool setTexture(const std::string & filePath);
 
 };
 
@@ -94,6 +102,7 @@ class Cone : public Shape3D{
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
+  bool setTexture(const std::string & filePath);
 };
 
 #endif

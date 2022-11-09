@@ -35,6 +35,12 @@ bool Sphere::setMaterial(Material *material) {
   return true;
 }
 
+bool Sphere::setTexture(const std::string & filePath){
+  this->texture = new Texture(filePath);
+  return true;
+}
+
+
 double Sphere::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax) {
   double r = this->getRadius();
   Vector3D c_minus_o = Vector3D((O - this->getCenter()));
@@ -73,6 +79,11 @@ Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material) {
 Material *Plane::getMaterial() { return this->material; }
 
 Vector3D Plane::computeNormal(Coordinate P,Vector3D D){ return this->normal;}
+
+bool Plane::setTexture(const std::string & filePath){
+  this->texture = new Texture(filePath);
+  return true;
+}
 
 double Plane::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax){
   Vector3D p_minuspi = Vector3D(this->planePoint - O);//mudei aqui
@@ -126,6 +137,11 @@ Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
   N.normalize();
 
   return N;
+}
+
+bool Cylinder::setTexture(const std::string & filePath){
+  this->texture = new Texture(filePath);
+  return true;
 }
 
 double Cylinder::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
@@ -230,6 +246,12 @@ Vector3D Cone::computeNormal(Coordinate P,Vector3D D){
   Vector3D n = Vector3D::cross(nbar,v_pi);
   n.normalize();
   return n;
+}
+
+
+bool Cone::setTexture(const std::string & filePath){
+  this->texture = new Texture(filePath);
+  return true;
 }
 
 double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
