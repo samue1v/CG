@@ -11,7 +11,6 @@ template <class T,int rows, int columns >class Matrix {
 private:
   int nLines;
   int nColumns;
-  //T calcSum(Matrix<T,int,int>,int,int);
   T matrix[rows][columns];
 
 public:
@@ -19,7 +18,6 @@ public:
   Matrix(Vector4D v);
   
   Matrix(Vertex v);
-  //Matrix<T,columns,rows> transpose();
 
   T * operator[](int i) {
         return matrix[i];
@@ -70,14 +68,18 @@ public:
     Matrix<C,rows,k> m = Matrix<C,rows,k>();
     for(int i =0;i<this->nLines;i++){
       for(int j = 0;j<md.getDimensions().right;j++){
-        C r = this->calcSum(md,i,j);
-        m.setVal(i,j,r);
-
+        T sum = 0;
+        for(int s = 0;s<columns;s++){
+          sum = sum + (this->getVal(i,s)*md.getVal(s,j));
+        }
+        m.setVal(i,j,sum);
       }
     }
     return m;
   }
+  
   template <int l,int k>
+  [[deprecated("not used anymore!!")]]
   T calcSum(Matrix<T,l,k> md,int line,int column){
   T sum = 0;
   for(int i =0;i<this->nColumns;i++){

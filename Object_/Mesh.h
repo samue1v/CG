@@ -34,10 +34,6 @@ class Mesh{
     Vector3D computeNormal();
     Material * getMaterial();
     bool setTransform(Transformation * t);
-
-    //Face getFaceAt(int index);
-    //Vertex getVertexAt(int index);
-    //Vector3D getNormalAt(int index); 
     double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
 };
 

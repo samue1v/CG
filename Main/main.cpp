@@ -23,6 +23,8 @@ para -canvas_distance
 #include <fstream>
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
@@ -122,7 +124,7 @@ int main() {
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
 
   //Meshes
-  std::string path = "../MeshFiles/teste1obj.obj";
+  std::string path = "../MeshFiles/cube.obj";
   Mesh * mesh = new Mesh(path,rubber);
   mesh->setTransform(new Scale(2,0.3,1));
   mesh->setTransform(new RotateY(45));
