@@ -5,6 +5,7 @@
 #include "../Ilumination/Intensity.h"
 #include "../Ilumination/Light.h"
 #include "../Object_/Object.h"
+#include "../Object_/Texture.h"
 
 class Scene {
 public:

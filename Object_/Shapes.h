@@ -19,6 +19,7 @@ public:
   Shape3D();
   Material *material;
   Texture * texture;
+  virtual Texture * getTexture() = 0;
   virtual bool setTexture(const std::string & filePath) = 0;
   virtual Material *getMaterial() = 0;
   virtual Vector3D computeNormal(Coordinate P, Vector3D D) = 0;
@@ -38,6 +39,7 @@ public:
   Material *getMaterial();
   bool setMaterial(Material *material);
   bool setRadius(double newRadius);
+  Texture * getTexture();
   double getRadius();
   bool setCenter(Coordinate newCenter);
   bool setTexture(const std::string & filePath);
@@ -58,6 +60,7 @@ public:
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
   bool setTexture(const std::string & filePath);
+  Texture * getTexture();
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector3D getNormal();
@@ -81,6 +84,7 @@ class Cylinder : public Shape3D{
   Cylinder(Coordinate, Vector3D, double, double,Material*);
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
+  Texture * getTexture();
   double IntersectRay(Coordinate O, Vector3D D,double, double);
   bool setTexture(const std::string & filePath);
 
@@ -101,6 +105,7 @@ class Cone : public Shape3D{
   Cone(Coordinate, Vector3D, double, double,Material*);
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
+  Texture * getTexture();
   double IntersectRay(Coordinate O, Vector3D D,double, double);
   bool setTexture(const std::string & filePath);
 };

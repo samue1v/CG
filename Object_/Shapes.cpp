@@ -11,6 +11,14 @@ Sphere::Sphere(Coordinate center, double radius, Material *material)
   this->center = center;
   this->radius = radius;
   this->material = (material);
+  this->texture = nullptr;
+}
+
+Texture * Sphere::getTexture(){
+  if(this->texture){
+    return this->texture;
+  }
+  return nullptr;
 }
 
 bool Sphere::setCenter(Coordinate newCenter) {
@@ -74,11 +82,19 @@ Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material) {
   this->planePoint = planePoint;
   this->normal = normal;
   this->material = material;
+  this->texture = nullptr;
 }
 
 Material *Plane::getMaterial() { return this->material; }
 
 Vector3D Plane::computeNormal(Coordinate P,Vector3D D){ return this->normal;}
+
+Texture * Plane::getTexture(){
+  if(this->texture){
+    return this->texture;
+  }
+  return nullptr;
+} 
 
 bool Plane::setTexture(const std::string & filePath){
   this->texture = new Texture(filePath);
@@ -108,10 +124,18 @@ Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double h
   this->topCenter = (axis*height) + baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
   this->topLid = Plane(topCenter,axis,new Cooper());
+  this->texture = nullptr;
 }
 
 Material * Cylinder::getMaterial(){
   return this->material;
+}
+
+Texture * Cylinder::getTexture(){
+  if(this->texture){
+    return this->texture;
+  }
+  return nullptr;
 }
 
 Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
@@ -217,7 +241,15 @@ Cone::Cone(Coordinate baseCenter,Vector3D axis,double radius,double height,Mater
   this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
   this->vertex = (axis*height)+baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,material);
+  this->texture = nullptr;
 
+}
+
+Texture * Cone::getTexture(){
+  if(this->texture){
+    return this->texture;
+  }
+  return nullptr;
 }
 
 Material * Cone::getMaterial(){

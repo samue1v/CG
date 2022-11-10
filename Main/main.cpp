@@ -16,6 +16,7 @@ para -canvas_distance
 #include "../Object_/Object.h"
 #include "../Object_/Shapes.h"
 #include "../Object_/Transformation.h"
+#include "../Object_/Texture.h"
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
 #include <math.h>
@@ -122,7 +123,7 @@ int main() {
 	Vector3D backNormal = Vector3D(0,0,1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
-  backPlane->setTexture("../TextureFiles/kaguya.png");
+  //backPlane->setTexture("../TextureFiles/kaguya.png");
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
@@ -182,9 +183,13 @@ int main() {
       double x = -wj / 2 + dx / 2 + c * dx;
       Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - Po);
       dr.normalize();
-      Intensity reflectCoefs = Space3D::TraceRay(scene, Po, dr, 1, INF);
-      //canvas->setColorAt(l, c, (whiteColor * reflectCoefs));
-      canvas->setColorAt(l, c, (backPlane->texture->getColorAt(l,c) * reflectCoefs));
+      Pair<Intensity,Texture*> hitData = Space3D::TraceRay(scene, Po, dr, 1, INF);
+      if(hitData.right){
+        canvas->setColorAt(l, c, ((hitData.right)->getColorAt(l,c) * hitData.left));
+      }
+      else{
+        canvas->setColorAt(l, c, (whiteColor * hitData.left));
+      }
     }
   }
   //Write to file(will be changed)

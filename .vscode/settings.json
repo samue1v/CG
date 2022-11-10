@@ -45,6 +45,12 @@
         "bit": "cpp",
         "map": "cpp",
         "optional": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "numbers": "cpp"
     }
 }

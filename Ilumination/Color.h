@@ -4,16 +4,16 @@
 #include "Intensity.h"
 #include <iostream>
 struct Color {
-  double red;
-  double green;
-  double blue;
+  uint8_t red;
+  uint8_t green;
+  uint8_t blue;
   Color();
-  Color(double red, double green, double blue);
+  Color(uint8_t red, uint8_t green, uint8_t blue);
   Color operator*(double right) {
-    return Color(red * right, green * right, blue * right);
+    return Color((uint8_t)((double)red * right), (uint8_t)((double)green * right),(uint8_t)((double)blue * right));
   }
   Color operator*(Intensity right) {
-    return Color(red * right.getRed(), green * right.getGreen(), blue * right.getBlue());
+    return Color((u_int8_t)((double)red * right.getRed()), (u_int8_t)((double)green * right.getGreen()), (uint8_t)((double)blue * right.getBlue()));
   }
   friend std::ostream& operator<<(std::ostream& os, Color &c);
 };

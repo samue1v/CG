@@ -36,7 +36,7 @@ public:
     return (this->matrix)[x][y];
   }
 
-  Pair<int> getDimensions(){
+  Pair<int,int> getDimensions(){
     return {this->nLines,this->nColumns};
   }
 
@@ -125,7 +125,7 @@ public:
 };
 
 template<class T,int n1 ,int n2 > inline std::ostream& operator<<(std::ostream& os, Matrix<T,n1,n2>& m){
-    Pair<int> dim = m.getDimensions(); 
+    Pair<int,int> dim = m.getDimensions(); 
     T val;
     for(int i=0;i<dim.left;i++){
       for(int j=0;j<dim.right;j++){

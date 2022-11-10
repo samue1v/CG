@@ -1,9 +1,10 @@
 #ifndef PAIR_H
 #define PAIR_H
 
-template <typename T> struct Pair {
+template <typename T,typename U> 
+struct Pair {
   T left;
-  T right;
+  U right;
 };
 
 

@@ -36,7 +36,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/mesh.o: ../Object_/Mesh.cpp ../Object_/Mesh.h ../DataStructures/Triple.h ../DataStructures/Vector.h ../Object_/Transformation.h ../DataStructures/Matrix.h
 	g++ -o ../Links/mesh.o ../Object_/Mesh.cpp -c
 
-../Links/scene.o: ../World/Scene.cpp ../World/Scene.h ../Ilumination/Light.h ../Object_/Shapes.h ../DataStructures/DataConsts.h
+../Links/scene.o: ../World/Scene.cpp ../World/Scene.h ../Ilumination/Light.h ../Object_/Shapes.h ../Object_/Texture.h ../DataStructures/DataConsts.h
 	g++ -o ../Links/scene.o ../World/Scene.cpp -c
 
 ../Links/space3D.o: ../World/Space3D.cpp ../World/Space3D.h ../DataStructures/Coordinate.h

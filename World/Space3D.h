@@ -15,14 +15,15 @@ class Space3D {
 public:
   Coordinate canvasToViewport(double x, double y);
 
-  static Intensity TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
+  static Pair<Intensity,Texture*> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
                             double t_max) {
-    //double change
     double closest_t = INF;
     double closest_shape_t = INF;
     double closest_mesh_t = INF;
     Shape3D *closestShape = nullptr;
     Mesh * closestMesh = nullptr;
+    Texture * closestTexture = nullptr;
+    Pair<Intensity,Texture*> hitData;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
@@ -31,6 +32,7 @@ public:
         if (t >= t_min && t <= t_max && t < closest_shape_t) {
           closest_shape_t = t;
           closestShape = shape;
+          closestTexture = shape->getTexture();
         }
       }
       for(int k = 0;k<object->getMeshCount();k++){
@@ -44,7 +46,9 @@ public:
 
     }
     if (!closestShape && !closestMesh) {
-      return scene->getBackgroundCoefs();
+      hitData.left = scene->getBackgroundCoefs();
+      hitData.right = nullptr;
+      return hitData;
     }
 
     if(closest_mesh_t<closest_shape_t && closest_mesh_t<closest_t){
@@ -85,7 +89,13 @@ public:
 		if(i.getBlue()>1 || i.getRed()>1 || i.getGreen()>1){
 			i = i.normalize();
 		}
-    return i;
+    //std::cout<<i.getBlue()<<'\n';
+    //std::cout<<closestTexture->getColorAt(0,0).blue<<'\n';
+    //uint8_t xd= 10;
+    //std::cout<<"xd: "<<xd<<'\n';
+    hitData.left= i;
+    hitData.right = closestTexture;
+    return hitData;
   }
 
   static bool isOfuscated(Coordinate O,Vector3D D,Scene* scene,double maxLength){

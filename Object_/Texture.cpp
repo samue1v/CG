@@ -41,7 +41,7 @@ Color Texture::getColorAt(int row,int column){
     Uint32 PixelData = *(Uint32*)pPixel;
     sdlColor = {0x00,0x00,0x00,SDL_ALPHA_OPAQUE};
     SDL_GetRGB(PixelData,this->image->format,&sdlColor.r,&sdlColor.g,&sdlColor.b);
-    return {(double)sdlColor.r,(double)sdlColor.g,(double)sdlColor.b};
+    return {sdlColor.r,sdlColor.g,sdlColor.b};
 
 
 }
