@@ -20,7 +20,8 @@ public:
   Material *material;
   Texture * texture;
   virtual Texture * getTexture() = 0;
-  virtual bool setTexture(const std::string & filePath) = 0;
+  virtual Color getTexel(Coordinate P,Coordinate O) = 0;
+  virtual bool setTexture(const std::string & filePath,SDL_Renderer * renderer) = 0;
   virtual Material *getMaterial() = 0;
   virtual Vector3D computeNormal(Coordinate P, Vector3D D) = 0;
   virtual double IntersectRay(Coordinate O, Vector3D D,double, double) = 0;
@@ -39,10 +40,11 @@ public:
   Material *getMaterial();
   bool setMaterial(Material *material);
   bool setRadius(double newRadius);
+  Color getTexel(Coordinate P,Coordinate O);
   Texture * getTexture();
   double getRadius();
   bool setCenter(Coordinate newCenter);
-  bool setTexture(const std::string & filePath);
+  bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   Coordinate getCenter();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
@@ -59,8 +61,9 @@ public:
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
-  bool setTexture(const std::string & filePath);
+  bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   Texture * getTexture();
+  Color getTexel(Coordinate P,Coordinate O);
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector3D getNormal();
@@ -85,9 +88,9 @@ class Cylinder : public Shape3D{
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   Texture * getTexture();
+  Color getTexel(Coordinate P,Coordinate O);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
-  bool setTexture(const std::string & filePath);
-
+  bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
 };
 
 class Cone : public Shape3D{
@@ -106,8 +109,9 @@ class Cone : public Shape3D{
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   Texture * getTexture();
+  Color getTexel(Coordinate P,Coordinate O);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
-  bool setTexture(const std::string & filePath);
+  bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
 };
 
 #endif

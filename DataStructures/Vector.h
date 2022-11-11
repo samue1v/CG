@@ -40,6 +40,14 @@ public:
                   vector[1] - right.getElementAt(1),
                   vector[2] - right.getElementAt(2));
   }
+
+  bool operator==(Vector3D right){
+    if(this->vector[0] == right.getElementAt(0) && this->vector[1] == right.getElementAt(1) && this->vector[2] == right.getElementAt(2)){
+      return true;
+    }
+    return false;
+  }
+
   Vector3D operator*(double right) {
     return Vector3D(vector[0] * right, vector[1] * right, vector[2] * right);
   }
@@ -51,6 +59,8 @@ public:
     Vector3D v = Vector3D(vector[0] + right, vector[1] + right, vector[2] + right);
     return v;
   }
+
+
 
 
   /*
@@ -105,6 +115,14 @@ public:
                   vector[1] - right.getElementAt(1),
                   vector[2] - right.getElementAt(2));
   }
+
+  bool operator==(Vector4D right){
+    if(this->vector[0] == right.getElementAt(0) && this->vector[1] == right.getElementAt(1) && this->vector[2] == right.getElementAt(2) && this->vector[3] == right.getElementAt(3)){
+      return true;
+    }
+    return false;
+  }
+
   Vector4D operator*(double right) {
     return Vector4D(vector[0] * right, vector[1] * right, vector[2] * right);
   }

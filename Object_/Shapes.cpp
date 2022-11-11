@@ -21,6 +21,10 @@ Texture * Sphere::getTexture(){
   return nullptr;
 }
 
+Color Sphere::getTexel(Coordinate P,Coordinate O){
+  return Color();
+}
+
 bool Sphere::setCenter(Coordinate newCenter) {
   this->center = newCenter;
   return true;
@@ -43,8 +47,8 @@ bool Sphere::setMaterial(Material *material) {
   return true;
 }
 
-bool Sphere::setTexture(const std::string & filePath){
-  this->texture = new Texture(filePath);
+bool Sphere::setTexture(const std::string & filePath,SDL_Renderer * renderer){
+  this->texture = new Texture(filePath,renderer);
   return true;
 }
 
@@ -96,8 +100,40 @@ Texture * Plane::getTexture(){
   return nullptr;
 } 
 
-bool Plane::setTexture(const std::string & filePath){
-  this->texture = new Texture(filePath);
+Color Plane::getTexel(Coordinate P,Coordinate O){
+  double u,v;
+  Vector3D Pvec = Vector3D(P-O);
+  Vector3D e1 = Vector3D::cross(this->normal,Vector3D(1,0,0));
+  /*
+  e1.normalize();
+  if(abs(e1.getElementAt(0))<=ZERO_PROX && abs(e1.getElementAt(1))<=ZERO_PROX && abs(e1.getElementAt(2))<=ZERO_PROX){
+    e1 = Vector3D::cross(this->normal,Vector3D(0,0,1));
+    e1.normalize();
+  }
+  */
+ Vector3D e12 = Vector3D::cross(this->normal,Vector3D(0,0,1));
+ if(e12.getLength()>e1.getLength()){
+  e1 =e12;
+  std::cout<<"erro\n";
+ }
+  e1.normalize();
+  Vector3D e2 = Vector3D::cross(this->normal,e1);
+  e2.normalize();
+  Pvec.normalize();
+  u = (Vector3D::dot(e1,Pvec));
+  v = (Vector3D::dot(e2,Pvec));
+  double ubias = (u+1.0)/2.0;
+  double vbias = (v+1.0)/2.0;
+  
+  Pair<int,int> wh = this->texture->getWH();
+  //std::cout<<"width: "<<wh.left<<"height: "<<wh.right<<"\n";
+  //std::cout<<"u: "<<ubias*wh.left<<" v: "<<vbias*wh.right<<"\n";
+  Color c = this->texture->getColorAt((int)((ubias*wh.left)),(int)((vbias*wh.right)));
+  return c;
+}
+
+bool Plane::setTexture(const std::string & filePath,SDL_Renderer * renderer){
+  this->texture = new Texture(filePath,renderer);
   return true;
 }
 
@@ -138,6 +174,10 @@ Texture * Cylinder::getTexture(){
   return nullptr;
 }
 
+Color Cylinder::getTexel(Coordinate P,Coordinate O){
+  return Color();
+}
+
 Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
 
 
@@ -163,8 +203,8 @@ Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
   return N;
 }
 
-bool Cylinder::setTexture(const std::string & filePath){
-  this->texture = new Texture(filePath);
+bool Cylinder::setTexture(const std::string & filePath,SDL_Renderer * renderer){
+  this->texture = new Texture(filePath,renderer);
   return true;
 }
 
@@ -252,6 +292,10 @@ Texture * Cone::getTexture(){
   return nullptr;
 }
 
+Color Cone::getTexel(Coordinate P,Coordinate O){
+  return Color();
+}
+
 Material * Cone::getMaterial(){
   return this->material;
 }
@@ -281,8 +325,8 @@ Vector3D Cone::computeNormal(Coordinate P,Vector3D D){
 }
 
 
-bool Cone::setTexture(const std::string & filePath){
-  this->texture = new Texture(filePath);
+bool Cone::setTexture(const std::string & filePath,SDL_Renderer * renderer){
+  this->texture = new Texture(filePath,renderer);
   return true;
 }
 

@@ -4,7 +4,7 @@
 #include <iostream>
 Texture::Texture(){}
 
-Texture::Texture(const std::string & path){
+Texture::Texture(const std::string & path,SDL_Renderer * renderer){
     int flags = IMG_INIT_PNG;
     int status = IMG_Init(flags);
     if((status & flags) != flags){
@@ -16,7 +16,7 @@ Texture::Texture(const std::string & path){
         throw std::runtime_error(errorMessage);
     }
 
-    this->texture = SDL_CreateTextureFromSurface(this->renderer,image);
+    this->texture = SDL_CreateTextureFromSurface(renderer,image);
 
 }
 
@@ -37,11 +37,23 @@ Color Texture::getColorAt(int row,int column){
     SDL_Color sdlColor;
     const Uint8 Bpp = (this->image)->format->BytesPerPixel;
     //might return error
-    Uint8* pPixel = (Uint8*)(this->image)->pixels + row*(this->image)->pitch + column*Bpp;
+    Uint8* pPixel = (Uint8*)(this->image)->pixels + column*(this->image)->pitch + row*Bpp;
     Uint32 PixelData = *(Uint32*)pPixel;
     sdlColor = {0x00,0x00,0x00,SDL_ALPHA_OPAQUE};
     SDL_GetRGB(PixelData,this->image->format,&sdlColor.r,&sdlColor.g,&sdlColor.b);
     return {sdlColor.r,sdlColor.g,sdlColor.b};
 
 
+}
+
+bool Texture::setUV(Vector3D u, Vector3D v){
+    this->u = u;
+    this->v = v;
+    return true;
+}
+
+Pair<int,int> Texture::getWH(){
+    int w = this->image->w;
+    int h = this->image->h;
+    return {w,h};
 }

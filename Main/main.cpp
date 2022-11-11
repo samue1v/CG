@@ -23,6 +23,7 @@ para -canvas_distance
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <unistd.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -75,9 +76,9 @@ bool SDLdraw(Canvas<l,k> *canvas){
 }
 
 int main() {
-
+  SDL_Renderer * renderer = nullptr;
   Coordinate O = Coordinate(0, 0, 0);
-  Coordinate Po = Coordinate(0,0,250);
+  Coordinate Po = Coordinate(0,0,500);
   Intensity bgIntensity = Intensity(0, 0, 0);
   Color whiteColor = Color(255, 255, 255);
   double wj = 60;
@@ -87,7 +88,7 @@ int main() {
   const int nColumns = 500;
   double dx = wj / nColumns;
   double dy = hj / nLines;
-  double canvasDistance = 220;
+  double canvasDistance = 470;
   double sphereDistance = 60;
   // double sphere_distance = 100;
   // inicialização da cena e da esfera
@@ -120,10 +121,11 @@ int main() {
 	Coordinate floorPoint = Coordinate(0,-radius,0);
 	Vector3D floorNormal = Vector3D(0,1,0);
   Coordinate backPoint = Coordinate(0,0,-100);
-	Vector3D backNormal = Vector3D(0,0,1);
+	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
-  //backPlane->setTexture("../TextureFiles/kaguya.png");
+  floorPlane->setTexture("../TextureFiles/mage.png",renderer);
+  backPlane->setTexture("../TextureFiles/kaguya.png",renderer);
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
@@ -145,6 +147,7 @@ int main() {
   //Setting shapes and meshes to object
 
   //obj->setShape(circle);
+  //std::cout<<"aqui\n";
   //obj->setShape(floorPlane);
   obj->setShape(backPlane);
   //obj->setMesh(mesh);
@@ -175,7 +178,7 @@ int main() {
   // Canvas creation
   Matrix<Color,nLines,nColumns> * m = new Matrix<Color,nLines,nColumns>();
   Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>(m);
-
+  
   //Canvas Loop
   for (int l = 0; l < nLines; l++) {
     double y = hj / 2 - dy / 2 - l * dy;
@@ -183,9 +186,10 @@ int main() {
       double x = -wj / 2 + dx / 2 + c * dx;
       Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - Po);
       dr.normalize();
-      Pair<Intensity,Texture*> hitData = Space3D::TraceRay(scene, Po, dr, 1, INF);
-      if(hitData.right){
-        canvas->setColorAt(l, c, ((hitData.right)->getColorAt(l,c) * hitData.left));
+      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, Po, dr, 1, INF);
+      if(hitData.right.hasInit){
+        //std::cout<<"aqui\n";
+        canvas->setColorAt(l, c, ((hitData.right) ));//* hitData.left));
       }
       else{
         canvas->setColorAt(l, c, (whiteColor * hitData.left));

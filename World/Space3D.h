@@ -15,15 +15,16 @@ class Space3D {
 public:
   Coordinate canvasToViewport(double x, double y);
 
-  static Pair<Intensity,Texture*> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
+  static Pair<Intensity,Color> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
                             double t_max) {
     double closest_t = INF;
     double closest_shape_t = INF;
     double closest_mesh_t = INF;
+    Color texel = Color();
     Shape3D *closestShape = nullptr;
     Mesh * closestMesh = nullptr;
-    Texture * closestTexture = nullptr;
-    Pair<Intensity,Texture*> hitData;
+    //Texture * closestTexture = nullptr;
+    Pair<Intensity,Color> hitData;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
@@ -32,7 +33,7 @@ public:
         if (t >= t_min && t <= t_max && t < closest_shape_t) {
           closest_shape_t = t;
           closestShape = shape;
-          closestTexture = shape->getTexture();
+          //closestTexture = shape->getTexture();
         }
       }
       for(int k = 0;k<object->getMeshCount();k++){
@@ -47,7 +48,7 @@ public:
     }
     if (!closestShape && !closestMesh) {
       hitData.left = scene->getBackgroundCoefs();
-      hitData.right = nullptr;
+      hitData.right = Color();
       return hitData;
     }
 
@@ -67,6 +68,7 @@ public:
     if(closest_shape_t<closest_mesh_t){
       N = closestShape->computeNormal(P,D);    
       N.normalize();
+      texel =  closestShape->getTexel(P,O);
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
         Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
         double p_lightDirLength = p_lightDir.getLength();
@@ -89,12 +91,9 @@ public:
 		if(i.getBlue()>1 || i.getRed()>1 || i.getGreen()>1){
 			i = i.normalize();
 		}
-    //std::cout<<i.getBlue()<<'\n';
-    //std::cout<<closestTexture->getColorAt(0,0).blue<<'\n';
-    //uint8_t xd= 10;
-    //std::cout<<"xd: "<<xd<<'\n';
+
     hitData.left= i;
-    hitData.right = closestTexture;
+    hitData.right = texel;
     return hitData;
   }
 
