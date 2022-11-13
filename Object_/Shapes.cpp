@@ -102,7 +102,7 @@ Texture * Plane::getTexture(){
 
 Color Plane::getTexel(Coordinate P,Coordinate O){
   double u,v;
-  Vector3D Pvec = Vector3D(P-O);
+  Vector3D Pvec = Vector3D(P-planePoint);
   Vector3D e1 = Vector3D::cross(this->normal,Vector3D(1,0,0));
   /*
   e1.normalize();
@@ -119,16 +119,20 @@ Color Plane::getTexel(Coordinate P,Coordinate O){
   e1.normalize();
   Vector3D e2 = Vector3D::cross(this->normal,e1);
   e2.normalize();
-  Pvec.normalize();
-  u = (Vector3D::dot(e1,Pvec));
-  v = (Vector3D::dot(e2,Pvec));
-  double ubias = (u+1.0)/2.0;
-  double vbias = (v+1.0)/2.0;
+  //std::cout << "e1: "<< e1 << "\n";
+  //std::cout << "e2: "<< e2 << "\n";
+  //Pvec.normalize();
+  v = (Vector3D::dot(e1,Pvec));
+  u = (Vector3D::dot(e2,Pvec));
+  //double ubias = (u+1.0)/2.0;
+  //double vbias = (v+1.0)/2.0;
   
   Pair<int,int> wh = this->texture->getWH();
   //std::cout<<"width: "<<wh.left<<"height: "<<wh.right<<"\n";
   //std::cout<<"u: "<<ubias*wh.left<<" v: "<<vbias*wh.right<<"\n";
-  Color c = this->texture->getColorAt((int)((ubias*wh.left)),(int)((vbias*wh.right)));
+  //std::cout << "w: " << wh.left << " h" << wh.right <<"\n";
+  //std::cout<< "u: "<<((int)abs(u)) % wh.right <<" v: "<< ((int)abs(v)) % wh.left<<"\n";
+  Color c = this->texture->getColorAt( (wh.left - ((int)abs(u)) % wh.left) - 1,wh.right  - (((int)abs(v))% wh.right)-1);
   return c;
 }
 

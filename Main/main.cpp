@@ -114,17 +114,17 @@ int main() {
   //Cone
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
-  Cone * cone = new Cone(center,cylinderAxis*-1,coneRadius,coneRadius/3,marble);
+  Cone * cone = new Cone(center+Coordinate(0,50,300),cylinderAxis,coneRadius,coneRadius,marble);
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
 
   //Planes
-	Coordinate floorPoint = Coordinate(0,-radius,0);
+	Coordinate floorPoint = Coordinate(0,-100,0);
 	Vector3D floorNormal = Vector3D(0,1,0);
-  Coordinate backPoint = Coordinate(0,0,-100);
+  Coordinate backPoint = Coordinate(0,0,-1000);
 	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
 	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
-  floorPlane->setTexture("../TextureFiles/mage.png",renderer);
+  floorPlane->setTexture("../TextureFiles/floor.png",renderer);
   backPlane->setTexture("../TextureFiles/kaguya.png",renderer);
 
   //Meshes
@@ -148,11 +148,11 @@ int main() {
 
   //obj->setShape(circle);
   //std::cout<<"aqui\n";
-  //obj->setShape(floorPlane);
+  obj->setShape(floorPlane);
   obj->setShape(backPlane);
-  //obj->setMesh(mesh);
+  obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  //obj->setShape(cone);  
+  obj->setShape(cone);  
 
 
   //Setting lights
