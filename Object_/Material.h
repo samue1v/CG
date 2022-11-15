@@ -19,9 +19,9 @@ public:
 struct Rubber : Material {
 public:
   Rubber()
-      : ka(AmbientReflectiveness(Coeficients{0.7, 0.2, 0.2})),
-        kd(DifuseReflectiveness(Coeficients(0.7, 0.2, 0.2))),
-        ke(SpecularReflectiveness(Coeficients(0.7, 0.2, 0.2), 300)){};
+      : ka(AmbientReflectiveness(Coeficients{0.7, 0.7, 0.7})),
+        kd(DifuseReflectiveness(Coeficients(1, 1, 1))),
+        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 500)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();
@@ -36,8 +36,8 @@ private:
 struct Metal : Material {
 public:
   Metal()
-      : ka(AmbientReflectiveness(Coeficients{0.2, 0.7, 0.2})),
-        kd(DifuseReflectiveness(Coeficients(0.2, 0.7, 0.2))),
+      : ka(AmbientReflectiveness(Coeficients{0.7, 0.7, 0.7})),
+        kd(DifuseReflectiveness(Coeficients(0.2, 0.2, 0.2))),
         ke(SpecularReflectiveness(Coeficients(0,0,0), 1)){};
 
   AmbientReflectiveness getKa();

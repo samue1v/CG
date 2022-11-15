@@ -104,7 +104,7 @@ int main() {
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(center, radius, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,400), radius, rubber);
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
@@ -119,13 +119,14 @@ int main() {
 
   //Planes
 	Coordinate floorPoint = Coordinate(0,-100,0);
-	Vector3D floorNormal = Vector3D(0,1,0);
-  Coordinate backPoint = Coordinate(0,0,-1000);
+	Vector3D floorNormal = Vector3D(0,sqrt(2),1);
+  Coordinate backPoint = Coordinate(0,-20,-500);
 	Vector3D backNormal = Vector3D(0,0,-1);
-	Plane *floorPlane = new Plane(floorPoint, floorNormal, metal);
-	Plane *backPlane = new Plane(backPoint, backNormal, plastic);
-  floorPlane->setTexture("../TextureFiles/floor.png",renderer);
-  backPlane->setTexture("../TextureFiles/kaguya.png",renderer);
+	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
+	Plane *backPlane = new Plane(backPoint, backNormal, rubber);
+  floorPlane->setTexture("../TextureFiles/checkers.png",renderer);
+  circle->setTexture("../TextureFiles/3ano.png",renderer);
+  backPlane->setTexture("../TextureFiles/3ano.png",renderer);
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
@@ -146,22 +147,22 @@ int main() {
 
   //Setting shapes and meshes to object
 
-  //obj->setShape(circle);
-  //std::cout<<"aqui\n";
+  obj->setShape(circle);
   obj->setShape(floorPlane);
   obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  //obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  obj->setShape(cone);  
+  //obj->setShape(cone);  
 
 
   //Setting lights
 
-  Intensity ambientIntensity = Intensity(0.3, 0.3, 0.3);
+  Intensity ambientIntensity = Intensity(0.5, 0.5, 0.5);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,250));//Coordinate(0,60,-30))
-
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,30,450));//Coordinate(0,60,-30))
+  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,-499));
+  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
   Scene *scene = new Scene();
 
@@ -170,8 +171,9 @@ int main() {
 
 
   scene->setLight(ambientLight);
-  // scene->setLightAt(1, dirLight);
+  scene->setLight(dirLight);
   scene->setLight(pointLight);
+  //scene->setLight(pointLight2);
 
   scene->setBackgroundCoefs(bgIntensity);
 
@@ -189,7 +191,7 @@ int main() {
       Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, Po, dr, 1, INF);
       if(hitData.right.hasInit){
         //std::cout<<"aqui\n";
-        canvas->setColorAt(l, c, ((hitData.right) ));//* hitData.left));
+        canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
       }
       else{
         canvas->setColorAt(l, c, (whiteColor * hitData.left));

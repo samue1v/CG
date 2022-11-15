@@ -22,7 +22,21 @@ Texture * Sphere::getTexture(){
 }
 
 Color Sphere::getTexel(Coordinate P,Coordinate O){
-  return Color();
+  double x = (P.x -center.x);
+  double y = (P.y - center.y);
+  double z = (P.z - center.z);
+  
+  //double v = (atan(sqrtf(x*x + y*y)/z) + PI/2.0)/PI;
+  double v =  (acos(y/radius))/PI;
+  double u = (atan2(x,z)/(2*PI)+ 0.5);
+  //double u = asin(x/sqrtf(x*x + z*z))/(2*PI);
+
+
+  std::cout<< "u: "<< u <<" v: " << v << "\n"; 
+  Pair<int,int> wh = this->texture->getWH();
+
+  Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));
+  return c;
 }
 
 bool Sphere::setCenter(Coordinate newCenter) {
@@ -104,13 +118,6 @@ Color Plane::getTexel(Coordinate P,Coordinate O){
   double u,v;
   Vector3D Pvec = Vector3D(P-planePoint);
   Vector3D e1 = Vector3D::cross(this->normal,Vector3D(1,0,0));
-  /*
-  e1.normalize();
-  if(abs(e1.getElementAt(0))<=ZERO_PROX && abs(e1.getElementAt(1))<=ZERO_PROX && abs(e1.getElementAt(2))<=ZERO_PROX){
-    e1 = Vector3D::cross(this->normal,Vector3D(0,0,1));
-    e1.normalize();
-  }
-  */
  Vector3D e12 = Vector3D::cross(this->normal,Vector3D(0,0,1));
  if(e12.getLength()>e1.getLength()){
   e1 =e12;
@@ -119,21 +126,47 @@ Color Plane::getTexel(Coordinate P,Coordinate O){
   e1.normalize();
   Vector3D e2 = Vector3D::cross(this->normal,e1);
   e2.normalize();
-  //std::cout << "e1: "<< e1 << "\n";
-  //std::cout << "e2: "<< e2 << "\n";
-  //Pvec.normalize();
+
   v = (Vector3D::dot(e1,Pvec));
   u = (Vector3D::dot(e2,Pvec));
-  //double ubias = (u+1.0)/2.0;
-  //double vbias = (v+1.0)/2.0;
-  
+
   Pair<int,int> wh = this->texture->getWH();
-  //std::cout<<"width: "<<wh.left<<"height: "<<wh.right<<"\n";
-  //std::cout<<"u: "<<ubias*wh.left<<" v: "<<vbias*wh.right<<"\n";
-  //std::cout << "w: " << wh.left << " h" << wh.right <<"\n";
-  //std::cout<< "u: "<<((int)abs(u)) % wh.right <<" v: "<< ((int)abs(v)) % wh.left<<"\n";
-  Color c = this->texture->getColorAt( (wh.left - ((int)abs(u)) % wh.left) - 1,wh.right  - (((int)abs(v))% wh.right)-1);
+
+  //Color c = this->texture->getColorAt( (wh.left - ((int)abs(u)) % wh.left) - 1,wh.right  - (((int)abs(v))% wh.right)-1);
+  
+  //Quadrant checking
+  Color c;
+  if(u<0 && v > 0){
+    //std::cout<<"1\n";
+    c = this->texture->getColorAt((wh.left + ((int)floor(u) % -wh.left)),((int)floor(v)%wh.right));
+    //std::cout<<"a"<<"\n";
+
+     
+  }
+  else if(v<0 && u >0){
+    //std::cout<<"2\n";
+    //std::cout<<"b"<<"\n";
+    //std::cout<< "u: " << ((int)floor(u))%wh.left <<"v: " <<(wh.right + ((int)floor(v))%-wh.right)<<"\n"; 
+    c = this->texture->getColorAt(((int)floor(u))%wh.left,(wh.right + ((int)floor(v))%-wh.right));
+    //exit(-1);
+  }
+  else if(v<0 && u < 0){
+    //std::cout<<"3\n";
+    //std::cout<< "u: " << -(wh.left + (((int)floor(u))%-wh.left)) <<"v: " <<(wh.right + ((int)floor(v))%-wh.right)<<"\n"; 
+    c = this->texture->getColorAt((wh.left + (((int)floor(u))%-wh.left)),(wh.right + ((int)floor(v))%-wh.right));
+    
+    //std::cout<<"c"<<"\n";  
+  }
+  else{
+    //std::cout<<"d"<<"\n";
+    //std::cout<<"4\n";
+    c = this->texture->getColorAt(((int)floor(u)%wh.left),((int)floor(v))%wh.right);
+  }
+  
+  //Color c = this->texture->getColorAt( ((int)u % wh.left) - 1,((int)v % wh.right)-1);
+  
   return c;
+  
 }
 
 bool Plane::setTexture(const std::string & filePath,SDL_Renderer * renderer){
@@ -179,7 +212,21 @@ Texture * Cylinder::getTexture(){
 }
 
 Color Cylinder::getTexel(Coordinate P,Coordinate O){
-  return Color();
+  double x = (P.x -baseCenter.x);
+  double y = (P.y - baseCenter.y);
+  double z = (P.z - baseCenter.z);
+  
+  //double v = (atan(sqrtf(x*x + y*y)/z) + PI/2.0)/PI;
+  double v = P.y - baseCenter.y;
+  double u = (atan2(x,z)/(2*PI)+ 0.5);
+  //double u = asin(x/sqrtf(x*x + z*z))/(2*PI);
+
+
+  std::cout<< "u: "<< u <<" v: " << v << "\n"; 
+  Pair<int,int> wh = this->texture->getWH();
+
+  Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));
+  return c;
 }
 
 Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
@@ -199,7 +246,7 @@ Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
   */
   Vector3D V = Vector3D(P - this->baseCenter);
   double lv = V.getLength();
-  double pll = sqrt(lv*lv - (this->radius*this->radius));
+  double pll = sqrtf(lv*lv - (this->radius*this->radius));
   Coordinate Pl = ((this->axis) * pll) + this->baseCenter;
   Vector3D N = Vector3D(P-Pl);
   N.normalize();
