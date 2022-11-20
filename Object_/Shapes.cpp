@@ -136,9 +136,15 @@ Color Plane::getTexel(Coordinate P,Coordinate O){
   
   //Quadrant checking
   Color c;
+  int um,vm;
+  int w,h;
+  w = wh.left-1;
+  h = wh.right-1;
   if(u<0 && v > 0){
     //std::cout<<"1\n";
-    c = this->texture->getColorAt((wh.left + ((int)floor(u) % -wh.left)),((int)floor(v)%wh.right));
+    um = (w - ((int)floor(-u)) % w);
+    vm = (int)floor(v)%h;
+    //c = this->texture->getColorAt(um,vm);
     //std::cout<<"a"<<"\n";
 
      
@@ -147,21 +153,37 @@ Color Plane::getTexel(Coordinate P,Coordinate O){
     //std::cout<<"2\n";
     //std::cout<<"b"<<"\n";
     //std::cout<< "u: " << ((int)floor(u))%wh.left <<"v: " <<(wh.right + ((int)floor(v))%-wh.right)<<"\n"; 
-    c = this->texture->getColorAt(((int)floor(u))%wh.left,(wh.right + ((int)floor(v))%-wh.right));
+    um = (int)floor(u)%w;
+    vm = h - (int)floor(-v)%h;
+    //c = this->texture->getColorAt(um,vm);
     //exit(-1);
   }
   else if(v<0 && u < 0){
     //std::cout<<"3\n";
     //std::cout<< "u: " << -(wh.left + (((int)floor(u))%-wh.left)) <<"v: " <<(wh.right + ((int)floor(v))%-wh.right)<<"\n"; 
-    c = this->texture->getColorAt((wh.left + (((int)floor(u))%-wh.left)),(wh.right + ((int)floor(v))%-wh.right));
+    um = w - ((int)floor(-u)%w);
+    vm = (h - ((int)floor(-v))%h);
+    //c = this->texture->getColorAt(um,vm);
     
     //std::cout<<"c"<<"\n";  
   }
   else{
     //std::cout<<"d"<<"\n";
     //std::cout<<"4\n";
-    c = this->texture->getColorAt(((int)floor(u)%wh.left),((int)floor(v))%wh.right);
+    um = (int)floor(u)%w;
+    vm = (int)floor(v)%h;
+    
+  
   }
+  /*
+  if(um==wh.left){
+    um--;
+  }
+  else if(vm==wh.right){
+    vm--;
+  }
+  */
+  c = this->texture->getColorAt(um,vm);
   
   //Color c = this->texture->getColorAt( ((int)u % wh.left) - 1,((int)v % wh.right)-1);
   

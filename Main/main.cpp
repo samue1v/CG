@@ -92,7 +92,7 @@ int main() {
   double sphereDistance = 60;
   // double sphere_distance = 100;
   // inicialização da cena e da esfera
-  double radius = 40;
+  double radius = 200;
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
 
@@ -104,7 +104,7 @@ int main() {
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,400), radius, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,100), radius, rubber);
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
@@ -120,22 +120,22 @@ int main() {
   //Planes
 	Coordinate floorPoint = Coordinate(0,-100,0);
 	Vector3D floorNormal = Vector3D(0,sqrt(2),1);
-  Coordinate backPoint = Coordinate(0,-20,-500);
+  Coordinate backPoint = Coordinate(0,0,-400);
 	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
-	Plane *backPlane = new Plane(backPoint, backNormal, rubber);
-  floorPlane->setTexture("../TextureFiles/checkers.png",renderer);
-  circle->setTexture("../TextureFiles/3ano.png",renderer);
-  backPlane->setTexture("../TextureFiles/3ano.png",renderer);
+	Plane *backPlane = new Plane(backPoint, backNormal, metal);
+  floorPlane->setTexture("../TextureFiles/wood.png",renderer);
+  circle->setTexture("../TextureFiles/kaguya.png",renderer);
+  backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
-  Mesh * mesh = new Mesh(path,rubber);
+  Mesh * mesh = new Mesh(path,marble);
   mesh->setTransform(new Scale(2,0.3,1));
   mesh->setTransform(new RotateY(45));
   mesh->setTransform(new RotateX(120));
   mesh->setTransform(new RotateZ(270));
-  mesh->setTransform(new Translate(-40,0,40));
+  mesh->setTransform(new Translate(-40,0,370));
   mesh->setTransform(new ShearYX(30));
   
 
@@ -147,10 +147,10 @@ int main() {
 
   //Setting shapes and meshes to object
 
-  obj->setShape(circle);
+  //obj->setShape(circle);
   obj->setShape(floorPlane);
   obj->setShape(backPlane);
-  //obj->setMesh(mesh);
+  obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
