@@ -198,6 +198,8 @@ int main() {
       }
     }
   }
+  Matrix<double,4,4> teste;
+  std::cout<<teste;
   //Write to file(will be changed)
   writePPM<nLines,nColumns>(canvas);
 

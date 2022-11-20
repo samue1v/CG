@@ -74,6 +74,8 @@ void Vector3D::normalize(){
   this->lenght = 1;
 }
 
+
+
 std::ostream& operator<<(std::ostream& os,Vector3D& e){
     os <<"Vector3D:\n";
     os << "x: "<<e.getElementAt(0)<<" ";
@@ -87,7 +89,7 @@ Vector4D::Vector4D(){
   this->vector[0] = 0;
   this->vector[1] = 0;
   this->vector[2] = 0;
-  this->vector[3] = 1;
+  this->vector[3] = 0;
   this->maxIndex = 3;
 }
 
@@ -95,7 +97,7 @@ Vector4D::Vector4D(double x, double y, double z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
-  this->vector[3] = 1;
+  this->vector[3] = 0;
   this->lenght = this->calcLength();
 
   this->maxIndex = 3;
@@ -105,7 +107,7 @@ Vector4D::Vector4D(Vector3D v3d){
     this->vector[0] = v3d.getElementAt(0);
     this->vector[1] = v3d.getElementAt(1);
     this->vector[2] = v3d.getElementAt(2);
-    this->vector[3] = 1;
+    this->vector[3] = 0;
     this->lenght = this->calcLength();
     this->maxIndex = 3;
 }
@@ -114,7 +116,7 @@ Vector4D::Vector4D(Coordinate cord) {
   this->vector[0] = cord.x;
   this->vector[1] = cord.y;
   this->vector[2] = cord.z;
-  this->vector[3] = 1;
+  this->vector[3] = 0;
   this->lenght = this->calcLength();
 
   this->maxIndex = 3;
@@ -168,6 +170,10 @@ void Vector4D::normalize(){
   this->vector[1] = (this->vector[1])/(this->lenght);
   this->vector[2] = (this->vector[2])/(this->lenght);
   this->lenght = 1;
+}
+
+Coordinate Vector4D::toCoord(){
+  return Coordinate(vector[0],vector[1],vector[2]);
 }
 
 std::ostream& operator<<(std::ostream& os,Vector4D& e){

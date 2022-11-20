@@ -89,6 +89,7 @@ public:
   Vector4D(double x, double y, double z);
   Vector4D(Coordinate cord);
   Vector4D(Vector3D v3d);
+  Coordinate toCoord();
   double getLength();
   double getElementAt(int index);
   bool setLength(double);
@@ -98,6 +99,12 @@ public:
   double calcLength();
   void normalize();
   friend std::ostream& operator<<(std::ostream& os, Vector4D& a);
+  static Vector4D cross(Vector4D a, Vector4D b) {
+    double cx = (a.getElementAt(1)*b.getElementAt(2)) - (a.getElementAt(2)*b.getElementAt(1));
+    double cy = (a.getElementAt(2)*b.getElementAt(0)) - (a.getElementAt(0)*b.getElementAt(2));
+    double cz = (a.getElementAt(0)*b.getElementAt(1)) - (a.getElementAt(1)*b.getElementAt(0));
+    return Vector4D(cx,cy,cz);
+  }
   static double dot(Vector4D a, Vector4D b) {
     double *pa = a.getVector();
     double *pb = b.getVector();

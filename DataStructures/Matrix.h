@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "MeshUtils.h"
 #include "Pair.h"
+#include "Coordinate.h"
 #include "DataConsts.h"
 
 template <class T,int rows, int columns >class Matrix {
@@ -18,6 +19,11 @@ public:
   Matrix(Vector4D v);
   
   Matrix(Vertex v);
+  Matrix(Coordinate coord);
+  
+  
+  Coordinate toCoordinate(Matrix<double,1,4> m);
+  
 
   T * operator[](int i) {
         return matrix[i];
@@ -168,6 +174,22 @@ template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vertex v){
   this->matrix[2][0] = v.z;
   this->matrix[3][0] = 1;
 }
+
+template <class T,int l, int k> Matrix<T,l,k>::Matrix(Coordinate c){  
+  //std::cout<<v.getElementAt(2)<<'\n';
+  this->nLines = l;
+  this->nColumns = 1;
+  this->matrix[0][0] = c.x;
+  this->matrix[1][0] = c.y;
+  this->matrix[2][0] = c.z;
+  this->matrix[3][0] = 1;
+}
+
+template <class T,int l, int k>
+Coordinate  Matrix<T,l,k>::toCoordinate(Matrix<double,1,4> m){
+    return Coordinate(m.getVal(0,0),m.getVal(1,0),m.getVal(2,0));
+  }
+
 
 
 
