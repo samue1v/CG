@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Camera.h"
-#include "DataStructures/Vector.h"
+#include "../DataStructures/Vector.h"
+#include "../DataStructures/Coordinate.h"
 
 Camera::Camera(){
     this->eye = Coordinate(0,0,0);
@@ -29,6 +30,22 @@ bool Camera::setUp(Coordinate newUp){
     return true;
 }
 
+Coordinate Camera::getEye(){
+    return eye;
+}
+
+Coordinate Camera::getLookAt(){
+    return lookAt;
+}
+
+Coordinate Camera::getUp(){
+    return up;
+}
+
+Matrix<double,4,4> Camera::getTransformMatrix(){
+    return this->transformMatrix;
+}
+
 Coordinate Camera::transformCoordinate(Coordinate coord){
     Matrix<double,1,4> m = Matrix<double,1,4>(coord);
     m = m*transformMatrix;
@@ -47,14 +64,20 @@ void Camera::calcTransform(){
     transformMatrix.setVal(0,0,i.getElementAt(0));
     transformMatrix.setVal(0,1,i.getElementAt(1));
     transformMatrix.setVal(0,2,i.getElementAt(2));
+    transformMatrix.setVal(0,3,-Vector4D::dot(eye,i));
 
     transformMatrix.setVal(1,0,j.getElementAt(0));
     transformMatrix.setVal(1,1,j.getElementAt(1));
     transformMatrix.setVal(1,2,j.getElementAt(2));
+    transformMatrix.setVal(1,3,-Vector4D::dot(eye,j));
 
     transformMatrix.setVal(2,0,k.getElementAt(0));
     transformMatrix.setVal(2,1,k.getElementAt(1));
     transformMatrix.setVal(2,2,k.getElementAt(2));
+    transformMatrix.setVal(2,3,-Vector4D::dot(eye,k));
 
+    
+    
+   
     transformMatrix.setVal(3,3,1);
 }

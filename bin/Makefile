@@ -1,13 +1,16 @@
 all: program
 
-program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/main.o #../Links/canvas.o
-	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o -Ofast -lSDL2 -lSDL2_image -o program
+program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/camera.o ../Links/main.o #../Links/canvas.o
+	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/camera.o -Ofast -lSDL2 -lSDL2_image -o program
 
 #../Links/canvas.o: ../Canvas_/Canvas.cpp ../Canvas_/Canvas.h
 #	g++ -o ../Links/canvas.o ../Canvas_/Canvas.cpp -c
 
 ../Links/coordinate.o: ../DataStructures/Coordinate.cpp ../DataStructures/Coordinate.h
 	g++ -Ofast -o ../Links/coordinate.o ../DataStructures/Coordinate.cpp -c
+
+../Links/camera.o: ../DataStructures/Vector.h ../Camera/Camera.h ../DataStructures/Matrix.h ../DataStructures/Coordinate.h
+	g++ -Ofast -o ../Links/camera.o ../Camera/Camera.cpp -c
 
 ../Links/vector.o: ../DataStructures/Vector.cpp ../DataStructures/Vector.h ../DataStructures/DataConsts.h
 	g++ -Ofast -o ../Links/vector.o ../DataStructures/Vector.cpp -c
@@ -48,7 +51,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/texture.o: ../Object_/Texture.cpp ../Object_/Texture.h ../Ilumination/Color.h
 	g++ -Ofast -o ../Links/texture.o ../Object_/Texture.cpp -c
 
-../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h
+../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h ../Camera/Camera.h
 	g++ -Ofast -o ../Links/main.o ../Main/main.cpp -c
 
 clean:

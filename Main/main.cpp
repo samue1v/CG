@@ -5,6 +5,7 @@ para -canvas_distance
 */
 
 #include "../Canvas_/Canvas.h"
+#include "../Camera/Camera.h"
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/DataConsts.h"
 #include "../DataStructures/Matrix.h"
@@ -78,7 +79,10 @@ bool SDLdraw(Canvas<l,k> *canvas){
 int main() {
   SDL_Renderer * renderer = nullptr;
   Coordinate O = Coordinate(0, 0, 0);
-  Coordinate Po = Coordinate(0,0,500);
+  Coordinate eye = Coordinate(0,0,500);
+  Coordinate up = Coordinate(0,1,500);
+  Coordinate lookAt = Coordinate(0,0,-1);
+  Camera * camera = new Camera(eye,lookAt,up);
   Intensity bgIntensity = Intensity(0, 0, 0);
   Color whiteColor = Color(255, 255, 255);
   double wj = 60;
@@ -186,9 +190,9 @@ int main() {
     double y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       double x = -wj / 2 + dx / 2 + c * dx;
-      Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - Po);
+      Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - camera->getEye());
       dr.normalize();
-      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, Po, dr, 1, INF);
+      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, camera->getEye(), dr, 1, INF);
       if(hitData.right.hasInit){
         //std::cout<<"aqui\n";
         canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
@@ -198,8 +202,9 @@ int main() {
       }
     }
   }
-  Matrix<double,4,4> teste;
-  std::cout<<teste;
+
+  Matrix<double,4,4> teste = camera->getTransformMatrix();
+  std::cout<< teste;
   //Write to file(will be changed)
   writePPM<nLines,nColumns>(canvas);
 

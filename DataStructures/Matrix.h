@@ -22,7 +22,7 @@ public:
   Matrix(Coordinate coord);
   
   
-  Coordinate toCoordinate(Matrix<double,1,4> m);
+  Coordinate toCoordinate();
   
 
   T * operator[](int i) {
@@ -186,8 +186,8 @@ template <class T,int l, int k> Matrix<T,l,k>::Matrix(Coordinate c){
 }
 
 template <class T,int l, int k>
-Coordinate  Matrix<T,l,k>::toCoordinate(Matrix<double,1,4> m){
-    return Coordinate(m.getVal(0,0),m.getVal(1,0),m.getVal(2,0));
+Coordinate  Matrix<T,l,k>::toCoordinate(){
+    return Coordinate(matrix[0][0],matrix[1][0],matrix[2][0]);
   }
 
 
