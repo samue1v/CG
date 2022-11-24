@@ -23,6 +23,7 @@ public:
   
   
   Coordinate toCoordinate();
+  Vector3D toVector3D();
   
 
   T * operator[](int i) {
@@ -188,6 +189,11 @@ template <class T,int l, int k> Matrix<T,l,k>::Matrix(Coordinate c){
 template <class T,int l, int k>
 Coordinate  Matrix<T,l,k>::toCoordinate(){
     return Coordinate(matrix[0][0],matrix[1][0],matrix[2][0]);
+  }
+
+template <class T,int l, int k>
+Vector3D Matrix<T,l,k>::toVector3D(){
+    return Vector3D(matrix[0][0],matrix[1][0],matrix[2][0]);
   }
 
 

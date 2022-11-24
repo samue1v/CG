@@ -2,6 +2,7 @@
 #define OBJECTS_HEADER
 #include <stdio.h>
 #include "../DataStructures/Array.h"
+#include "../DataStructures/Matrix.h"
 #include "Mesh.h"
 #include "Shapes.h"
 class Object{
@@ -16,6 +17,7 @@ class Object{
         bool setMesh(Mesh * newMesh);
         Mesh * getMeshAt(int index);
         Shape3D * getShapeAt(int index);
+        void applyViewTransform(Matrix<double,4,4> transformMatrix);
 
 
     private:

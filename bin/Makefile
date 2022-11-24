@@ -9,9 +9,6 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/coordinate.o: ../DataStructures/Coordinate.cpp ../DataStructures/Coordinate.h
 	g++ -Ofast -o ../Links/coordinate.o ../DataStructures/Coordinate.cpp -c
 
-../Links/camera.o: ../DataStructures/Vector.h ../Camera/Camera.h ../DataStructures/Matrix.h ../DataStructures/Coordinate.h
-	g++ -Ofast -o ../Links/camera.o ../Camera/Camera.cpp -c
-
 ../Links/vector.o: ../DataStructures/Vector.cpp ../DataStructures/Vector.h ../DataStructures/DataConsts.h
 	g++ -Ofast -o ../Links/vector.o ../DataStructures/Vector.cpp -c
 
@@ -21,7 +18,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/intensity.o: ../Ilumination/Intensity.cpp ../Ilumination/Intensity.h ../DataStructures/DataConsts.h
 	g++ -Ofast -o ../Links/intensity.o ../Ilumination/Intensity.cpp -c
 
-../Links/light.o: ../Ilumination/Light.cpp ../Ilumination/Light.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h
+../Links/light.o: ../Ilumination/Light.cpp ../Ilumination/Light.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h  ../DataStructures/Matrix.h
 	g++ -Ofast -o ../Links/light.o ../Ilumination/Light.cpp -c
 
 ../Links/reflect.o: ../Ilumination/Reflect.cpp ../Ilumination/Reflect.h
@@ -30,16 +27,16 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/shapes.o: ../Object_/Shapes.cpp ../Object_/Shapes.h
 	g++ -Ofast -o ../Links/shapes.o ../Object_/Shapes.cpp -c
 
-../Links/material.o: ../Object_/Material.cpp ../Object_/Material.h
+../Links/material.o: ../Object_/Material.cpp ../Object_/Material.h 
 	g++ -Ofast -o ../Links/material.o ../Object_/Material.cpp -c
 
-../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h ../DataStructures/MeshUtils.h
+../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h ../Object_/Shapes.h ../DataStructures/MeshUtils.h ../DataStructures/Matrix.h
 	g++ -Ofast -o ../Links/object.o ../Object_/Object.cpp -c
 
 ../Links/mesh.o: ../Object_/Mesh.cpp ../Object_/Mesh.h ../DataStructures/Triple.h ../DataStructures/Vector.h ../Object_/Transformation.h ../DataStructures/Matrix.h
 	g++ -Ofast -o ../Links/mesh.o ../Object_/Mesh.cpp -c
 
-../Links/scene.o: ../World/Scene.cpp ../World/Scene.h ../Ilumination/Light.h ../Object_/Shapes.h ../Object_/Texture.h ../DataStructures/DataConsts.h
+../Links/scene.o: ../World/Scene.cpp ../World/Scene.h ../Ilumination/Light.h ../Object_/Shapes.h ../Object_/Texture.h ../DataStructures/DataConsts.h ../Camera/Camera.h
 	g++ -Ofast -o ../Links/scene.o ../World/Scene.cpp -c
 
 ../Links/space3D.o: ../World/Space3D.cpp ../World/Space3D.h ../DataStructures/Coordinate.h
@@ -50,6 +47,9 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 
 ../Links/texture.o: ../Object_/Texture.cpp ../Object_/Texture.h ../Ilumination/Color.h
 	g++ -Ofast -o ../Links/texture.o ../Object_/Texture.cpp -c
+
+../Links/camera.o: ../Camera/Camera.cpp ../Camera/Camera.h ../DataStructures/Vector.h ../DataStructures/Coordinate.h
+	g++ -Ofast -o ../Links/camera.o ../Camera/Camera.cpp -c
 
 ../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h ../Camera/Camera.h
 	g++ -Ofast -o ../Links/main.o ../Main/main.cpp -c

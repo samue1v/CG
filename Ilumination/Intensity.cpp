@@ -1,6 +1,9 @@
 #include "Intensity.h"
 #include "../DataStructures/DataConsts.h"
+#include <iostream>
 #include <stdio.h>
+
+Intensity::Intensity(){}
 
 Intensity::Intensity(double red, double green, double blue)
     : ir(red), ig(green), ib(blue) {}

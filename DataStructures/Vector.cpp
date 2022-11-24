@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include "Vector.h"
 #include <math.h>
 #include "DataConsts.h"
@@ -68,10 +69,12 @@ double Vector3D::calcLength(){
 }
 
 void Vector3D::normalize(){
-  this->vector[0] = (this->vector[0])/(this->lenght);
-  this->vector[1] = (this->vector[1])/(this->lenght);
-  this->vector[2] = (this->vector[2])/(this->lenght);
-  this->lenght = 1;
+  if(this->lenght>0){
+    this->vector[0] = (this->vector[0])/(this->lenght);
+    this->vector[1] = (this->vector[1])/(this->lenght);
+    this->vector[2] = (this->vector[2])/(this->lenght);
+    this->lenght = 1;
+  }
 }
 
 
@@ -166,10 +169,13 @@ double Vector4D::calcLength(){
 }
 
 void Vector4D::normalize(){
-  this->vector[0] = (this->vector[0])/(this->lenght);
-  this->vector[1] = (this->vector[1])/(this->lenght);
-  this->vector[2] = (this->vector[2])/(this->lenght);
-  this->lenght = 1;
+  if(this->lenght >0){
+    this->vector[0] = (this->vector[0])/(this->lenght);
+    this->vector[1] = (this->vector[1])/(this->lenght);
+    this->vector[2] = (this->vector[2])/(this->lenght);
+    this->lenght = 1;
+  }
+
 }
 
 Coordinate Vector4D::toCoord(){
@@ -177,7 +183,7 @@ Coordinate Vector4D::toCoord(){
 }
 
 std::ostream& operator<<(std::ostream& os,Vector4D& e){
-    os <<"Vector3D:\n";
+    os <<"Vector4D:\n";
     os << "x: "<<e.getElementAt(0)<<" ";
     os << "y: "<<e.getElementAt(1)<<" ";
     os << "z: "<<e.getElementAt(2)<<" ";

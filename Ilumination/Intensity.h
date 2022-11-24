@@ -5,7 +5,8 @@
 
 class Intensity {
 public:
-  Intensity(double ir = 0, double ig = 0, double ib = 0);
+  Intensity();
+  Intensity(double ir, double ig, double ib);
   double getRed();
   bool setRed(double red);
   double getGreen();

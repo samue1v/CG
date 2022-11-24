@@ -8,7 +8,7 @@
 
 Light::Light() {}
 
-AmbientLight::AmbientLight(){};
+AmbientLight::AmbientLight(){}
 
 AmbientLight::AmbientLight(Intensity intensity) : intensity(intensity) {}
 
@@ -35,6 +35,10 @@ Vector3D AmbientLight::calcDirection(Coordinate O){
 
 Vector3D AmbientLight::getReference(){
   return Vector3D();
+}
+
+void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
+
 }
 
 DirectionalLight::DirectionalLight() {}
@@ -84,6 +88,10 @@ Vector3D DirectionalLight::calcDirection(Coordinate o){
 
 Vector3D DirectionalLight::getReference(){
   return Vector3D();
+}
+
+void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
+  
 }
 
 PointLight::PointLight() {}
@@ -137,4 +145,8 @@ Vector3D PointLight::calcDirection(Coordinate O){
 
 Vector3D PointLight::getReference(){
   return this->position;
+}
+
+void PointLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
+  
 }

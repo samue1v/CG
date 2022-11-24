@@ -21,7 +21,14 @@ Texture * Sphere::getTexture(){
   return nullptr;
 }
 
-Color Sphere::getTexel(Coordinate P,Coordinate O){
+Color Sphere::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+  if(!this->texture){
+    return Color();
+  }
+  Matrix<double,4,1> Pmatrix = Matrix<double,4,1>(P);
+  Matrix<double,4,1> Omatrix = Matrix<double,4,1>(O);
+  P = (cameraToWorld*Pmatrix).toCoordinate();
+  O = (cameraToWorld*Omatrix).toCoordinate();
   double x = (P.x -center.x);
   double y = (P.y - center.y);
   double z = (P.z - center.z);
@@ -32,11 +39,18 @@ Color Sphere::getTexel(Coordinate P,Coordinate O){
   //double u = asin(x/sqrtf(x*x + z*z))/(2*PI);
 
 
-  std::cout<< "u: "<< u <<" v: " << v << "\n"; 
+  //std::cout<< "u: "<< u <<" v: " << v << "\n"; 
   Pair<int,int> wh = this->texture->getWH();
 
   Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));
   return c;
+}
+
+void Sphere::transformView(Matrix<double,4,4> transformMatrix){
+  Matrix<double,4,1> centerMatrix = Matrix<double,4,1>(this->center);
+  std::cout<<"center1:"<<center<<"\n";
+  this->center = (transformMatrix*centerMatrix).toCoordinate();
+  std::cout<<"center2:"<<center<<"\n";
 }
 
 bool Sphere::setCenter(Coordinate newCenter) {
@@ -114,7 +128,15 @@ Texture * Plane::getTexture(){
   return nullptr;
 } 
 
-Color Plane::getTexel(Coordinate P,Coordinate O){
+void Plane::transformView(Matrix<double,4,4> transformMatrix){
+  this->planePoint = (transformMatrix*Matrix<double,4,1>(this->planePoint)).toCoordinate();
+  this->normal = (transformMatrix*Matrix<double,4,1>(this->normal)).toVector3D();
+}
+
+Color Plane::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+  if(!this->texture){
+    return Color();
+  }
   double u,v;
   Vector3D Pvec = Vector3D(P-planePoint);
   Vector3D e1 = Vector3D::cross(this->normal,Vector3D(1,0,0));
@@ -233,7 +255,10 @@ Texture * Cylinder::getTexture(){
   return nullptr;
 }
 
-Color Cylinder::getTexel(Coordinate P,Coordinate O){
+Color Cylinder::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+  if(!this->texture){
+    return Color();
+  }
   double x = (P.x -baseCenter.x);
   double y = (P.y - baseCenter.y);
   double z = (P.z - baseCenter.z);
@@ -249,6 +274,15 @@ Color Cylinder::getTexel(Coordinate P,Coordinate O){
 
   Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));
   return c;
+}
+
+void Cylinder::transformView(Matrix<double,4,4> transformMatrix){
+  this->axis = (transformMatrix * Matrix<double,4,1>(this->axis)).toVector3D();
+  this->baseCenter = (transformMatrix * Matrix<double,4,1>(this->baseCenter)).toCoordinate();
+  this->topCenter = (transformMatrix * Matrix<double,4,1>(this->topCenter)).toCoordinate();
+  this->baseLid.transformView(transformMatrix);
+  this->topLid.transformView(transformMatrix);
+  
 }
 
 Vector3D Cylinder::computeNormal(Coordinate P,Vector3D D){
@@ -365,12 +399,19 @@ Texture * Cone::getTexture(){
   return nullptr;
 }
 
-Color Cone::getTexel(Coordinate P,Coordinate O){
+Color Cone::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+  if(!this->texture){
+    return Color();
+  }
   return Color();
 }
 
 Material * Cone::getMaterial(){
   return this->material;
+}
+
+void Cone::transformView(Matrix<double,4,4> transformMatrix){
+
 }
 
 Vector3D Cone::computeNormal(Coordinate P,Vector3D D){

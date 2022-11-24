@@ -35,6 +35,7 @@ class Mesh{
     Material * getMaterial();
     bool setTransform(Transformation * t);
     double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
+    void transformView(Matrix<double,4,4> transformMatrix);
 };
 
 

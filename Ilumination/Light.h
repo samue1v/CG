@@ -8,6 +8,7 @@
 
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/Vector.h"
+#include "../DataStructures/Matrix.h"
 #include "../Object_/Material.h"
 #include "Intensity.h"
 
@@ -18,11 +19,12 @@ public:
   virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
   virtual Vector3D calcDirection(Coordinate o) = 0;
   virtual Vector3D getReference() = 0;
+  virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
   Light();
 
 
 private:
-  Intensity intensity = Intensity(1.0, 1.0, 1.0);
+  //Intensity intensity = Intensity(1.0, 1.0, 1.0);
 };
 
 class AmbientLight : public Light {
@@ -34,6 +36,7 @@ public:
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
+  void applyViewTransform(Matrix<double,4,4> transformMatrix);
 
 private:
   Intensity intensity;
@@ -50,6 +53,7 @@ public:
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
+  void applyViewTransform(Matrix<double,4,4> transformMatrix);
 
 private:
   Vector3D direction;
@@ -67,6 +71,7 @@ public:
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
+  void applyViewTransform(Matrix<double,4,4> transformMatrix);
 
 private:
   Coordinate position;

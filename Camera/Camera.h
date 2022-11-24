@@ -7,19 +7,20 @@ class Camera{
     Coordinate lookAt;
     Coordinate up;
     Coordinate eye;
-    Matrix<double,4,4> transformMatrix;
+    Matrix<double,4,4> worldToCamera;
+    Matrix<double,4,4> cameraToWorld;
     public:
     Camera();
     Camera(Coordinate eye,Coordinate lookAt,Coordinate up);
     bool setLookAt(Coordinate newLookAt);
     bool setEye(Coordinate newEye);
     bool setUp(Coordinate newUp);
-    Matrix<double,4,4> getTransformMatrix();
+    Matrix<double,4,4> getWorldToCamera();
+    Matrix<double,4,4> getCameraToWorld();
     Coordinate getEye();
     Coordinate getUp();
     Coordinate getLookAt();
-    Coordinate transformCoordinate(Coordinate coord);
-    void calcTransform();
+    void calcTransforms();
     
 
 };

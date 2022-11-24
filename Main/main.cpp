@@ -79,10 +79,44 @@ bool SDLdraw(Canvas<l,k> *canvas){
 int main() {
   SDL_Renderer * renderer = nullptr;
   Coordinate O = Coordinate(0, 0, 0);
-  Coordinate eye = Coordinate(0,0,500);
-  Coordinate up = Coordinate(0,1,500);
-  Coordinate lookAt = Coordinate(0,0,-1);
+  /*
+  Coordinate eye = Coordinate(0,50,30);
+  Coordinate up = Coordinate(0,101,30);
+  Coordinate lookAt = Coordinate(0,0,-260);
+  */
+  /*
+   Coordinate eye = Coordinate(0,200,-100);
+  Coordinate up = Coordinate(0,500,-100);
+  Coordinate lookAt = Coordinate(0,0,-100);
+  */
+  
+   Coordinate eye = Coordinate(0,200,-50);
+  Coordinate up = Coordinate(0,500,-50);
+  Coordinate lookAt = Coordinate(0,0,-200);
+  
+  
+  /*
+  Coordinate eye = Coordinate(0,0,10);
+  Coordinate up = Coordinate(0,500,10);
+  Coordinate lookAt = Coordinate(0,0,-100);
+  */
   Camera * camera = new Camera(eye,lookAt,up);
+  //Coordinate c = camera.getEye();
+  //std::cout<<"jao: "<<c;
+
+  Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
+  //std::cout<<eyematrix;
+  Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
+  //std::cout<<"cameraMatrix: "<<cameraMatrix<<"\n";
+  Matrix<double,4,1> tmatrix = camera->getWorldToCamera()*eyematrix;
+  //std::cout<< eyematrix;
+  //std::cout<<"\n" <<cameraMatrix;
+  //std::cout<<"\n"<<tmatrix;
+  Coordinate P0 = (tmatrix).toCoordinate();
+  //std::cout<<"P0:"<<P0;
+  
+
+
   Intensity bgIntensity = Intensity(0, 0, 0);
   Color whiteColor = Color(255, 255, 255);
   double wj = 60;
@@ -92,11 +126,11 @@ int main() {
   const int nColumns = 500;
   double dx = wj / nColumns;
   double dy = hj / nLines;
-  double canvasDistance = 470;
+  double canvasDistance = -30;
   double sphereDistance = 60;
   // double sphere_distance = 100;
   // inicialização da cena e da esfera
-  double radius = 200;
+  double radius = 100;
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
 
@@ -108,11 +142,12 @@ int main() {
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,100), radius, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,-200), radius, rubber);
+  
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(center,cylinderAxis,radius/3,3*radius,cooper);
+  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),Vector3D(0,1,0),radius/3,3*radius,cooper);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
   
   //Cone
@@ -129,7 +164,7 @@ int main() {
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
 	Plane *backPlane = new Plane(backPoint, backNormal, metal);
   floorPlane->setTexture("../TextureFiles/wood.png",renderer);
-  circle->setTexture("../TextureFiles/kaguya.png",renderer);
+  circle->setTexture("../TextureFiles/teste.png",renderer);
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
@@ -151,10 +186,10 @@ int main() {
 
   //Setting shapes and meshes to object
 
-  //obj->setShape(circle);
-  obj->setShape(floorPlane);
-  obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  obj->setShape(circle);
+  //obj->setShape(floorPlane);
+  //obj->setShape(backPlane);
+  //obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
@@ -169,17 +204,23 @@ int main() {
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
   Scene *scene = new Scene();
-
+  
   scene->setObject(obj);
 
 
 
   scene->setLight(ambientLight);
-  scene->setLight(dirLight);
-  scene->setLight(pointLight);
+  //scene->setLight(dirLight);
+  //scene->setLight(pointLight);
   //scene->setLight(pointLight2);
 
   scene->setBackgroundCoefs(bgIntensity);
+  
+  scene->setCamera(camera);
+  Coordinate t = scene->getCamera()->getEye();
+  std::cout<<t;
+
+  scene->transformView();
 
   // Canvas creation
   Matrix<Color,nLines,nColumns> * m = new Matrix<Color,nLines,nColumns>();
@@ -190,9 +231,10 @@ int main() {
     double y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       double x = -wj / 2 + dx / 2 + c * dx;
-      Vector3D dr = Vector3D(Coordinate(x, y, canvasDistance) - camera->getEye());
+      Coordinate canvasPoint = Coordinate(x, y, canvasDistance);
+      Vector3D dr = Vector3D(canvasPoint - P0);
       dr.normalize();
-      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, camera->getEye(), dr, 1, INF);
+      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
       if(hitData.right.hasInit){
         //std::cout<<"aqui\n";
         canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
@@ -202,9 +244,10 @@ int main() {
       }
     }
   }
-
-  Matrix<double,4,4> teste = camera->getTransformMatrix();
-  std::cout<< teste;
+  //Matrix<double,4,4> msd = scene->getCamera().getTransformMatrix();
+  //std::cout<< msd;
+  //Matrix<double,4,4> teste = camera->getTransformMatrix();
+  //std::cout<< teste;
   //Write to file(will be changed)
   writePPM<nLines,nColumns>(canvas);
 

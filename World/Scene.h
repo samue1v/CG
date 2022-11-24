@@ -6,6 +6,7 @@
 #include "../Ilumination/Light.h"
 #include "../Object_/Object.h"
 #include "../Object_/Texture.h"
+#include "../Camera/Camera.h"
 
 class Scene {
 public:
@@ -18,8 +19,12 @@ public:
   int getNumberOfLights();
   bool setBackgroundCoefs(Intensity coefs);
   Intensity getBackgroundCoefs();
+  Camera * getCamera();
+  bool setCamera(Camera * newCamera);
+  void transformView();
 
 private:
+  Camera * camera;
   Intensity background_coefs;
   Array<Object *> elements;
   Array<Light *> lights;

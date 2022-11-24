@@ -146,6 +146,10 @@ Material * Mesh::getMaterial(){
     return this->material;
 }
 
+void Mesh::transformView(Matrix<double,4,4> transformMatrix){
+
+}
+
 Vector3D Mesh::computeNormal(){
     return this->intersectedNormal;
 }
