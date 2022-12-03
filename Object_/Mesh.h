@@ -18,6 +18,8 @@ class Mesh{
     Array<Transformation *> transformList;
     Material * material;
     Vector3D intersectedNormal;
+    void tempTransform(Vertex t);
+    Matrix<double,4,4> stackedTransformMatrix;
     Matrix<double,4,4> transformMatrix;
     Matrix<double,4,4> inverseMatrix;
     void applyTransform();

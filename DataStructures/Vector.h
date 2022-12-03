@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 #include "Coordinate.h"
+#include "MeshUtils.h"
 #include <iostream>
 
 class Vector3D {

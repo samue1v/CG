@@ -24,6 +24,7 @@ public:
   
   Coordinate toCoordinate();
   Vector3D toVector3D();
+  Vertex toVertex();
   
 
   T * operator[](int i) {
@@ -194,6 +195,11 @@ Coordinate  Matrix<T,l,k>::toCoordinate(){
 template <class T,int l, int k>
 Vector3D Matrix<T,l,k>::toVector3D(){
     return Vector3D(matrix[0][0],matrix[1][0],matrix[2][0]);
+  }
+
+template <class T,int l, int k>
+Vertex Matrix<T,l,k>::toVertex(){
+    return Vertex(matrix[0][0],matrix[1][0],matrix[2][0]);
   }
 
 

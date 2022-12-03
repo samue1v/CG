@@ -90,7 +90,7 @@ int main() {
   Coordinate lookAt = Coordinate(0,0,-100);
   */
   
-   Coordinate eye = Coordinate(0,200,-50);
+   Coordinate eye = Coordinate(0,0,-50);
   Coordinate up = Coordinate(0,500,-50);
   Coordinate lookAt = Coordinate(0,0,-200);
   
@@ -142,7 +142,7 @@ int main() {
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,-200), radius, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,-200), radius, cooper);
   
 
   //Cylinder
@@ -164,18 +164,18 @@ int main() {
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
 	Plane *backPlane = new Plane(backPoint, backNormal, metal);
   floorPlane->setTexture("../TextureFiles/wood.png",renderer);
-  circle->setTexture("../TextureFiles/teste.png",renderer);
+  circle->setTexture("../TextureFiles/basketball1.png",renderer);
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
   std::string path = "../MeshFiles/cube.obj";
   Mesh * mesh = new Mesh(path,marble);
+  mesh->setTransform(new Translate(0,0,-300));
   mesh->setTransform(new Scale(2,0.3,1));
-  mesh->setTransform(new RotateY(45));
-  mesh->setTransform(new RotateX(120));
-  mesh->setTransform(new RotateZ(270));
-  mesh->setTransform(new Translate(-40,0,370));
-  mesh->setTransform(new ShearYX(30));
+  mesh->setTransform(new RotateY(90));
+  //mesh->setTransform(new RotateX(-45));
+  //mesh->setTransform(new RotateZ(30));
+  //mesh->setTransform(new ShearYX(30));
   
 
 
@@ -186,10 +186,10 @@ int main() {
 
   //Setting shapes and meshes to object
 
-  obj->setShape(circle);
+  //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  //obj->setMesh(mesh);
+  obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
@@ -199,7 +199,7 @@ int main() {
   Intensity ambientIntensity = Intensity(0.5, 0.5, 0.5);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,30,450));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,00));//Coordinate(0,60,-30))
   PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,-499));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
@@ -209,9 +209,9 @@ int main() {
 
 
 
-  scene->setLight(ambientLight);
+  //scene->setLight(ambientLight);
   //scene->setLight(dirLight);
-  //scene->setLight(pointLight);
+  scene->setLight(pointLight);
   //scene->setLight(pointLight2);
 
   scene->setBackgroundCoefs(bgIntensity);

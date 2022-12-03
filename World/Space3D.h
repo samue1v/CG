@@ -23,7 +23,6 @@ public:
     Color texel = Color();
     Shape3D *closestShape = nullptr;
     Mesh * closestMesh = nullptr;
-    //Texture * closestTexture = nullptr;
     Pair<Intensity,Color> hitData;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
@@ -33,7 +32,6 @@ public:
         if (t >= t_min && t <= t_max && t < closest_shape_t) {
           closest_shape_t = t;
           closestShape = shape;
-          //closestTexture = shape->getTexture();
         }
       }
       for(int k = 0;k<object->getMeshCount();k++){

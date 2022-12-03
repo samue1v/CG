@@ -19,9 +19,9 @@ public:
 struct Rubber : Material {
 public:
   Rubber()
-      : ka(AmbientReflectiveness(Coeficients{0.7, 0.7, 0.7})),
-        kd(DifuseReflectiveness(Coeficients(1, 1, 1))),
-        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 500)){};
+      : ka(AmbientReflectiveness(Coeficients{0.4, 0.4, 0.4})),
+        kd(DifuseReflectiveness(Coeficients(0.4, 0.4, 0.4))),
+        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 300)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();

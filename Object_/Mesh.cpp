@@ -16,6 +16,7 @@ Mesh::Mesh(const std::string & filePath){
     file.open(filePath);
     parseFile(file);
     this->transformMatrix = Matrix<double,4,4>::identity();
+    this->stackedTransformMatrix = this->transformMatrix; 
     this->inverseMatrix = this->transformMatrix;
 }
 
@@ -24,6 +25,7 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     file.open(filePath);
     parseFile(file);
     this->transformMatrix = Matrix<double,4,4>::identity();
+    this->stackedTransformMatrix = this->transformMatrix; 
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
     //std::cout << this->faceList;
@@ -147,7 +149,12 @@ Material * Mesh::getMaterial(){
 }
 
 void Mesh::transformView(Matrix<double,4,4> transformMatrix){
-
+    for(int i = 0;i<this->vertexList.getSize();i++){
+        this->vertexList.setElementAt(i,(transformMatrix*Matrix<double,4,1>(this->vertexList.getElementAt(i))).toVertex());
+    }
+    for(int j = 0;j<this->normalList.getSize();j++){
+        this->normalList.setElementAt(j,(transformMatrix*Matrix<double,4,1>(this->normalList.getElementAt(j))).toVector3D());
+    }
 }
 
 Vector3D Mesh::computeNormal(){
@@ -219,6 +226,7 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 
 bool Mesh::setTransform(Transformation * t){
     (this->transformList).push(t); 
+    this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
     this->transformMatrix = t->getTransform() * (this->transformMatrix);//ja mudei aqiu
     this->inverseMatrix = t->getInverse()*(this->inverseMatrix);
     applyTransform();
@@ -226,8 +234,13 @@ bool Mesh::setTransform(Transformation * t){
     
 }
 
+
+
 void Mesh::applyTransform(){
     Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
+    Vertex translateVertex = Vertex(-stackedTransformMatrix.getVal(0,3),-stackedTransformMatrix.getVal(1,3),-stackedTransformMatrix.getVal(2,3));
+    Vertex goBackVertex = Vertex(stackedTransformMatrix.getVal(0,3),stackedTransformMatrix.getVal(1,3),stackedTransformMatrix.getVal(2,3));
+    tempTransform(translateVertex); 
     for(int i=0;i<this->vertexList.getSize();i++){
         Vertex currentVertex = this->vertexList.getElementAt(i);
         Matrix<double,4,1> m = Matrix<double,4,1>(currentVertex);
@@ -235,6 +248,7 @@ void Mesh::applyTransform(){
         Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
         this->vertexList.setElementAt(i,newVertex);
     }
+    tempTransform(goBackVertex); 
     for(int j = 0;j<this->normalList.getSize();j++){
         Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
         Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
@@ -250,6 +264,13 @@ void Mesh::applyTransform(){
         delete this->transformList.getElementAt(k);
         this->transformList.setElementAt(k,nullptr);
 
+    }
+}
+
+void Mesh::tempTransform(Vertex v){
+    for(int i = 0;i<this->vertexList.getSize();i++){
+        Vertex currentV = this->vertexList.getElementAt(i);
+        this->vertexList.setElementAt(i,Vertex(currentV.x+v.x,currentV.y+v.y,currentV.z+v.z));
     }
 }
 
