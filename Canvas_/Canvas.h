@@ -13,13 +13,13 @@ class Canvas{
       Matrix<Object *,l,k> * getCanvas();
       int getNumberLines();
       int getNumberColumns();
-      u_int8_t * getColorBuffer();
+      uint8_t * getColorBuffer();
       Color getColorAt(int i,int j);
       bool pushColorBuffer(Color c);
       void clearCanvas();
     private:
       int colorBufferCount;
-      u_int8_t * colorBuffer;
+      uint8_t * colorBuffer;
       int nLines;
       int nColumns;
       Matrix<Object *,l,k> * canvas;
@@ -29,7 +29,7 @@ Canvas<l,k>::Canvas(){
   this->canvas = new Matrix<Object *,l,k>();
   this->nLines = l;
   this->nColumns = k;
-  this->colorBuffer = new u_int8_t[l*k*3];
+  this->colorBuffer = new uint8_t[l*k*3];
   this->colorBufferCount = 0;
 }
 
@@ -55,8 +55,7 @@ bool Canvas<l,k>::setColorAt(int x, int y, Color c){
 template <int l, int k>
 Color Canvas<l,k>::getColorAt(int i,int j){
   int begin = (i*l + j)*3;
-  Color c = Color(colorBuffer[begin],colorBuffer[++begin],colorBuffer[++begin]);
-  //std::cout<<c;
+  Color c = Color(colorBuffer[begin],colorBuffer[begin+1],colorBuffer[begin+2]);
   return c;
 }
 
@@ -77,7 +76,15 @@ uint8_t * Canvas<l,k>::getColorBuffer(){
 }
 template <int l, int k>
 bool Canvas<l,k>::pushColorBuffer(Color c){
-  //std::cout<<c;
+/*   std::cout<<"red:";
+  std::cout<<std::hex <<(c.red>>0);
+  std::cout<<"\n";
+  std::cout<<"green:";
+  std::cout<<std::hex <<(c.green>>0);
+  std::cout<<"\n";
+  std::cout<<"blue:";
+  std::cout<<std::hex <<(c.blue>>0);
+  std::cout<<"\n"; */
   colorBuffer[colorBufferCount++] = c.red;
   colorBuffer[colorBufferCount++] = c.green;
   colorBuffer[colorBufferCount++] = c.blue;

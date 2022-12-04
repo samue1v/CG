@@ -50,7 +50,7 @@ public:
     }
     if (!closestShape && !closestMesh) {
       hitData.left = nullptr;
-      hitData.middle = scene->getBackgroundCoefs();
+      hitData.middle = scene->getBackgroundIntensity();
       hitData.right = Color();
       return hitData;
     }
@@ -90,10 +90,11 @@ public:
         }
       }
     }
- 
+    //std::cout<<i;
 		if(i.getBlue()>1 || i.getRed()>1 || i.getGreen()>1){
 			i = i.normalize();
 		}
+    //std::cout<<i;
 
     hitData.left = closestObject;
     hitData.middle= i;

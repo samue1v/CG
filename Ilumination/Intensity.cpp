@@ -3,7 +3,11 @@
 #include <iostream>
 #include <stdio.h>
 
-Intensity::Intensity(){}
+Intensity::Intensity(){
+  ir = 0;
+  ig = 0;
+  ib = 0;
+}
 
 Intensity::Intensity(double red, double green, double blue)
     : ir(red), ig(green), ib(blue) {}
@@ -53,4 +57,18 @@ Intensity Intensity::normalize() {
   ig = ig / bigger;
   ib = ib / bigger;
   return Intensity(ir, ig, ib);
+}
+
+
+  std::ostream& operator<<(std::ostream& os, Intensity &i){
+  os<< "ir:";
+  os<< i.getRed();
+  os<<"/";
+  os<< "ig:";
+  os<< i.getGreen();
+  os<<"/";
+  os<< "ib:";
+  os<< i.getBlue();
+  os<<"\n";
+  return os;
 }

@@ -39,7 +39,10 @@ bool writePPM(Canvas<l,k> *canvas) {
   myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns()
          << '\n';
   myfile << 255 << '\n';
-
+  unsigned char RGBarray[6];
+  RGBarray[1] = ' ';
+  RGBarray[3] = ' ';
+  RGBarray[5] = ' ';
   for (int i = 0; i < canvas->getNumberLines(); i++) {
     for (int j = 0; j < canvas->getNumberColumns(); j++) {
       Color c = canvas->getColorAt(i,j);
@@ -80,9 +83,9 @@ void constructScene(Scene & scene){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,100);
-  Coordinate up = Coordinate(0,500,100);
-  Coordinate lookAt = Coordinate(0,0,-200);  
+  Coordinate eye = Coordinate(0,70 ,70);
+  Coordinate up = Coordinate(0,2000,20);
+  Coordinate lookAt = Coordinate(0,0,-100);  
 
   Camera * camera  = new Camera(eye,lookAt,up);
 
@@ -104,7 +107,7 @@ void constructScene(Scene & scene){
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),cylinderAxis,radius/3,3*radius,marble);
+  Cylinder * cylinder = new Cylinder(Coordinate(0,200,-100),Vector3D(0,0,-1),100,200,marble);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
   
   //Cone
@@ -114,8 +117,8 @@ void constructScene(Scene & scene){
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
 
   //Planes
-	Coordinate floorPoint = Coordinate(0,-100,0);
-	Vector3D floorNormal = Vector3D(0,sqrt(2),1);
+	Coordinate floorPoint = Coordinate(0,0,0);
+	Vector3D floorNormal = Vector3D(0,1,0);
   Coordinate backPoint = Coordinate(0,0,-400);
 	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
@@ -125,12 +128,13 @@ void constructScene(Scene & scene){
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
-  std::string path = "../MeshFiles/cube.obj";
-  Mesh * mesh = new Mesh(path,marble);
-  mesh->setTransform(new Translate(0,0,-300));
-  mesh->setTransform(new Scale(2,0.3,1));
-  mesh->setTransform(new RotateY(90));
-  mesh->setTransform(new RotateX(-90));
+  std::string simple_mesh = "../MeshFiles/cube.obj";
+   std::string casa_mesh = "../MeshFiles/casa.obj";
+  Mesh * mesh = new Mesh(casa_mesh,marble);
+  mesh->setTransform(new Translate(0,35,0));
+  mesh->setTransform(new Scale(3,3,3));
+  mesh->setTransform(new RotateY(-10));
+  //mesh->setTransform(new RotateX(-90));
   //mesh->setTransform(new RotateZ(30));
   //mesh->setTransform(new ShearYX(30));
   
@@ -144,19 +148,18 @@ void constructScene(Scene & scene){
   //Setting shapes and meshes to object
 
   //obj->setShape(circle);
-  //obj->setShape(floorPlane);
+  obj->setShape(floorPlane);
   //obj->setShape(backPlane);
   obj->setMesh(mesh);
   //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
-
   //Setting lights
 
-  Intensity ambientIntensity = Intensity(0.5, 0.5, 0.5);
+  Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,00));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,70,10));//Coordinate(0,60,-30))
   PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,-499));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
@@ -165,7 +168,7 @@ void constructScene(Scene & scene){
 
 
 
-  //scene->setLight(ambientLight);
+  scene.setLight(ambientLight);
   //scene->setLight(dirLight);
   scene.setLight(pointLight);
   //scene->setLight(pointLight2);

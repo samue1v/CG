@@ -17,7 +17,7 @@ public:
   Light *getLightAt(int index);
   bool setLight(Light * l);
   int getNumberOfLights();
-  Intensity getBackgroundCoefs();
+  Intensity getBackgroundIntensity();
   Camera * getCamera();
   bool setCamera(Camera * newCamera);
   void transformView();
@@ -28,7 +28,6 @@ private:
   Intensity bgIntensity;
   Color naturalColor;
   Camera * camera;
-  Intensity background_coefs;
   Array<Object *> elements;
   Array<Light *> lights;
 };

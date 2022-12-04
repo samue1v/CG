@@ -2,6 +2,7 @@
 #define INTENSITY_H
 
 #include "Reflect.h"
+#include <iostream>
 
 class Intensity {
 public:
@@ -27,6 +28,7 @@ public:
     return Intensity(ir + right.getRed(), ig + right.getGreen(),
                      ib + right.getBlue());
   }
+  friend std::ostream& operator<<(std::ostream& os, Intensity &i);
 
 private:
   double ir;

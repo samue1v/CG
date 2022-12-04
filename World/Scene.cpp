@@ -25,7 +25,7 @@ bool Scene::setObject(Object *polygon){
 int Scene::getNumberOfElements() { return (this->elements).getSize(); }
 
 
-Intensity Scene::getBackgroundCoefs() { return this->background_coefs; }
+Intensity Scene::getBackgroundIntensity() { return this->bgIntensity; }
 
 bool Scene::setLight(Light * light){
   (this->lights).push(light);
