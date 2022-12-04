@@ -7,6 +7,7 @@ class Camera{
     Coordinate lookAt;
     Coordinate up;
     Coordinate eye;
+    Coordinate eyeTransformed;
     Matrix<double,4,4> worldToCamera;
     Matrix<double,4,4> cameraToWorld;
     public:
@@ -17,6 +18,7 @@ class Camera{
     bool setUp(Coordinate newUp);
     Matrix<double,4,4> getWorldToCamera();
     Matrix<double,4,4> getCameraToWorld();
+    Coordinate getEyeTransformed();
     Coordinate getEye();
     Coordinate getUp();
     Coordinate getLookAt();

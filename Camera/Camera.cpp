@@ -16,7 +16,10 @@ Camera::Camera(Coordinate eye,Coordinate lookAt,Coordinate up){
     this->eye = eye;
     this->up = up;
     this->lookAt = lookAt;
-    //std::cout<<"aquikkkk\n";
+    Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
+    //Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
+    Matrix<double,4,1> tmatrix = worldToCamera*eyematrix;
+    this->eyeTransformed = (tmatrix).toCoordinate();
     calcTransforms();
 }
 
@@ -55,6 +58,9 @@ Matrix<double,4,4> Camera::getCameraToWorld(){
     return this->cameraToWorld;
 }
 
+Coordinate Camera::getEyeTransformed(){
+    return eyeTransformed;
+}
 
 
 

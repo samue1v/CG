@@ -5,7 +5,10 @@
 #include <iostream>
 #include <stdio.h>
 
-Scene::Scene(){}
+Scene::Scene(){
+  bgIntensity = Intensity(0, 0, 0);
+  naturalColor = Color(255, 255, 255);
+}
 
 Object *Scene::getObjectAt(int index) {
   return (this->elements).getElementAt(index);
@@ -21,15 +24,7 @@ bool Scene::setObject(Object *polygon){
 
 int Scene::getNumberOfElements() { return (this->elements).getSize(); }
 
-bool Scene::setBackgroundCoefs(Intensity coefs) {
-  if (coefs.getRed() > INTENSITY_MAX || coefs.getRed() < INTENSITY_MIN ||
-      coefs.getGreen() > INTENSITY_MAX || coefs.getGreen() < INTENSITY_MIN ||
-      coefs.getBlue() > INTENSITY_MAX || coefs.getBlue() < INTENSITY_MIN) {
-    return false;
-  }
-  this->background_coefs = coefs;
-  return true;
-}
+
 Intensity Scene::getBackgroundCoefs() { return this->background_coefs; }
 
 bool Scene::setLight(Light * light){
@@ -59,4 +54,12 @@ void Scene::transformView(){
   for(int j = 0;j<this->elements.getSize();j++){
     this->lights.getElementAt(j)->applyViewTransform(this->camera->getWorldToCamera());
   }
+}
+
+Intensity Scene::getBgIntensity(){
+  return bgIntensity;
+}
+
+Color Scene::getNaturalColor(){
+  return naturalColor;
 }
