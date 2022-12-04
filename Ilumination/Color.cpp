@@ -18,5 +18,6 @@
   os<< "b:";
   os<< c.blue;
   os<<"/";
+  os<<"\n";
   return os;
 }

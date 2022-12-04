@@ -1,10 +1,10 @@
 #ifndef TRIPLE_H
 #define TRIPLE_H
 
-template <typename T> struct Triple {
+template <typename T,typename U,typename V> struct Triple {
   T left;
-  T middle;
-  T right;
+  U middle;
+  V right;
 };
 
 

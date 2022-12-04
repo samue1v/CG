@@ -3,6 +3,7 @@
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/Matrix.h"
 #include "../DataStructures/Vector.h"
+#include "../DataStructures/Triple.h"
 #include "../Ilumination/Color.h"
 #include "../Ilumination/Intensity.h"
 #include "../Ilumination/Light.h"
@@ -15,7 +16,7 @@ class Space3D {
 public:
   Coordinate canvasToViewport(double x, double y);
 
-  static Pair<Intensity,Color> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
+  static Triple<Object *,Intensity,Color> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
                             double t_max) {
     double closest_t = INF;
     double closest_shape_t = INF;
@@ -23,7 +24,8 @@ public:
     Color texel = Color();
     Shape3D *closestShape = nullptr;
     Mesh * closestMesh = nullptr;
-    Pair<Intensity,Color> hitData;
+    Object * closestObject = nullptr;
+    Triple<Object *,Intensity,Color> hitData;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
@@ -32,6 +34,7 @@ public:
         if (t >= t_min && t <= t_max && t < closest_shape_t) {
           closest_shape_t = t;
           closestShape = shape;
+          closestObject = object;
         }
       }
       for(int k = 0;k<object->getMeshCount();k++){
@@ -40,12 +43,14 @@ public:
         if (t >= t_min && t <= t_max && t < closest_mesh_t) {
           closest_mesh_t = t;
           closestMesh = mesh;
+          closestObject = object;
         }
       }
 
     }
     if (!closestShape && !closestMesh) {
-      hitData.left = scene->getBackgroundCoefs();
+      hitData.left = nullptr;
+      hitData.middle = scene->getBackgroundCoefs();
       hitData.right = Color();
       return hitData;
     }
@@ -90,7 +95,8 @@ public:
 			i = i.normalize();
 		}
 
-    hitData.left= i;
+    hitData.left = closestObject;
+    hitData.middle= i;
     hitData.right = texel;
     return hitData;
   }

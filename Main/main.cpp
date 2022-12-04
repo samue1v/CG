@@ -33,22 +33,19 @@ para -canvas_distance
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
   std::ofstream myfile;
-  Matrix<Color,l,k> *m = canvas->getCanvas();
+  //Matrix<Color,l,k> *m = canvas->getCanvas();
   myfile.open("image.ppm");
   myfile << "P3\n";
   myfile << canvas->getNumberLines() << ' ' << canvas->getNumberColumns()
          << '\n';
   myfile << 255 << '\n';
-  unsigned char RGBarray[6];
-  RGBarray[1] = ' ';
-  RGBarray[3] = ' ';
-  RGBarray[5] = ' ';
 
   for (int i = 0; i < canvas->getNumberLines(); i++) {
     for (int j = 0; j < canvas->getNumberColumns(); j++) {
-      // std::cout << (int)m->getVal(i, j).red <<"\n";
-      myfile << ' ' << (int)m->getVal(i, j).red << ' '
-             << (int)m->getVal(i, j).green << ' ' << (int)m->getVal(i, j).blue
+      Color c = canvas->getColorAt(i,j);
+      //std::cout<<(c);
+      myfile << ' ' << (int)c.red << ' '
+             << (int)c.green << ' ' << (int)c.blue
              << ' ';
     }
     myfile << '\n';
@@ -107,7 +104,7 @@ void constructScene(Scene & scene){
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),cylinderAxis,radius/3,3*radius,cooper);
+  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),cylinderAxis,radius/3,3*radius,marble);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
   
   //Cone
@@ -149,8 +146,8 @@ void constructScene(Scene & scene){
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  //obj->setMesh(mesh);
-  obj->setShape(cylinder);
+  obj->setMesh(mesh);
+  //obj->setShape(cylinder);
   //obj->setShape(cone);  
 
 
@@ -194,8 +191,7 @@ int main() {
   constructScene(*scene);
 
   // Canvas creation
-  Matrix<Color,nLines,nColumns> * m = new Matrix<Color,nLines,nColumns>();
-  Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>(m);
+  Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>();
   
   //Canvas Loop
   Coordinate P0 = scene->getCamera()->getEyeTransformed();
@@ -206,12 +202,15 @@ int main() {
       Coordinate canvasPoint = Coordinate(x, y, canvasDistance);
       Vector3D dr = Vector3D(canvasPoint - P0);
       dr.normalize();
-      Pair<Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
+      Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
+      canvas->setObjectAt(l,c,hitData.left);
       if(hitData.right.hasInit){
-        canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
+        //canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
+        canvas->pushColorBuffer(hitData.right * hitData.middle);
       }
       else{
-        canvas->setColorAt(l, c, (scene->getNaturalColor() * hitData.left));
+        //canvas->setColorAt(l, c, (scene->getNaturalColor() * hitData.left));
+        canvas->pushColorBuffer(scene->getNaturalColor() * hitData.middle);
       }
     }
   }

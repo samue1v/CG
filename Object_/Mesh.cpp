@@ -50,9 +50,9 @@ void Mesh::parseFile(std::ifstream & file){
     file.close();
 }
 
-Triple<int> Mesh::parseFaceData(const std::string & line){
+Triple<int,int,int> Mesh::parseFaceData(const std::string & line){
     Array<int> a;
-    Triple<int> t;
+    Triple<int,int,int> t;
     std::string tempStr = line;
     double val;
     int index = 0;
@@ -125,7 +125,7 @@ void Mesh::parseF(const std::string & line){
     Array<int> v;
     Array<int> t;
     Array<int> n;
-    Triple<int> r;
+    Triple<int,int,int> r;
     int len;
     int index = 0;
     while(!tempStr.empty() && index >= 0){
