@@ -1,6 +1,7 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 #include "../DataStructures/Matrix.h"
+#include "../DataStructures/Pair.h"
 #include "../Object_/Object.h"
 #include "../Ilumination/Color.h"
 
@@ -14,10 +15,20 @@ class Canvas{
       int getNumberLines();
       int getNumberColumns();
       uint8_t * getColorBuffer();
+      double getCanvasDistance();
+      bool setCanvasDistance(double newCanvasDistance);
       Color getColorAt(int i,int j);
       bool pushColorBuffer(Color c);
       void clearCanvas();
+      Pair<double,double> getWindowSize();
+      Pair<double,double> getGridSize();
+      bool setWindowsSize(Pair<double,double> newWindowSize);
+      bool setGridSize(Pair<double,double> newGridSize);
+
     private:
+      Pair<double,double> windowSize;
+      Pair<double,double> gridSize;
+      double canvasDistance;
       int colorBufferCount;
       uint8_t * colorBuffer;
       int nLines;
@@ -60,6 +71,17 @@ Color Canvas<l,k>::getColorAt(int i,int j){
 }
 
 template <int l, int k>
+double Canvas<l,k>::getCanvasDistance(){
+  return canvasDistance;
+}
+
+template <int l, int k>
+bool Canvas<l,k>::setCanvasDistance(double newCanvasDistance){
+  this->canvasDistance = newCanvasDistance;
+  return true;
+}
+
+template <int l, int k>
 void Canvas<l,k>::clearCanvas(){
   std::fill(colorBuffer,colorBuffer+(l*k*3),0);
   colorBufferCount = 0;
@@ -74,6 +96,31 @@ template <int l, int k>
 uint8_t * Canvas<l,k>::getColorBuffer(){
   return this->colorBuffer;
 }
+
+template <int l, int k>
+Pair<double,double> Canvas<l,k>::getWindowSize(){
+  return windowSize;
+}
+
+
+template <int l, int k>
+Pair<double,double> Canvas<l,k>::getGridSize(){
+  return gridSize;
+}
+
+template <int l, int k>
+bool Canvas<l,k>::setWindowsSize(Pair<double,double> newWindowSize){
+  windowSize = newWindowSize;
+  return true;
+}
+
+template <int l, int k>
+bool Canvas<l,k>::setGridSize(Pair<double,double> newGridSize){
+  gridSize = newGridSize;
+  return true;
+}
+
+
 template <int l, int k>
 bool Canvas<l,k>::pushColorBuffer(Color c){
 /*   std::cout<<"red:";

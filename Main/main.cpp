@@ -20,6 +20,7 @@ para -canvas_distance
 #include "../Object_/Texture.h"
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
+#include "../libs/glfw/include/GLFW/glfw3.h"
 #include <math.h>
 #include <string>
 #include <fstream>
@@ -129,12 +130,14 @@ void constructScene(Scene & scene){
 
   //Meshes
   std::string simple_mesh = "../MeshFiles/cube.obj";
-   std::string casa_mesh = "../MeshFiles/casa.obj";
-  Mesh * mesh = new Mesh(casa_mesh,marble);
+  std::string casa_mesh = "../MeshFiles/casa.obj";
+  Mesh * mesh = new Mesh(simple_mesh,marble);
+  //Mesh * mesh = new Mesh(casa_mesh,marble);
   mesh->setTransform(new Translate(0,35,0));
-  mesh->setTransform(new Scale(3,3,3));
+  //mesh->setTransform(new Scale(3,3,3));
+  mesh->setTransform(new Scale(0.3,0.3,0.3));
   mesh->setTransform(new RotateY(-10));
-  //mesh->setTransform(new RotateX(-90));
+  mesh->setTransform(new RotateX(30));
   //mesh->setTransform(new RotateZ(30));
   //mesh->setTransform(new ShearYX(30));
   
@@ -178,14 +181,104 @@ void constructScene(Scene & scene){
   scene.transformView();
 }
 
+
+template<int nLines,int nColumns>
+void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
+  Pair<double,double> windowSize = canvas->getWindowSize();
+  double wj = windowSize.left;
+  double hj = windowSize.right;
+  Pair<double,double> gridSize = canvas->getGridSize();
+  double dx = gridSize.left;
+  double dy = gridSize.right;
+  Coordinate P0 = scene->getCamera()->getEyeTransformed();
+  for (int l = 0; l < nLines; l++) {
+    double y = hj / 2 - dy / 2 - l * dy;
+    for (int c = 0; c < nColumns; c++) {
+      double x = -wj / 2 + dx / 2 + c * dx;
+      Coordinate canvasPoint = Coordinate(x, y, canvas->getCanvasDistance());
+      Vector3D dr = Vector3D(canvasPoint - P0);
+      dr.normalize();
+      Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
+      canvas->setObjectAt(l,c,hitData.left);
+      if(hitData.right.hasInit){
+        canvas->pushColorBuffer(hitData.right * hitData.middle);
+      }
+      else{
+        canvas->pushColorBuffer(scene->getNaturalColor() * hitData.middle);
+      }
+    }
+  }
+}
+void ErrorCallback(int, const char* err_str)
+{
+    std::cout << "GLFW Error: " << err_str << std::endl;
+}
+
+
+template<int nLines,int nColumns>
+void display(Canvas<nLines,nColumns> * canvas){
+  GLFWwindow* window;
+  
+  glfwSetErrorCallback(ErrorCallback);
+  if (!glfwInit()) {
+      std::cout<< "Couldn't init GLFW\n";
+      exit(-1);
+  }
+
+  window = glfwCreateWindow(nLines, nColumns, "CG", NULL, NULL);
+  glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
+  if (!window) {
+      std::cout<<"Couldn't open window\n";
+      exit(-1);
+  }
+
+
+    glfwMakeContextCurrent(window);
+    uint8_t * data = canvas->getColorBuffer();
+    GLuint tex_handle;
+    glGenTextures(1, &tex_handle);
+    glBindTexture(GL_TEXTURE_2D, tex_handle);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+  while (!glfwWindowShouldClose(window)) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Set up orphographic projection
+    int window_width, window_height;
+    glfwGetFramebufferSize(window, &window_width, &window_height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, window_width, 0, window_height, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+
+    // Render whatever you want
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex_handle);
+    glBegin(GL_QUADS);
+      glTexCoord2d(0,1); glVertex2i(0, 0);
+      glTexCoord2d(1,1); glVertex2i(0 + nLines, 0);
+      glTexCoord2d(1,0); glVertex2i(0 + nLines /** 2*/, 0 + nColumns /** 2*/);
+      glTexCoord2d(0,0); glVertex2i(0, 0 + nColumns /** 2*/);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glfwSwapBuffers(window);
+    glfwWaitEvents();
+    }
+
+}
+
 int main() {
   double wj = 60;
   double hj = 60;
-
   double canvasDistance = -30;
-
-  const int nLines = 500;
-  const int nColumns = 500;
+  const int nLines = 600;
+  const int nColumns = 600;
   double dx = wj / nColumns;
   double dy = hj / nLines;
 
@@ -195,30 +288,15 @@ int main() {
 
   // Canvas creation
   Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>();
+  canvas->setCanvasDistance(-30);
+  canvas->setGridSize({dx,dy});
+  canvas->setWindowsSize({wj,hj});
   
   //Canvas Loop
-  Coordinate P0 = scene->getCamera()->getEyeTransformed();
-  for (int l = 0; l < nLines; l++) {
-    double y = hj / 2 - dy / 2 - l * dy;
-    for (int c = 0; c < nColumns; c++) {
-      double x = -wj / 2 + dx / 2 + c * dx;
-      Coordinate canvasPoint = Coordinate(x, y, canvasDistance);
-      Vector3D dr = Vector3D(canvasPoint - P0);
-      dr.normalize();
-      Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
-      canvas->setObjectAt(l,c,hitData.left);
-      if(hitData.right.hasInit){
-        //canvas->setColorAt(l, c, ((hitData.right) * hitData.left));
-        canvas->pushColorBuffer(hitData.right * hitData.middle);
-      }
-      else{
-        //canvas->setColorAt(l, c, (scene->getNaturalColor() * hitData.left));
-        canvas->pushColorBuffer(scene->getNaturalColor() * hitData.middle);
-      }
-    }
-  }
+  run<nLines,nColumns>(scene,canvas);
+  display<nLines,nColumns>(canvas);
   //Write to file(will be changed)
-  writePPM<nLines,nColumns>(canvas);
+  //writePPM<nLines,nColumns>(canvas);
 
   return 0;
 }
