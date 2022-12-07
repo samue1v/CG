@@ -1,0 +1,12 @@
+TO DO:
+
+. Transformação espacial de objetos lisos. ✔️
+. Fazer a textura acompanhar a transformação espacial dos objetos lisos. ✔️
+. Fazer modelos no blender e pensar na cena(considerar tig).
+. Fazer o parsing das coordenadas de textura do blender.
+. Textura em malha.
+. Menu de interação(nanoGUI-SDL) - vide(1).
+
+OBS:
+
+1 Caso não haja tempo, considerar fortemente a interação por prompt.

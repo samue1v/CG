@@ -30,7 +30,6 @@ para -canvas_distance
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL_image.h>
 
-
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
   std::ofstream myfile;
@@ -57,8 +56,6 @@ bool writePPM(Canvas<l,k> *canvas) {
   return true;
 }
 
-
-
 template<int l,int k>
 bool SDLdraw(Canvas<l,k> *canvas){
   Matrix<Color,l,k> *m = canvas->getCanvas();
@@ -84,7 +81,7 @@ void constructScene(Scene & scene){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,70 ,70);
+  Coordinate eye = Coordinate(0,0 ,70);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -103,19 +100,30 @@ void constructScene(Scene & scene){
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,-200), radius, cooper);
+  Sphere *circle = new Sphere(Coordinate(0,0,0), radius, rubber);
+  circle->setTransform(new Scale(0.5,1,1));
+  circle->setTransform(new Translate(50,10,-100));
   
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(Coordinate(0,200,-100),Vector3D(0,0,-1),100,200,marble);
+  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),Vector3D(0,0,-1),20,50,marble);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
+
+  cylinder->setTransform(new RotateX(120));
+  //cylinder->setTransform(new Translate(120,90,-60));
+  cylinder->setTransform(new Scale(2,3,3));
+  
   
   //Cone
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
-  Cone * cone = new Cone(center+Coordinate(0,50,300),cylinderAxis,coneRadius,coneRadius,marble);
+  Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(0,1,0),10,20,marble);
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
+  //cone->setTransform(new Translate(-50,100,10));
+  cone->setTransform(new RotateX(-45));
+  cone->setTransform(new RotateY(45));
+
 
   //Planes
 	Coordinate floorPoint = Coordinate(0,0,0);
@@ -124,8 +132,13 @@ void constructScene(Scene & scene){
 	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
 	Plane *backPlane = new Plane(backPoint, backNormal, metal);
+
+  floorPlane->setTransform(new RotateX(30));
+
+
+  //textures
   floorPlane->setTexture("../TextureFiles/wood.png",renderer);
-  circle->setTexture("../TextureFiles/basketball1.png",renderer);
+  circle->setTexture("../TextureFiles/kaguya.png",renderer);
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
@@ -151,11 +164,11 @@ void constructScene(Scene & scene){
   //Setting shapes and meshes to object
 
   //obj->setShape(circle);
-  obj->setShape(floorPlane);
+  //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  //obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  //obj->setShape(cone);  
+  obj->setShape(cone);  
 
   //Setting lights
 
@@ -180,7 +193,6 @@ void constructScene(Scene & scene){
 
   scene.transformView();
 }
-
 
 template<int nLines,int nColumns>
 void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
@@ -209,11 +221,11 @@ void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
     }
   }
 }
+
 void ErrorCallback(int, const char* err_str)
 {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
-
 
 template<int nLines,int nColumns>
 void display(Canvas<nLines,nColumns> * canvas){

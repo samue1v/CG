@@ -8,6 +8,7 @@
 #include "../Ilumination/Color.h"
 #include "../Ilumination/Reflect.h"
 #include "../Ilumination/Light.h"
+#include "Transformation.h"
 #include "Material.h"
 #include "Texture.h"
 
@@ -26,6 +27,7 @@ public:
   virtual Vector3D computeNormal(Coordinate P, Vector3D D) = 0;
   virtual double IntersectRay(Coordinate O, Vector3D D,double, double) = 0;
   virtual void transformView(Matrix<double,4,4> transformMatrix) = 0;
+  virtual bool setTransform(Transformation * t) = 0;
 };
 
 class Sphere : public Shape3D {
@@ -50,6 +52,7 @@ public:
   Coordinate getCenter();
   Vector3D computeNormal(Coordinate P,Vector3D D);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
+  bool setTransform(Transformation * t);
 };
 
 class Plane : public Shape3D {
@@ -71,6 +74,7 @@ public:
   bool setplanePoint(Coordinate newplanePoint);
   Vector3D getNormal();
   bool setNormal(Vector3D newNormal);
+  bool setTransform(Transformation * t);
 };
 
 class Cylinder : public Shape3D{
@@ -95,6 +99,7 @@ class Cylinder : public Shape3D{
   Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
+  bool setTransform(Transformation * t);
 };
 
 class Cone : public Shape3D{
@@ -117,6 +122,7 @@ class Cone : public Shape3D{
   Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
   double IntersectRay(Coordinate O, Vector3D D,double, double);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
+  bool setTransform(Transformation * t);
 };
 
 #endif

@@ -108,6 +108,22 @@ Vector3D Sphere::computeNormal(Coordinate P,Vector3D D) {
   return Vector3D(P - (this->center));
 }
 
+bool Sphere::setTransform(Transformation * t){
+  if(dynamic_cast<Translate *>(t)){
+    Matrix<double,4,1> centerMatrix = Matrix<double,4,1>(this->center);
+    Matrix<double,4,1> transformedCenter = t->getTransform() * centerMatrix;
+    this->center = transformedCenter.toCoordinate();
+    return true;
+  }
+  else if(dynamic_cast<Scale *>(t)){
+    double scaleFactor = t->getTransform().getVal(0,0);
+    this->radius = radius * scaleFactor;
+    return true;
+  }
+  return false;
+  
+}
+
 Plane::Plane() {}
 
 Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material) {
@@ -127,6 +143,15 @@ Texture * Plane::getTexture(){
   }
   return nullptr;
 } 
+
+bool Plane::setplanePoint(Coordinate newPoint){
+  this->planePoint = newPoint;
+  return true;
+}
+
+Coordinate Plane::getplanePoint(){
+  return this->planePoint;
+}
 
 void Plane::transformView(Matrix<double,4,4> transformMatrix){
   this->planePoint = (transformMatrix*Matrix<double,4,1>(this->planePoint)).toCoordinate();
@@ -218,6 +243,16 @@ bool Plane::setTexture(const std::string & filePath,SDL_Renderer * renderer){
   return true;
 }
 
+Vector3D Plane::getNormal(){
+  return this->normal;
+}
+
+bool Plane::setNormal(Vector3D newNormal){
+  this->normal = newNormal;
+  this->normal.normalize();
+  return true;
+}
+
 double Plane::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax){
   Vector3D p_minuspi = Vector3D(this->planePoint - O);//mudei aqui
   double denom = Vector3D::dot(D,this->normal);
@@ -230,6 +265,22 @@ double Plane::IntersectRay(Coordinate O, Vector3D D,double tMin,double tMax){
   	return t;
   }
 	return INF;
+}
+
+bool Plane::setTransform(Transformation * t){
+  if(dynamic_cast<RotateX*>(t) || dynamic_cast<RotateY*>(t) || dynamic_cast<RotateZ*>(t)){
+    Matrix<double,4,1> planeNormalm = Matrix<double,4,1>(this->normal);
+    Matrix<double,4,1> planeNormalmTransformed = t->getTransform() * planeNormalm;
+    this->normal = planeNormalmTransformed.toVector3D();
+    return true;
+  }
+  else if(dynamic_cast<Translate*>(t)){
+    Matrix<double,4,1> pointMatrix = Matrix<double,4,1>(this->planePoint);
+    Matrix<double,4,1> transformedPoint = t->getTransform() * pointMatrix;
+    this->planePoint = transformedPoint.toCoordinate();
+    return true;
+  }
+  return false;
 }
 
 Cylinder::Cylinder(){}
@@ -381,6 +432,48 @@ double Cylinder::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax
   return closest_t;
 }
 
+bool Cylinder::setTransform(Transformation * t){
+  if(dynamic_cast<Scale *>(t)){
+    double scaleFactor = t->getTransform().getVal(0,0);
+    this->height = scaleFactor * height;
+    this->radius = scaleFactor * radius;
+    this->topCenter = this->topCenter*scaleFactor;
+    this->baseCenter = this->baseCenter*scaleFactor;
+    this->topLid.setplanePoint(topCenter);
+    this->baseLid.setplanePoint(baseCenter);
+    return true;
+  }
+  else if(dynamic_cast<Translate *>(t)){
+    Matrix<double,4,1> baseCenterMatrix = Matrix<double,4,1>(this->baseCenter);
+    Matrix<double,4,1> topCenterMatrix = Matrix<double,4,1>(this->topCenter);
+    Matrix<double,4,1> transformedBaseCenter = t->getTransform() * baseCenterMatrix;
+    Matrix<double,4,1> transformedTopCenter = t->getTransform() * topCenterMatrix;
+    this->baseCenter = transformedBaseCenter.toCoordinate();
+    this->topCenter = transformedTopCenter.toCoordinate();
+       
+    this->baseLid.setTransform(t);
+    this->topLid.setTransform(t);
+    
+    return true;
+  }
+  else if(dynamic_cast<RotateX*>(t) || dynamic_cast<RotateY*>(t) || dynamic_cast<RotateZ*>(t)){
+    Matrix<double,4,1> axisM = Matrix<double,4,1>(this->axis);
+    Matrix<double,4,1> axisTransformed = t->getTransform() * axisM;
+    this->axis = axisTransformed.toVector3D(); 
+    this->baseLid.setTransform(t);
+    this->topCenter =(this->axis*this->height)+this->baseCenter;
+    this->topLid.setplanePoint(topCenter);
+    //olhar dps
+    this->topLid.setTransform(t);
+    
+    return true;
+  }
+
+  
+  return false;
+  }
+
+
 Cone::Cone(){}
 
 Cone::Cone(Coordinate baseCenter,Vector3D axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
@@ -411,7 +504,12 @@ Material * Cone::getMaterial(){
 }
 
 void Cone::transformView(Matrix<double,4,4> transformMatrix){
+  this->axis = (transformMatrix * Matrix<double,4,1>(this->axis)).toVector3D();
+  this->baseCenter = (transformMatrix * Matrix<double,4,1>(this->baseCenter)).toCoordinate();
+  this->vertex = (transformMatrix * Matrix<double,4,1>(this->vertex)).toCoordinate();
+  this->baseLid.transformView(transformMatrix);
 
+  
 }
 
 Vector3D Cone::computeNormal(Coordinate P,Vector3D D){
@@ -455,17 +553,10 @@ double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
   Matrix<double,3,1> dr = Matrix<double,3,1>(D);
   Matrix<double,3,1> dc = Matrix<double,3,1>(this->axis);
   Matrix<double,1,3> dct = dc.transpose();
-  //t1 norm
-  //wv.normalize();
   beta = ((this->radius*this->radius)+(this->height*this->height))/(this->height*this->height);
   Matrix<double,3,1> w = Matrix<double,3,1>(wv);
   Matrix<double,3,3> dc_dct = dc*dct;
   Matrix<double,3,3> M = Matrix<double,3,3>::identity() - ((dc_dct)*beta);
-  //std::cout<< this->height <<'\n';
-  //std::cout<< beta <<'\n';
-  //std::cout<< M;
-  //std::cout<< '\n';
-  //exit(-1);
   a = (dr.transpose()*M*dr).getVal(0,0);
   b = -2*((dr.transpose()*M*w).getVal(0,0));
   c = (w.transpose()*M*w).getVal(0,0);
@@ -524,4 +615,40 @@ double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
 
   return closest_t;
 
+}
+
+bool Cone::setTransform(Transformation * t){
+  if(dynamic_cast<Scale *>(t)){
+    double scaleFactor = t->getTransform().getVal(0,0);
+    this->height = scaleFactor * height;
+    this->radius = scaleFactor * radius;
+    this->baseCenter = this->baseCenter*scaleFactor;
+    this->baseLid.setplanePoint(baseCenter);
+    return true;
+  }
+  else if(dynamic_cast<Translate *>(t)){
+    Matrix<double,4,1> baseCenterMatrix = Matrix<double,4,1>(this->baseCenter);
+    Matrix<double,4,1> vertexMatrix = Matrix<double,4,1>(this->vertex);
+    Matrix<double,4,1> transformedBaseCenter = t->getTransform() * baseCenterMatrix;
+    this->baseCenter = transformedBaseCenter.toCoordinate();
+       
+    this->baseLid.setTransform(t);
+    this->vertex = (t->getTransform()*vertexMatrix).toCoordinate();
+    return true;
+  }
+  else if(dynamic_cast<RotateX*>(t) || dynamic_cast<RotateY*>(t) || dynamic_cast<RotateZ*>(t)){
+    Matrix<double,4,1> axisM = Matrix<double,4,1>(this->axis);
+    //Matrix<double,4,1> vertexMatrix = Matrix<double,4,1>(this->vertex);
+    //Matrix<double,4,1> baseMatrix = Matrix<double,4,1>(this->baseCenter);
+    Matrix<double,4,1> axisTransformed = t->getTransform() * axisM;
+    this->axis = axisTransformed.toVector3D(); 
+    this->vertex = this->axis*this->height + this->baseCenter;
+    //this->baseCenter = (t->getTransform()*baseMatrix).toCoordinate();
+    
+    this->baseLid.setTransform(t);
+    return true;
+  }
+
+  
+  return false;
 }
