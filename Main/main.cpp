@@ -144,17 +144,19 @@ void constructScene(Scene & scene){
   //Meshes
   std::string simple_mesh = "../MeshFiles/cube.obj";
   std::string casa_mesh = "../MeshFiles/casa.obj";
-  Mesh * mesh = new Mesh(simple_mesh,marble);
+  std::string quadro_mesh = "../MeshFiles/frame.obj";
+  Mesh * mesh = new Mesh(quadro_mesh,marble);
+
   //Mesh * mesh = new Mesh(casa_mesh,marble);
-  mesh->setTransform(new Translate(0,35,0));
+  mesh->setTransform(new Translate(0,0,10));
   //mesh->setTransform(new Scale(3,3,3));
-  mesh->setTransform(new Scale(0.3,0.3,0.3));
-  mesh->setTransform(new RotateY(-10));
-  mesh->setTransform(new RotateX(30));
+  mesh->setTransform(new Scale(20,20,20));
+  //mesh->setTransform(new RotateY(-135));
+  //mesh->setTransform(new RotateX(-135));
   //mesh->setTransform(new RotateZ(30));
   //mesh->setTransform(new ShearYX(30));
   
-
+  mesh->setTexture("../TextureFiles/kaguya.png",renderer);
 
   //Object
   char name[] = "circulo";
@@ -166,16 +168,16 @@ void constructScene(Scene & scene){
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  //obj->setMesh(mesh);
+  obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  obj->setShape(cone);  
+  //obj->setShape(cone);  
 
   //Setting lights
 
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,70,10));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
   PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,-499));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene

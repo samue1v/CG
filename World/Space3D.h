@@ -82,6 +82,7 @@ public:
     }
     else{
       N = closestMesh->computeNormal();
+      texel =  closestMesh->getTexel(P,O,scene->getCamera()->getCameraToWorld());
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
         Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
         double p_lightDirLength = p_lightDir.getLength();

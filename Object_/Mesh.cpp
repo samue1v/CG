@@ -38,11 +38,13 @@ void Mesh::parseFile(std::ifstream & file){
         if(line[0] == 'v' && line[1]==' '){
             parseV(line.substr(line.find(" ") + 1,line.length()));
         }
-        if(line[0] == 'v' && line[1]=='n'){
+        else if(line[0] == 'v' && line[1]=='n'){
             parseN(line.substr(line.find(" ") + 1,line.length()));
         }
-        if(line[0] == 'f'){
-
+        else if (line[0] == 'v' && line[1] == 't'){
+            parseT(line.substr(line.find(" ") + 1,line.length()));
+        }
+        else if(line[0] == 'f'){
             parseF(line.substr(line.find(" ") + 1,line.length()));
         }
 
@@ -98,7 +100,6 @@ void Mesh::parseV(const std::string & line){
 
 void Mesh::parseN(const std::string & line){
     Array<double> a;
-    double x,y,z;
     std::string delimiter = " ";
     std::string tempStr = line;
     std::string valueStr;
@@ -137,11 +138,30 @@ void Mesh::parseF(const std::string & line){
         v.push(r.left - 1);
         t.push(r.middle - 1);
         n.push(r.right - 1);
+        
     }
-    for(int i = 0;i<v.getSize();i+=3){
-        Face f = Face(v.getElementAt(i),v.getElementAt(i+1),v.getElementAt(i+2),n.getElementAt(i));
-        this->faceList.push(f); 
+    Face f = Face(v.getElementAt(0),v.getElementAt(1),v.getElementAt(2),n.getElementAt(0),t.getElementAt(0),t.getElementAt(1),t.getElementAt(2));
+    this->faceList.push(f);
+}
+
+void Mesh::parseT(const std::string & line){
+    Array<double> a;
+    double x,y,z;
+    std::string delimiter = " ";
+    std::string tempStr = line;
+    std::string valueStr;
+    int index = 0;
+    double val;
+    int length;
+    while(!tempStr.empty() && index >= 0){
+        length = (int)tempStr.length();
+        index = tempStr.find(delimiter);
+        valueStr = tempStr.substr(0,index);
+        tempStr = tempStr.substr(std::min(index+1,length),length);
+        val = std::stod(valueStr);
+        a.push(val);
     }
+    this->uvList.push(UVTex(a.getElementAt(0),a.getElementAt(1)));
 }
 
 Material * Mesh::getMaterial(){
@@ -163,24 +183,18 @@ Vector3D Mesh::computeNormal(){
 
 double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
     Coordinate V0, V1, V2;
-    double b0,b1,b2;
+    double b0,b1,b2,bFace;
     Plane plane;
     Face current_face;
     Vector3D N;
     double t_plane;
     double closest_t = INF;
     for(int i = 0;i<this->faceList.getSize();i++){
-        //if(i==1){break;}
         current_face = this->faceList.getElementAt(i);
-        //std::cout << this->faceList;
         N = this->normalList.getElementAt(current_face.n);
         V0 = Coordinate(this->vertexList.getElementAt(current_face.v1).x,this->vertexList.getElementAt(current_face.v1).y,this->vertexList.getElementAt(current_face.v1).z);
         V1 = Coordinate(this->vertexList.getElementAt(current_face.v2).x,this->vertexList.getElementAt(current_face.v2).y,this->vertexList.getElementAt(current_face.v2).z);
         V2 = Coordinate(this->vertexList.getElementAt(current_face.v3).x,this->vertexList.getElementAt(current_face.v3).y,this->vertexList.getElementAt(current_face.v3).z);
-        
-        //std::cout << current_face;
-        //std::cout << N;
-        //exit(-1);
         
         plane = Plane(V1,N,nullptr);
         t_plane = plane.IntersectRay(O,D,t_min,t_max);
@@ -189,19 +203,11 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
             continue;
         }
         
-       /*
-       if(t_plane > t_min || t_plane < t_max){
-            //std::cout << i << "\n";
-            return t_plane;
-        }
-        else{
-            return INF;
-        }
-        */
         Coordinate P = D*t_plane + O;
         Vector3D V1_V0 = Vector3D(V1-V0);
         Vector3D V2_V1 = Vector3D(V2-V1);
         Vector3D V0_V2 = Vector3D(V0-V2);
+        Vector3D V2_V0 = Vector3D(V2-V0);
         Vector3D P_V0 = Vector3D(P-V0);
         Vector3D P_V1 = Vector3D(P-V1);
         Vector3D P_V2 = Vector3D(P-V2);
@@ -209,15 +215,18 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
         b0 = Vector3D::dot(Vector3D::cross(V1_V0,P_V0),N);
         b1 = Vector3D::dot(Vector3D::cross(V2_V1,P_V1),N);
         b2 = Vector3D::dot(Vector3D::cross(V0_V2,P_V2),N);
-        /*
-        if(b0<0){
-        std::cout<< "b0:" << b0 <<"\n";
-        std::cout<< "b1:" << b1 <<"\n";
-        std::cout<< "b2:" << b2 <<"\n";
-        }
-        */
+        bFace = Vector3D::dot(Vector3D::cross(V1_V0,V2_V0),N);
+
         if(b0>=0 && b1>=0 && b2>=0 && t_plane<closest_t){
+            current_face.faceArea = bFace;
             closest_t = t_plane;
+            //confundi b com area, lembrar de arrumar.
+            current_face.v1W = b1/bFace;
+            current_face.v2W = b2/bFace;
+            current_face.v3W = b0/bFace;
+            
+            //calcula faceArea
+            this->intersectedFace = current_face;
             this->intersectedNormal = N;
         }   
     }
@@ -272,6 +281,51 @@ void Mesh::tempTransform(Vertex v){
         Vertex currentV = this->vertexList.getElementAt(i);
         this->vertexList.setElementAt(i,Vertex(currentV.x+v.x,currentV.y+v.y,currentV.z+v.z));
     }
+}
+
+bool Mesh::setTexture(const std::string & filePath,SDL_Renderer * renderer){
+    this->texture = new Texture(filePath,renderer);
+    return true;
+}
+
+Texture * Mesh::getTexture(){
+    return this->texture;
+}
+
+Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+    /*
+    Matrix<double,4,1> Pmatrix = Matrix<double,4,1>(P);
+    //Matrix<double,4,1> Omatrix = Matrix<double,4,1>(O);
+    P = (cameraToWorld*Pmatrix).toCoordinate();
+    //O = (cameraToWorld*Omatrix).toCoordinate();
+    Vector3D N = (cameraToWorld * Matrix<double,4,1>(this->normalList.getElementAt(intersectedFace.n))).toVector3D();
+    Coordinate V0 =  (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v1))).toCoordinate();
+    Coordinate V1 = (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v2))).toCoordinate();
+    Coordinate V2 = (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v3))).toCoordinate();
+    Vector3D V1_V0 = Vector3D(V1-V0);
+    Vector3D V2_V1 = Vector3D(V2-V1);
+    Vector3D V0_V2 = Vector3D(V0-V2);
+    Vector3D P_V0 = Vector3D(P-V0);
+    Vector3D P_V1 = Vector3D(P-V1);
+    Vector3D P_V2 = Vector3D(P-V2);
+    */
+    if(!this->texture){
+        return Color();
+    }
+    UVTex v1tex = this->uvList.getElementAt(this->intersectedFace.v1t);
+    UVTex v2tex = this->uvList.getElementAt(this->intersectedFace.v2t);
+    UVTex v3tex = this->uvList.getElementAt(this->intersectedFace.v3t);
+
+    double u = v1tex.u * this->intersectedFace.v1W + v2tex.u * this->intersectedFace.v2W + v3tex.u * this->intersectedFace.v3W;
+    double v = v1tex.v * this->intersectedFace.v1W + v2tex.v * this->intersectedFace.v2W + v3tex.v * this->intersectedFace.v3W;   
+
+    Pair<int,int> wh = this->texture->getWH();
+
+    Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));
+    return c;
+  
+
+
 }
 
 

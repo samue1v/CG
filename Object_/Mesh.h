@@ -4,6 +4,7 @@
 #include "../DataStructures/Triple.h"
 #include "../DataStructures/Vector.h"
 #include "../DataStructures/Matrix.h"
+#include "Texture.h"
 #include "Material.h"
 #include <string>
 #include "Transformation.h"
@@ -12,9 +13,12 @@
 
 class Mesh{
     private:
+    Texture * texture;
+    Face intersectedFace;
     Array<Vertex> vertexList;
     Array<Vector3D> normalList;
     Array<Face> faceList;
+    Array<UVTex> uvList;
     Array<Transformation *> transformList;
     Material * material;
     Vector3D intersectedNormal;
@@ -27,6 +31,7 @@ class Mesh{
     void parseV(const std::string & line);
     void parseN(const std::string & line);
     void parseF(const std::string & line);
+    void parseT(const std::string & line);
     void parseFile(std::ifstream & file);
     
     public:
@@ -35,6 +40,9 @@ class Mesh{
     Mesh(const std::string & filePath,Material * material);
     Vector3D computeNormal();
     Material * getMaterial();
+    bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
+    Texture * getTexture();
+    Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
     bool setTransform(Transformation * t);
     double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
     void transformView(Matrix<double,4,4> transformMatrix);
