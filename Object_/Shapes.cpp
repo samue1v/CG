@@ -622,8 +622,7 @@ bool Cone::setTransform(Transformation * t){
     double scaleFactor = t->getTransform().getVal(0,0);
     this->height = scaleFactor * height;
     this->radius = scaleFactor * radius;
-    this->baseCenter = this->baseCenter*scaleFactor;
-    this->baseLid.setplanePoint(baseCenter);
+    this->vertex =  this->axis*this->height + this->baseCenter;
     return true;
   }
   else if(dynamic_cast<Translate *>(t)){

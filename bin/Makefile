@@ -30,7 +30,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/material.o: ../Object_/Material.cpp ../Object_/Material.h 
 	g++ -Ofast -o ../Links/material.o ../Object_/Material.cpp -c
 
-../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h ../Object_/Shapes.h ../DataStructures/MeshUtils.h ../DataStructures/Matrix.h
+../Links/object.o: ../Object_/Object.cpp ../Object_/Object.h ../Object_/Mesh.h ../Object_/Shapes.h ../DataStructures/MeshUtils.h ../DataStructures/Matrix.h ../Object_/Transformation.h
 	g++ -Ofast -o ../Links/object.o ../Object_/Object.cpp -c
 
 ../Links/mesh.o: ../Object_/Mesh.cpp ../Object_/Mesh.h ../DataStructures/Triple.h ../DataStructures/Vector.h ../Object_/Transformation.h ../DataStructures/Matrix.h

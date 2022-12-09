@@ -100,9 +100,9 @@ void constructScene(Scene & scene){
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,0), radius, rubber);
-  circle->setTransform(new Scale(0.5,1,1));
-  circle->setTransform(new Translate(50,10,-100));
+  Sphere *circle = new Sphere(Coordinate(0,0,-100), 15, rubber);
+  //circle->setTransform(new Scale(0.5,1,1));
+  //circle->setTransform(new Translate(50,10,-100));
   
 
   //Cylinder
@@ -118,11 +118,14 @@ void constructScene(Scene & scene){
   //Cone
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
-  Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(0,1,0),10,20,marble);
+  Cone * coneup = new Cone(Coordinate(0,10,-100),Vector3D(0,1,0),10,20,marble);
+  Cone * conedown = new Cone(Coordinate(0,-10,-100),Vector3D(0,-1,0),10,20,marble);
+  Cone * coneleft = new Cone(Coordinate(-10,0,-100),Vector3D(-1,0,0),10,20,marble);
+  Cone * coneright = new Cone(Coordinate(10,0,-100),Vector3D(1,0,0),10,20,marble);
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
   //cone->setTransform(new Translate(-50,100,10));
-  cone->setTransform(new RotateX(-45));
-  cone->setTransform(new RotateY(45));
+  //cone->setTransform(new RotateX(-45));
+  //cone->setTransform(new RotateY(45));
 
 
   //Planes
@@ -165,13 +168,25 @@ void constructScene(Scene & scene){
 
   //Setting shapes and meshes to object
 
-  //obj->setShape(circle);
+  obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  //obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  //obj->setShape(cone);  
+  obj->setShape(coneleft);  
+  obj->setShape(coneright);
+  obj->setShape(coneup);
+  obj->setShape(conedown);
 
+
+  //obj->setTransform(new RotateX(45));
+  //obj->setTransform(new RotateY(45));
+  obj->setTransform(new RotateZ(45));
+  //obj->setTransform(new Translate(20,20,20));
+  //obj->setTransform(new Scale(5,50,50));
+
+
+  
   //Setting lights
 
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);

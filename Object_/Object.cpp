@@ -52,3 +52,13 @@ void Object::applyViewTransform(Matrix<double,4,4> transformMatrix){
         meshes.getElementAt(j)->transformView(transformMatrix);
     }
 }
+
+bool Object::setTransform(Transformation * t){
+    for(int i = 0;i<shapes.getSize();i++){
+        shapes.getElementAt(i)->setTransform(t);
+    }
+    for(int j = 0;j<meshes.getSize();j++){
+        meshes.getElementAt(j)->setTransform(t);
+    }
+    return true;
+}
