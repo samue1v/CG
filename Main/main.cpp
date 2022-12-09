@@ -81,7 +81,7 @@ void constructScene(Scene & scene){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0 ,70);
+  Coordinate eye = Coordinate(0,60,70);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -100,7 +100,7 @@ void constructScene(Scene & scene){
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,-100), 15, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,-100), 60, rubber);
   //circle->setTransform(new Scale(0.5,1,1));
   //circle->setTransform(new Translate(50,10,-100));
   
@@ -119,7 +119,7 @@ void constructScene(Scene & scene){
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
   Cone * coneup = new Cone(Coordinate(0,10,-100),Vector3D(0,1,0),10,20,marble);
-  Cone * conedown = new Cone(Coordinate(0,-10,-100),Vector3D(0,-1,0),10,20,marble);
+  Cone * conedown = new Cone(Coordinate(0,-10,-100),Vector3D(0,-1,0),10,20,rubber);
   Cone * coneleft = new Cone(Coordinate(-10,0,-100),Vector3D(-1,0,0),10,20,marble);
   Cone * coneright = new Cone(Coordinate(10,0,-100),Vector3D(1,0,0),10,20,marble);
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
@@ -129,19 +129,19 @@ void constructScene(Scene & scene){
 
 
   //Planes
-	Coordinate floorPoint = Coordinate(0,0,0);
+	Coordinate floorPoint = Coordinate(0,-20,0);
 	Vector3D floorNormal = Vector3D(0,1,0);
   Coordinate backPoint = Coordinate(0,0,-400);
 	Vector3D backNormal = Vector3D(0,0,-1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
 	Plane *backPlane = new Plane(backPoint, backNormal, metal);
 
-  floorPlane->setTransform(new RotateX(30));
+  //floorPlane->setTransform(new RotateX(30));
 
 
   //textures
   floorPlane->setTexture("../TextureFiles/wood.png",renderer);
-  circle->setTexture("../TextureFiles/kaguya.png",renderer);
+  circle->setTexture("../TextureFiles/teste.png",renderer);
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
@@ -163,8 +163,10 @@ void constructScene(Scene & scene){
 
   //Object
   char name[] = "circulo";
+  char plano[] = "plane";
   //Object *obj = new Object(name,  3);
   Object *obj = new Object(name);
+  Object *objPlane = new Object(plano);
 
   //Setting shapes and meshes to object
 
@@ -179,9 +181,13 @@ void constructScene(Scene & scene){
   obj->setShape(conedown);
 
 
+  //objPlane->setShape(floorPlane);
+
   //obj->setTransform(new RotateX(45));
+  //obj->setTransform(new Translate(20,0,0));
+  
   //obj->setTransform(new RotateY(45));
-  obj->setTransform(new RotateZ(45));
+  //obj->setTransform(new RotateYfixed(120,Coordinate(0,0,-100)));
   //obj->setTransform(new Translate(20,20,20));
   //obj->setTransform(new Scale(5,50,50));
 
@@ -193,22 +199,22 @@ void constructScene(Scene & scene){
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
-  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,-499));
+  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,40));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
   
   scene.setObject(obj);
+  scene.setObject(objPlane);
 
 
 
-  scene.setLight(ambientLight);
+  //scene.setLight(ambientLight);
   //scene->setLight(dirLight);
   scene.setLight(pointLight);
-  //scene->setLight(pointLight2);
-  
+  scene.setLight(pointLight2);
   scene.setCamera(camera);
-
   scene.transformView();
+  
 }
 
 template<int nLines,int nColumns>

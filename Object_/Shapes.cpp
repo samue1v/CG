@@ -26,16 +26,21 @@ Color Sphere::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorl
     return Color();
   }
   Matrix<double,4,1> Pmatrix = Matrix<double,4,1>(P);
-  Matrix<double,4,1> Omatrix = Matrix<double,4,1>(O);
-  P = (cameraToWorld*Pmatrix).toCoordinate();
-  O = (cameraToWorld*Omatrix).toCoordinate();
-  double x = (P.x -center.x);
-  double y = (P.y - center.y);
-  double z = (P.z - center.z);
-  
+  Coordinate newCenter = (cameraToWorld*Matrix<double,4,1>(this->center)).toCoordinate();
+  P = ((cameraToWorld)*Pmatrix).toCoordinate();
+
+ 
+  double x = (P.x -newCenter.x);
+  double y = (P.y - newCenter.y);
+  double z = (P.z - newCenter.z);
+
   //double v = (atan(sqrtf(x*x + y*y)/z) + PI/2.0)/PI;
+
+  //double v =  (acos(y/radius))/PI;
   double v =  (acos(y/radius))/PI;
-  double u = (atan2(x,z)/(2*PI)+ 0.5);
+  double u = (atan2(z,x)/(PI)+ 1);
+
+
   //double u = asin(x/sqrtf(x*x + z*z))/(2*PI);
 
 
@@ -48,9 +53,7 @@ Color Sphere::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorl
 
 void Sphere::transformView(Matrix<double,4,4> transformMatrix){
   Matrix<double,4,1> centerMatrix = Matrix<double,4,1>(this->center);
-  std::cout<<"center1:"<<center<<"\n";
   this->center = (transformMatrix*centerMatrix).toCoordinate();
-  std::cout<<"center2:"<<center<<"\n";
 }
 
 bool Sphere::setCenter(Coordinate newCenter) {
@@ -278,6 +281,14 @@ bool Plane::setTransform(Transformation * t){
     Matrix<double,4,1> pointMatrix = Matrix<double,4,1>(this->planePoint);
     Matrix<double,4,1> transformedPoint = t->getTransform() * pointMatrix;
     this->planePoint = transformedPoint.toCoordinate();
+    return true;
+  }
+  else if(dynamic_cast<RotateXfixed*>(t) || dynamic_cast<RotateYfixed*>(t) || dynamic_cast<RotateZfixed*>(t)){
+    Matrix<double,4,1> planeNormalm = Matrix<double,4,1>(this->normal);
+    Matrix<double,4,1> planePointm = Matrix<double,4,1>(this->planePoint); 
+    Matrix<double,4,1> planeNormalmTransformed = t->getTransform() * planeNormalm;
+    this->planePoint = (t->getTransform()*planePointm).toCoordinate();
+    this->normal = planeNormalmTransformed.toVector3D();
     return true;
   }
   return false;
@@ -637,17 +648,34 @@ bool Cone::setTransform(Transformation * t){
   }
   else if(dynamic_cast<RotateX*>(t) || dynamic_cast<RotateY*>(t) || dynamic_cast<RotateZ*>(t)){
     Matrix<double,4,1> axisM = Matrix<double,4,1>(this->axis);
-    //Matrix<double,4,1> vertexMatrix = Matrix<double,4,1>(this->vertex);
-    //Matrix<double,4,1> baseMatrix = Matrix<double,4,1>(this->baseCenter);
+    //Matrix<double,4,1> vertexMatrix = Matrix<double,4,1>(this->vertex);//
+    //Matrix<double,4,1> baseMatrix = Matrix<double,4,1>(this->baseCenter);//
     Matrix<double,4,1> axisTransformed = t->getTransform() * axisM;
     this->axis = axisTransformed.toVector3D(); 
     this->vertex = this->axis*this->height + this->baseCenter;
-    //this->baseCenter = (t->getTransform()*baseMatrix).toCoordinate();
+    //this->baseCenter = (t->getTransform()*baseMatrix).toCoordinate();//
+    //this->vertex = (t->getTransform()*vertexMatrix).toCoordinate();//
     
     this->baseLid.setTransform(t);
     return true;
   }
+  else if(dynamic_cast<RotateXfixed*>(t) || dynamic_cast<RotateYfixed*>(t) || dynamic_cast<RotateZfixed*>(t)){
+    Translate * tr = new Translate(-t->getFixedPoint().x,-t->getFixedPoint().y,-t->getFixedPoint().z);
+    Translate * ntr = new Translate(t->getFixedPoint().x,t->getFixedPoint().y,t->getFixedPoint().z);
+    this->setTransform(tr);
 
-  
+    Matrix<double,4,1> axisM = Matrix<double,4,1>(this->axis);
+    Matrix<double,4,1> vertexMatrix = Matrix<double,4,1>(this->vertex);//
+    Matrix<double,4,1> baseMatrix = Matrix<double,4,1>(this->baseCenter);//
+    Matrix<double,4,1> axisTransformed = t->getTransform() * axisM;
+    this->vertex = (t->getTransform()*vertexMatrix).toCoordinate();//
+    this->axis = axisTransformed.toVector3D(); 
+    this->baseCenter = (t->getTransform()*baseMatrix).toCoordinate();//
+    this->baseLid.setTransform(t);
+
+    this->setTransform(ntr);
+
+    return true;
+  }
   return false;
 }

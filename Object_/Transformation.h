@@ -2,6 +2,7 @@
 #define TRANSFORM_H
 #include <iostream>
 #include "../DataStructures/Matrix.h"
+#include "../DataStructures/Coordinate.h"
 #include "../DataStructures/DataConsts.h"
 #include <math.h>
 struct Transformation{
@@ -9,7 +10,9 @@ struct Transformation{
     Transformation(){}
     virtual Matrix<double,4,4> getTransform() = 0;
     virtual Matrix<double,4,4> getInverse() = 0;
+    virtual Coordinate getFixedPoint() = 0;
     protected:
+    Coordinate fixedPoint;
     Matrix<double,4,4> transform;
     Matrix<double,4,4> inverse;
 };
@@ -33,6 +36,9 @@ struct Translate : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
     
 };
@@ -58,6 +64,9 @@ struct RotateX : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct RotateY : public Transformation{
@@ -78,6 +87,9 @@ struct RotateY : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
 };
 
@@ -101,7 +113,88 @@ struct RotateZ : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
+
+struct RotateXfixed : public Transformation{
+    RotateXfixed(){}
+    RotateXfixed(double angle,Coordinate point){
+        this->fixedPoint;
+        this->transform = Matrix<double,4,4>::identity();
+        double radiansAngle = (angle*PI)/180.0;
+        double cosine = cos(radiansAngle);
+        double sine = sin(radiansAngle);
+        (this->transform).setVal(1,1,cosine);
+        (this->transform).setVal(2,2,cosine);
+        (this->transform).setVal(1,2,-sine);
+        (this->transform).setVal(2,1,sine);
+        this->inverse = this->transform.transpose();
+
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
+};
+
+struct RotateYfixed : public Transformation{
+    RotateYfixed(){}
+    RotateYfixed(double angle,Coordinate point){
+        this->fixedPoint = point;
+        this->transform = Matrix<double,4,4>::identity();
+        double radiansAngle = (angle*PI)/180.0;
+        double cosine = cos(radiansAngle);
+        double sine = sin(radiansAngle);
+        (this->transform).setVal(0,0,cosine);
+        (this->transform).setVal(0,2,sine);
+        (this->transform).setVal(2,0,-sine);
+        (this->transform).setVal(2,2,cosine);
+        this->inverse = this->transform.transpose();
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
+};
+
+struct RotateZfixed : public Transformation{
+    RotateZfixed(){}
+    RotateZfixed(double angle,Coordinate point){
+        this->fixedPoint = point;
+        this->transform = Matrix<double,4,4>::identity();
+        double radiansAngle = (angle*PI)/180.0;
+        double cosine = cos(radiansAngle);
+        double sine = sin(radiansAngle);
+        (this->transform).setVal(0,0,cosine);
+        (this->transform).setVal(1,0,sine);
+        (this->transform).setVal(0,1,-sine);
+        (this->transform).setVal(1,1,cosine);
+        this->inverse = this->transform.transpose();
+        
+    }
+    Matrix<double,4,4> getTransform(){
+        return this->transform;
+    }
+    Matrix<double,4,4> getInverse(){
+        return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
+};
+
 
 struct Scale : public Transformation{
     Scale(){}
@@ -121,6 +214,9 @@ struct Scale : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ReflectXY : public Transformation{
@@ -135,6 +231,9 @@ struct ReflectXY : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
 };
 
@@ -151,6 +250,9 @@ struct ReflectXZ : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ReflectYZ : public Transformation{
@@ -165,6 +267,9 @@ struct ReflectYZ : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
 };
 
@@ -185,6 +290,9 @@ struct ShearXY : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ShearYX : public Transformation{
@@ -203,6 +311,9 @@ struct ShearYX : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
 };
 
@@ -223,6 +334,9 @@ struct ShearXZ : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ShearZX : public Transformation{
@@ -242,6 +356,9 @@ struct ShearZX : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ShearYZ : public Transformation{
@@ -260,6 +377,9 @@ struct ShearYZ : public Transformation{
     Matrix<double,4,4> getInverse(){
         return this->inverse;
     }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
+    }
 };
 
 struct ShearZY : public Transformation{
@@ -277,6 +397,9 @@ struct ShearZY : public Transformation{
     }
     Matrix<double,4,4> getInverse(){
         return this->inverse;
+    }
+    Coordinate getFixedPoint(){
+        return this->fixedPoint;
     }
 };
 #endif
