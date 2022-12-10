@@ -238,12 +238,46 @@ bool Mesh::setTransform(Transformation * t){
     this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
     this->transformMatrix = t->getTransform() * (this->transformMatrix);//ja mudei aqiu
     this->inverseMatrix = t->getInverse()*(this->inverseMatrix);
-    applyTransform();
+    if(dynamic_cast<RotateXfixed*>(t) || dynamic_cast<RotateYfixed*>(t) || dynamic_cast<RotateZfixed*>(t)){
+        applyTransform(t->getFixedPoint());
+    }
+    else{
+        applyTransform();
+    }
     return true;
     
 }
 
+void Mesh::applyTransform(Coordinate point){
+    Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
+    Vertex translateVertex = Vertex(-point.x,-point.y,-point.z);
+    Vertex goBackVertex = Vertex(point.x,point.y,point.z);
+    tempTransform(translateVertex); 
+    for(int i=0;i<this->vertexList.getSize();i++){
+        Vertex currentVertex = this->vertexList.getElementAt(i);
+        Matrix<double,4,1> m = Matrix<double,4,1>(currentVertex);
+        Matrix<double,4,1> transformedVertexMatrix = this->transformMatrix * m;
+        Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
+        this->vertexList.setElementAt(i,newVertex);
+    }
+    tempTransform(goBackVertex); 
+    for(int j = 0;j<this->normalList.getSize();j++){
+        Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
+        Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
+        Matrix<double,4,1> newNormal = transposeInverse * normalMatrix;
+        Vector3D vecNormal = Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0));
+        vecNormal.normalize();
+        normalList.setElementAt(j,vecNormal);
+    }
+    //reseting transforms
+    this-> inverseMatrix = Matrix<double,4,4>::identity();
+    this-> transformMatrix = Matrix<double,4,4>::identity();
+    for(int k = 0;k<this->transformList.getSize();k++){
+        delete this->transformList.getElementAt(k);
+        this->transformList.setElementAt(k,nullptr);
 
+    }
+}
 
 void Mesh::applyTransform(){
     Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();

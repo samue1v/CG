@@ -5,9 +5,10 @@ TO DO:
 . Fazer modelos no blender e pensar na cena(considerar tig).
 . Fazer o parsing das coordenadas de textura do blender. ✔️
 . Textura em malha. ✔️
-. Tentar rotacionar em relação a um eixo
+. Rotacionar em relação a um eixo ✔️
 . Luz spot
 . Otimização
+. Projeção ortografica.
 . Menu de interação(nanoGUI-SDL) - vide(1).
 
 OBS:

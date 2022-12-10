@@ -27,6 +27,7 @@ class Mesh{
     Matrix<double,4,4> transformMatrix;
     Matrix<double,4,4> inverseMatrix;
     void applyTransform();
+    void applyTransform(Coordinate point);
     Triple<int,int,int> parseFaceData(const std::string & line);
     void parseV(const std::string & line);
     void parseN(const std::string & line);

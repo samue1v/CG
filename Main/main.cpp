@@ -81,7 +81,7 @@ void constructScene(Scene & scene){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,60,70);
+  Coordinate eye = Coordinate(0,0,70);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -100,19 +100,19 @@ void constructScene(Scene & scene){
   Marble *marble = new Marble();
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,-100), 60, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,-10), 1, rubber);
   //circle->setTransform(new Scale(0.5,1,1));
   //circle->setTransform(new Translate(50,10,-100));
   
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(Coordinate(0,0,-100),Vector3D(0,0,-1),20,50,marble);
+  Cylinder * cylinder = new Cylinder(Coordinate(10,0,-100),Vector3D(1,0,0),20,50,marble);
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
 
-  cylinder->setTransform(new RotateX(120));
+  //cylinder->setTransform(new RotateX(120));
   //cylinder->setTransform(new Translate(120,90,-60));
-  cylinder->setTransform(new Scale(2,3,3));
+  //cylinder->setTransform(new Scale(2,3,3));
   
   
   //Cone
@@ -151,9 +151,9 @@ void constructScene(Scene & scene){
   Mesh * mesh = new Mesh(quadro_mesh,marble);
 
   //Mesh * mesh = new Mesh(casa_mesh,marble);
-  mesh->setTransform(new Translate(0,0,10));
-  //mesh->setTransform(new Scale(3,3,3));
-  mesh->setTransform(new Scale(20,20,20));
+  mesh->setTransform(new Translate(25,0,0));
+  mesh->setTransform(new Scale(0.8,0.8,0.8));
+  //mesh->setTransform(new Scale(20,20,20));
   //mesh->setTransform(new RotateY(-135));
   //mesh->setTransform(new RotateX(-135));
   //mesh->setTransform(new RotateZ(30));
@@ -170,24 +170,27 @@ void constructScene(Scene & scene){
 
   //Setting shapes and meshes to object
 
-  obj->setShape(circle);
+  //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  //obj->setMesh(mesh);
+  obj->setMesh(mesh);
   //obj->setShape(cylinder);
-  obj->setShape(coneleft);  
-  obj->setShape(coneright);
-  obj->setShape(coneup);
-  obj->setShape(conedown);
+  //obj->setShape(coneleft);  
+  //obj->setShape(coneright);
+  //obj->setShape(coneup);
+  //obj->setShape(conedown);
 
 
-  //objPlane->setShape(floorPlane);
+  objPlane->setShape(floorPlane);
 
-  //obj->setTransform(new RotateX(45));
-  //obj->setTransform(new Translate(20,0,0));
+ // obj->setTransform(new RotateZ(45));
+  //obj->setTransform(new Translate(0,10,50));
+  obj->setTransform(new Scale(20,20,20));
   
-  //obj->setTransform(new RotateY(45));
-  //obj->setTransform(new RotateYfixed(120,Coordinate(0,0,-100)));
+  obj->setTransform(new RotateYfixed(180,Coordinate(0,0,-10)));
+  obj->setTransform(new RotateXfixed(30,Coordinate(0,0,-10)));
+  obj->setTransform(new RotateY(360));
+  //obj->setTransform(new RotateYfixed(-90,Coordinate(0,0,-100)));
   //obj->setTransform(new Translate(20,20,20));
   //obj->setTransform(new Scale(5,50,50));
 
@@ -199,18 +202,18 @@ void constructScene(Scene & scene){
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
-  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,0,40));
+  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
   
   scene.setObject(obj);
-  scene.setObject(objPlane);
+  //scene.setObject(objPlane);
 
 
 
-  //scene.setLight(ambientLight);
+  scene.setLight(ambientLight);
   //scene->setLight(dirLight);
-  scene.setLight(pointLight);
+  //scene.setLight(pointLight);
   scene.setLight(pointLight2);
   scene.setCamera(camera);
   scene.transformView();
