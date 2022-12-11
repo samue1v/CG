@@ -48,20 +48,25 @@ public:
       }
 
     }
+    
     if (!closestShape && !closestMesh) {
+      
       hitData.left = nullptr;
       hitData.middle = scene->getBackgroundIntensity();
       hitData.right = Color();
       return hitData;
+      
     }
-
+    
+    
     if(closest_mesh_t<closest_shape_t && closest_mesh_t<closest_t){
       closest_t = closest_mesh_t;
     }
     else if(closest_shape_t<closest_mesh_t && closest_shape_t<closest_t){
       closest_t = closest_shape_t;
     }
-
+    
+    
     Intensity i = Intensity(); // 0,0,0
     Coordinate P = (D * closest_t) + O;
     Vector3D N; 
@@ -69,7 +74,7 @@ public:
     V = D;
     V.normalize();
     if(closest_shape_t<closest_mesh_t){
-      N = closestShape->computeNormal(P,D);    
+      N = closestShape->computeNormal(P,D); 
       N.normalize();
       texel =  closestShape->getTexel(P,O,scene->getCamera()->getCameraToWorld());
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
@@ -77,6 +82,7 @@ public:
         double p_lightDirLength = p_lightDir.getLength();
         if(dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength) ){
           i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+          
         }
       }
     }

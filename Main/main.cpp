@@ -81,7 +81,7 @@ void constructScene(Scene & scene){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,70);
+  Coordinate eye = Coordinate(0,0,10);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -145,27 +145,54 @@ void constructScene(Scene & scene){
   backPlane->setTexture("../TextureFiles/floor.png",renderer);
 
   //Meshes
-  std::string simple_mesh = "../MeshFiles/cube.obj";
+  std::string simple_mesh = "../MeshFiles/unitcube.obj";
+  std::string moldura_mesh = "../MeshFiles/moldura.obj";
   std::string casa_mesh = "../MeshFiles/casa.obj";
   std::string quadro_mesh = "../MeshFiles/frame.obj";
-  Mesh * mesh = new Mesh(quadro_mesh,marble);
+  Mesh * moldura = new Mesh(moldura_mesh,marble);
+  moldura->setTexture("../TextureFiles/woodp.png",renderer);
+  Mesh * pintura = new Mesh(quadro_mesh,marble);
+  pintura->setTexture("../TextureFiles/kaguya.png",renderer);
+  
+  //rightwood->setTransform(new Scale(10,10,10));
+  //rightwood->setTransform(new Translate(0,0,-100));
+  
+  //bottomwood->setTransform(new Scale(0.2,0.1,0.1));
+  //topwood->setTransform(new Scale(0.6,0.1,0.1));
+  //topwood->setTransform(new Translate(0,20,0));
+  //leftwood->setTransform(new Scale(0.6,0.1,0.1));
 
+  //rightwood->setTransform(new RotateZfixed(-180,Coordinate(-1,1,0)));
+  //leftwood->setTransform(new RotateZfixed(180,Coordinate(1,1,0)));
+  //topwood->setTransform(new Translate(0,4,0));
+  moldura->setTransform(new RotateZ(90));
+  moldura->setTransform(new RotateX(90));
+  pintura->setTransform(new RotateX(90));
+  pintura->setTransform(new Scale(4,3,1));
+  //pintura->setTransform(new RotateY(180));
+  //pintura->setTransform(new Translate(0,0,2));
+  
+
+  //rightwood->setTransform(new Scale(0.2,0.1,0.1));
   //Mesh * mesh = new Mesh(casa_mesh,marble);
-  mesh->setTransform(new Translate(25,0,0));
-  mesh->setTransform(new Scale(0.8,0.8,0.8));
+  //mesh->setTransform(new Translate(25,0,0));
+  //mesh->setTransform(new Scale(0.8,0.8,0.8));
+  
   //mesh->setTransform(new Scale(20,20,20));
   //mesh->setTransform(new RotateY(-135));
   //mesh->setTransform(new RotateX(-135));
   //mesh->setTransform(new RotateZ(30));
   //mesh->setTransform(new ShearYX(30));
   
-  mesh->setTexture("../TextureFiles/kaguya.png",renderer);
-
+  //mesh->setTexture("../TextureFiles/kaguya.png",renderer);
+  
   //Object
   char name[] = "circulo";
   char plano[] = "plane";
-  //Object *obj = new Object(name,  3);
-  Object *obj = new Object(name);
+  char quadronome[] = "quadro";
+
+  Object * quadro = new Object(quadronome);
+  //Object *obj = new Object(name);
   Object *objPlane = new Object(plano);
 
   //Setting shapes and meshes to object
@@ -173,7 +200,14 @@ void constructScene(Scene & scene){
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
-  obj->setMesh(mesh);
+  //obj->setMesh(mesh);
+  //quadro->setMesh(bottomwood);
+  //quadro->setMesh(topwood);
+  //quadro->setMesh(leftwood);
+  //quadro->setMesh(rightwood);
+  quadro->setMesh(moldura);
+  quadro->setMesh(pintura);
+  
   //obj->setShape(cylinder);
   //obj->setShape(coneleft);  
   //obj->setShape(coneright);
@@ -182,17 +216,18 @@ void constructScene(Scene & scene){
 
 
   objPlane->setShape(floorPlane);
-
- // obj->setTransform(new RotateZ(45));
-  //obj->setTransform(new Translate(0,10,50));
-  obj->setTransform(new Scale(20,20,20));
+  //objPlane->setMesh(rightwood);
   
-  obj->setTransform(new RotateYfixed(180,Coordinate(0,0,-10)));
-  obj->setTransform(new RotateXfixed(30,Coordinate(0,0,-10)));
-  obj->setTransform(new RotateY(360));
-  //obj->setTransform(new RotateYfixed(-90,Coordinate(0,0,-100)));
+ // obj->setTransform(new RotateZ(45));
+  //obj->setTransform(new Translate(0,0,50));
+  //obj->setTransform(new Scale(20,20,20));
+  
+  //obj->setTransform(new RotateYfixed(180,Coordinate(0,0,-10)));
+  //obj->setTransform(new RotateXfixed(30,Coordinate(0,0,-10)));
+  //obj->setTransform(new RotateY(360));
+  //obj->setTransform(new RotateZfixed(45,Coordinate(0,0,-100)));
   //obj->setTransform(new Translate(20,20,20));
-  //obj->setTransform(new Scale(5,50,50));
+  //obj->setTransform(new Scale(10,10,1));
 
 
   
@@ -201,24 +236,28 @@ void constructScene(Scene & scene){
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
-  PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
+  //PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
+  //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
+  PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(5,5,15));
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
   //Creating the scene
   
-  scene.setObject(obj);
-  //scene.setObject(objPlane);
+  scene.setObject(quadro);
+  scene.setObject(objPlane);
 
 
 
-  scene.setLight(ambientLight);
+  //scene.setLight(ambientLight);
   //scene->setLight(dirLight);
   //scene.setLight(pointLight);
-  scene.setLight(pointLight2);
+  //scene.setLight(pointLight2);
+  scene.setLight(pointLight3);
   scene.setCamera(camera);
   scene.transformView();
   
 }
+
+
 
 template<int nLines,int nColumns>
 void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
@@ -253,6 +292,16 @@ void ErrorCallback(int, const char* err_str)
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
 
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
+    {
+       double xpos, ypos;
+       //getting cursor position
+       glfwGetCursorPos(window, &xpos, &ypos);
+       std::cout << "Cursor Position at (" << xpos << " : " << ypos << ")"<<"\n";
+    }
+}
 template<int nLines,int nColumns>
 void display(Canvas<nLines,nColumns> * canvas){
   GLFWwindow* window;
@@ -262,6 +311,8 @@ void display(Canvas<nLines,nColumns> * canvas){
       std::cout<< "Couldn't init GLFW\n";
       exit(-1);
   }
+
+  
 
   window = glfwCreateWindow(nLines, nColumns, "CG", NULL, NULL);
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
@@ -283,6 +334,7 @@ void display(Canvas<nLines,nColumns> * canvas){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    //glfwSetMouseButtonCallback(window, mouseButtonCallback);
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -308,6 +360,7 @@ void display(Canvas<nLines,nColumns> * canvas){
     glfwSwapBuffers(window);
     glfwWaitEvents();
     }
+  
 
 }
 
@@ -323,7 +376,6 @@ int main() {
   Scene * scene = new Scene;
   
   constructScene(*scene);
-
   // Canvas creation
   Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>();
   canvas->setCanvasDistance(-30);
@@ -332,6 +384,7 @@ int main() {
   
   //Canvas Loop
   run<nLines,nColumns>(scene,canvas);
+  
   display<nLines,nColumns>(canvas);
   //Write to file(will be changed)
   //writePPM<nLines,nColumns>(canvas);

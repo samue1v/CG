@@ -4,6 +4,7 @@
 #include "../DataStructures/Pair.h"
 #include "../Object_/Object.h"
 #include "../Ilumination/Color.h"
+#include <GLFW/glfw3.h>
 
 template <int l,int k>
 class Canvas{
@@ -22,6 +23,7 @@ class Canvas{
       void clearCanvas();
       Pair<double,double> getWindowSize();
       Pair<double,double> getGridSize();
+      Object * getObjectAtCoords(int x,int y);
       bool setWindowsSize(Pair<double,double> newWindowSize);
       bool setGridSize(Pair<double,double> newGridSize);
 
@@ -33,6 +35,7 @@ class Canvas{
       uint8_t * colorBuffer;
       int nLines;
       int nColumns;
+      GLFWwindow* window;
       Matrix<Object *,l,k> * canvas;
 };
 template <int l, int k>
@@ -42,6 +45,7 @@ Canvas<l,k>::Canvas(){
   this->nColumns = k;
   this->colorBuffer = new uint8_t[l*k*3];
   this->colorBufferCount = 0;
+  
 }
 
 template <int l, int k>
@@ -55,7 +59,13 @@ int Canvas<l,k>::getNumberColumns(){
 
 template <int l, int k>
 Matrix<Object *,l,k> * Canvas<l,k>::getCanvas(){
-  return (this->canvas);
+  return
+   (this->canvas);
+}
+
+template <int l, int k>
+Object * Canvas<l,k>::getObjectAtCoords(int x,int y){
+  return this->canvas->getVal(x,y);
 }
 /*
 template <int l, int k>

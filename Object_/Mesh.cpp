@@ -24,6 +24,7 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     std::ifstream file;
     file.open(filePath);
     parseFile(file);
+    this->texture = nullptr;
     this->transformMatrix = Matrix<double,4,4>::identity();
     this->stackedTransformMatrix = this->transformMatrix; 
     this->inverseMatrix = this->transformMatrix;
@@ -273,7 +274,7 @@ void Mesh::applyTransform(Coordinate point){
     this-> inverseMatrix = Matrix<double,4,4>::identity();
     this-> transformMatrix = Matrix<double,4,4>::identity();
     for(int k = 0;k<this->transformList.getSize();k++){
-        delete this->transformList.getElementAt(k);
+        //delete this->transformList.getElementAt(k);
         this->transformList.setElementAt(k,nullptr);
 
     }
@@ -304,7 +305,7 @@ void Mesh::applyTransform(){
     this-> inverseMatrix = Matrix<double,4,4>::identity();
     this-> transformMatrix = Matrix<double,4,4>::identity();
     for(int k = 0;k<this->transformList.getSize();k++){
-        delete this->transformList.getElementAt(k);
+        //delete this->transformList.getElementAt(k);
         this->transformList.setElementAt(k,nullptr);
 
     }
@@ -346,13 +347,13 @@ Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld)
     if(!this->texture){
         return Color();
     }
+    
     UVTex v1tex = this->uvList.getElementAt(this->intersectedFace.v1t);
     UVTex v2tex = this->uvList.getElementAt(this->intersectedFace.v2t);
     UVTex v3tex = this->uvList.getElementAt(this->intersectedFace.v3t);
-
+    
     double u = v1tex.u * this->intersectedFace.v1W + v2tex.u * this->intersectedFace.v2W + v3tex.u * this->intersectedFace.v3W;
     double v = v1tex.v * this->intersectedFace.v1W + v2tex.v * this->intersectedFace.v2W + v3tex.v * this->intersectedFace.v3W;   
-
     Pair<int,int> wh = this->texture->getWH();
 
     Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));

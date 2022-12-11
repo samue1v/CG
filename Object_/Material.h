@@ -89,7 +89,7 @@ public:
   Marble()
       : ka(AmbientReflectiveness(Coeficients{0.6, 0.6, 0.6})),
         kd(DifuseReflectiveness(Coeficients(0.8, 0.8, 0.8))),
-        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 1)){};
+        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 100)){};
 
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();
