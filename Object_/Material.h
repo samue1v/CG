@@ -5,100 +5,63 @@
 #include <stdio.h>
 
 struct Material {
-private:
+protected:
   AmbientReflectiveness ka;
   DifuseReflectiveness kd;
   SpecularReflectiveness ke;
 
 public:
-  virtual AmbientReflectiveness getKa() = 0;
-  virtual DifuseReflectiveness getKd() = 0;
-  virtual SpecularReflectiveness getKe() = 0;
-};
-
-struct Rubber : Material {
-public:
-  Rubber()
-      : ka(AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5})),
-        kd(DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6))),
-        ke(SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300)){};
-
   AmbientReflectiveness getKa();
   DifuseReflectiveness getKd();
   SpecularReflectiveness getKe();
-
-private:
-  AmbientReflectiveness ka;
-  DifuseReflectiveness kd;
-  SpecularReflectiveness ke;
+  bool setKa(AmbientReflectiveness newKa);
+  bool setKd(DifuseReflectiveness newKd);
+  bool setKe(SpecularReflectiveness newKe);
 };
 
-struct Metal : Material {
+struct Rubber : public Material {
 public:
-  Metal()
-      : ka(AmbientReflectiveness(Coeficients{0.7, 0.7, 0.7})),
-        kd(DifuseReflectiveness(Coeficients(0.2, 0.2, 0.2))),
-        ke(SpecularReflectiveness(Coeficients(0,0,0), 1)){};
-
-  AmbientReflectiveness getKa();
-  DifuseReflectiveness getKd();
-  SpecularReflectiveness getKe();
-
-private:
-  AmbientReflectiveness ka;
-  DifuseReflectiveness kd;
-  SpecularReflectiveness ke;
+  Rubber(){
+      this->ka = (AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5}));
+      this->kd = (DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6)));
+      this->ke = (SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300));
+  }
 };
 
-struct Plastic : Material {
+struct Metal : public Material {
 public:
-  Plastic()
-      : ka(AmbientReflectiveness(Coeficients{0.3, 0.3, 0.7})),
-        kd(DifuseReflectiveness(Coeficients(0.3, 0.3, 0.7))),
-        ke(SpecularReflectiveness(Coeficients(0,0,0), 1)){};
-
-  AmbientReflectiveness getKa();
-  DifuseReflectiveness getKd();
-  SpecularReflectiveness getKe();
-
-private:
-  AmbientReflectiveness ka;
-  DifuseReflectiveness kd;
-  SpecularReflectiveness ke;
+  Metal(){
+      this->ka = (AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5}));
+      this->kd = (DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6)));
+      this->ke = (SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300));
+  }
 };
 
-struct Cooper : Material {
+struct Plastic : public Material {
 public:
-  Cooper()
-      : ka(AmbientReflectiveness(Coeficients{0.2, 0.3, 0.8})),
-        kd(DifuseReflectiveness(Coeficients(0.2, 0.3, 0.8))),
-        ke(SpecularReflectiveness(Coeficients(0.2, 0.3, 0.8), 1)){};
-
-  AmbientReflectiveness getKa();
-  DifuseReflectiveness getKd();
-  SpecularReflectiveness getKe();
-
-private:
-  AmbientReflectiveness ka;
-  DifuseReflectiveness kd;
-  SpecularReflectiveness ke;
+  Plastic(){
+      this->ka = (AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5}));
+      this->kd = (DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6)));
+      this->ke = (SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300));
+  }
 };
 
-struct Marble : Material {
+struct Cooper : public Material {
 public:
-  Marble()
-      : ka(AmbientReflectiveness(Coeficients{0.6, 0.6, 0.6})),
-        kd(DifuseReflectiveness(Coeficients(0.8, 0.8, 0.8))),
-        ke(SpecularReflectiveness(Coeficients(0.5, 0.5, 0.5), 100)){};
+  Cooper(){
+      this->ka = (AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5}));
+      this->kd = (DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6)));
+      this->ke = (SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300));
+  }
+};
 
-  AmbientReflectiveness getKa();
-  DifuseReflectiveness getKd();
-  SpecularReflectiveness getKe();
-
-private:
-  AmbientReflectiveness ka;
-  DifuseReflectiveness kd;
-  SpecularReflectiveness ke;
+struct Marble : public Material {
+public:
+  Marble(){
+      this->ka = (AmbientReflectiveness(Coeficients{0.5, 0.5, 0.5}));
+      this->kd = (DifuseReflectiveness(Coeficients(0.6, 0.6, 0.6)));
+      this->ke = (SpecularReflectiveness(Coeficients(0.2, 0.2, 0.2), 300));
+  }
 };
 
 #endif

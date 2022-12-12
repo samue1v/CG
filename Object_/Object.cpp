@@ -8,7 +8,7 @@ Object::Object(){
 
 Object::Object(std::string name){
     //this->shapes={nullptr};
-    this->name = name + '\0';
+    this->name = name;
 }
 
 

@@ -1,7 +1,7 @@
 all: program
 
 program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/intensity.o ../Links/light.o ../Links/reflect.o ../Links/shapes.o ../Links/material.o ../Links/object.o ../Links/scene.o ../Links/space3D.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/camera.o ../Links/main.o  #../Links/canvas.o
-	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/camera.o -Ofast -lSDL2 -lSDL2_image -lglfw -lGL -lGLU -lX11 -o program
+	g++ ../Links/main.o ../Links/space3D.o ../Links/scene.o ../Links/object.o ../Links/material.o ../Links/shapes.o ../Links/reflect.o ../Links/light.o ../Links/intensity.o ../Links/color.o ../Links/vector.o ../Links/coordinate.o ../Links/meshUtils.o ../Links/mesh.o ../Links/texture.o ../Links/camera.o -Ofast -pthread -std=c++0x -lSDL2 -lSDL2_image -lglfw -lGL -lGLU -lX11 -o program
 
 #../Links/canvas.o: ../Canvas_/Canvas.cpp ../Canvas_/Canvas.h
 #	g++ -o ../Links/canvas.o ../Canvas_/Canvas.cpp -c
@@ -52,7 +52,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 	g++ -Ofast -o ../Links/camera.o ../Camera/Camera.cpp -c
 
 ../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h ../Camera/Camera.h ../libs/glfw/include/GLFW/glfw3.h
-	g++ -Ofast -o ../Links/main.o ../Main/main.cpp -c
+	g++ -Ofast -pthread -o ../Links/main.o ../Main/main.cpp -c
 
 clean:
 	cd ../Links && rm *.o

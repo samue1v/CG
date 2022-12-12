@@ -52,7 +52,16 @@
         "list": "cpp",
         "set": "cpp",
         "numbers": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp",
+        "future": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

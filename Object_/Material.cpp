@@ -1,59 +1,29 @@
 #include <stdio.h>
 #include "Material.h"
 
-AmbientReflectiveness Rubber::getKa(){
+AmbientReflectiveness Material::getKa(){
     return this->ka;
 }
 
-DifuseReflectiveness Rubber::getKd(){
+DifuseReflectiveness Material::getKd(){
     return this->kd;
 }
 
-SpecularReflectiveness Rubber::getKe(){
+SpecularReflectiveness Material::getKe(){
     return this->ke;
 }
 
-AmbientReflectiveness Metal::getKa(){
-    return this->ka;
+bool Material::setKa(AmbientReflectiveness newKa){
+    this->ka = newKa;
+    return true;
 }
 
-DifuseReflectiveness Metal::getKd(){
-    return this->kd;
+bool Material::setKd(DifuseReflectiveness newKd){
+    this->kd = newKd;
+    return true;
 }
 
-SpecularReflectiveness Metal::getKe(){
-    return this->ke;
-}
-AmbientReflectiveness Plastic::getKa(){
-    return this->ka;
-}
-
-DifuseReflectiveness Plastic::getKd(){
-    return this->kd;
-}
-
-SpecularReflectiveness Plastic::getKe(){
-    return this->ke;
-}
-AmbientReflectiveness Cooper::getKa(){
-    return this->ka;
-}
-
-DifuseReflectiveness Cooper::getKd(){
-    return this->kd;
-}
-
-SpecularReflectiveness Cooper::getKe(){
-    return this->ke;
-}
-AmbientReflectiveness Marble::getKa(){
-    return this->ka;
-}
-
-DifuseReflectiveness Marble::getKd(){
-    return this->kd;
-}
-
-SpecularReflectiveness Marble::getKe(){
-    return this->ke;
+bool Material::setKe(SpecularReflectiveness newKe){
+    this->ke = newKe;
+    return true;
 }

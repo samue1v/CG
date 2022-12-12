@@ -20,20 +20,31 @@ para -canvas_distance
 #include "../Object_/Texture.h"
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
-#include "../libs/glfw/include/GLFW/glfw3.h"
 #include <unistd.h>
 #include <math.h>
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <future>
 #include <unistd.h>
 #include <SDL2/SDL.h>
-#include <GLFW/glfw3.h>
 #include <SDL2/SDL_image.h>
+#include "../libs/glfw/include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
-double xMousePos;
-double yMousePos;
-bool clicked = false;
+const int nLines = 600;
+const int nColumns = 600;
+
+bool clicked = false; 
+Canvas<nLines,nColumns> * canvas;
+Scene * scene;
+GLFWwindow* window;
+GLuint tex_handle;
+
+void display();
+void constructScene();
+void run();
+void menuObj(Object *);
 
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
@@ -82,7 +93,7 @@ bool SDLdraw(Canvas<l,k> *canvas){
   return true;
 }
 
-void constructScene(Scene & scene){
+void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
@@ -97,12 +108,22 @@ void constructScene(Scene & scene){
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
 
+  
+
   //Materials
   Rubber *rubber = new Rubber();
   Metal *metal = new Metal();
   Plastic *plastic = new Plastic();
   Cooper *cooper = new Cooper();
   Marble *marble = new Marble();
+
+  Object * lamp = new Object("lampada");
+  Cylinder * lampBase = new Cylinder(Coordinate(0,0,0),Vector3D(0,1,0),0.5,0.3,marble);
+  Sphere * lampBulb = new Sphere(Coordinate(0,-0.1,0),0.25,marble);
+
+  lamp->setShape(lampBase);
+  lamp->setShape(lampBulb);
+  lamp->setTransform(new Translate(0,2,5));
 
   //Sphere
   Sphere *circle = new Sphere(Coordinate(0,0,-10), 1, rubber);
@@ -241,29 +262,28 @@ void constructScene(Scene & scene){
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity,"Ambiente Light");
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  //PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
+  PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,1.4,5),"PointLight");//Coordinate(0,60,-30))
   //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
   PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(5,5,15),"PointLight3");
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1),"DirLIght");
   //Creating the scene
   
-  scene.setObject(quadro);
-  scene.setObject(objPlane);
+  scene->setObject(quadro);
+  scene->setObject(objPlane);
+  scene->setObject(lamp);
 
 
-
-  //scene.setLight(ambientLight);
+  scene->setLight(ambientLight);
   //scene->setLight(dirLight);
-  //scene.setLight(pointLight);
+  scene->setLight(pointLight);
   //scene.setLight(pointLight2);
-  scene.setLight(pointLight3);
-  scene.setCamera(camera);
-  scene.transformView();
+  scene->setLight(pointLight3);
+  scene->setCamera(camera);
+  scene->transformView();
   
 }
 
-template<int nLines,int nColumns>
-void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
+void run(){
   Pair<double,double> windowSize = canvas->getWindowSize();
   double wj = windowSize.left;
   double hj = windowSize.right;
@@ -294,37 +314,97 @@ void ErrorCallback(int, const char* err_str)
 {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
+
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
     {
-      clicked = true;
+      //clicked = true;
        //getting cursor position
+       double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
+       menuObj(canvas->getObjectAtCoord(xMousePos,yMousePos));
        //cout << "Cursor Position at (" << xpos << " : " << ypos << endl;
        
     }
 }
 
-template<int nLines,int nColumns>
-void processCLick(Scene * scene, Canvas<nLines,nColumns> * canvas){
-  std::cout<<"x: "<<(int)xMousePos << "y: "<<(int)yMousePos<<"\n";
+void menuObj(Object * clickedObj){
+  int option = 1;
+    std::cout<< clickedObj->getName();
+    std::cout<<"Chose any option: \n";
+    std::cout<<"(1)Apply Transform.\n";
+    std::cout<<"(2)Change Material.\n";
+    std::cout<<"(3)See shapes.\n";
+    std::cout<<"(4)See meshes.\n";
+    std::cout<<"(9)Sair.\n";
+    std::cout<<"Option: ";
+    //std::cin >> option;
+    std::cout<< "\n" << std::flush;
+    switch (option)
+    {
+    case 1:
+      clickedObj->setTransform(new RotateZ(-45));
+      run(); 
+      std::cout<<"done\n";
+
+    case 2:
+      run();
+
+    case 3:
+      run();
+
+    case 4:
+      run();
+
+    case 9:
+      exit(-1);
+    default:
+      exit(-1);
+    }
+    //clickedObj->setTransform(new RotateZ(-45));
+    //run();
+}
+
+
+/*
+void processCLick(){
+  //std::cout<<"x: "<<(int)xMousePos << "y: "<<(int)yMousePos<<"\n";
   Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
   if(obj){
-    std::cout << obj->getName();
-    std::cout << "\n";
-    obj->setTransform(new RotateZ(90));
-    run(scene,canvas);
+    std::async(std::launch::async,display);
+    menuObj(obj);
+    //obj->setTransform(new RotateZ(-45));
+    //run();
   }
   else{
    std::cout << "void";
   }
   std::cout << "\n";
 }
+*/
+/*
+void waitForCLick(){
+  
+  while(true){
+    if(clicked){
+      Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
+      if(obj){
+        menuObj(obj);
+      }
+      else{
+        std::cout << "void";
+      }
+    std::cout << "\n";  
+    }
+    sleep(0.3);
+    clicked=false;   
+  }
+}
+*/
 
-template<int nLines,int nColumns>
-void display(Scene * scene,Canvas<nLines,nColumns> * canvas){
-  GLFWwindow* window;
+
+void display(){
   glfwSetErrorCallback(ErrorCallback);
   if (!glfwInit()) {
       std::cout<< "Couldn't init GLFW\n";
@@ -336,22 +416,26 @@ void display(Scene * scene,Canvas<nLines,nColumns> * canvas){
       exit(-1);
   }
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
-    glfwMakeContextCurrent(window);
-    glfwSetMouseButtonCallback(window,mouseButtonCallback);
-    uint8_t * data = canvas->getColorBuffer();
-    GLuint tex_handle;
-    glGenTextures(1, &tex_handle);
-    glBindTexture(GL_TEXTURE_2D, tex_handle);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glfwMakeContextCurrent(window);
+  glfwSetMouseButtonCallback(window,mouseButtonCallback);
+  uint8_t * data = canvas->getColorBuffer();
+  glGenTextures(1, &tex_handle);
+  glBindTexture(GL_TEXTURE_2D, tex_handle);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glClearColor(255.0,255.0,255.0,0.0);
+  //ImGui::StyleColorsDark();
+  int cont = 0;
   while (!glfwWindowShouldClose(window)) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     // Set up orphographic projection
     int window_width, window_height;
     glfwGetFramebufferSize(window, &window_width, &window_height);
@@ -366,46 +450,39 @@ void display(Scene * scene,Canvas<nLines,nColumns> * canvas){
     glBegin(GL_QUADS);
       glTexCoord2d(0,1); glVertex2i(0, 0);
       glTexCoord2d(1,1); glVertex2i(0 + nLines, 0);
-      glTexCoord2d(1,0); glVertex2i(0 + nLines /** 2*/, 0 + nColumns /** 2*/);
-      glTexCoord2d(0,0); glVertex2i(0, 0 + nColumns /** 2*/);
+      glTexCoord2d(1,0); glVertex2i(nLines,+ nColumns);
+      glTexCoord2d(0,0); glVertex2i(0, nColumns);
     glEnd();
+    
     glDisable(GL_TEXTURE_2D);
-
+    std::cout<<(cont++) % 10<<"\n";
     glfwSwapBuffers(window);
     glfwWaitEvents();
-    //std::cout<<canvas->getObjectAtCoord(264,513)<<"\n";
-    if(clicked){
-      //std::cout<<"x: "<<xMousePos << "y: "<<yMousePos<<"\n";
-      processCLick(scene,canvas);
-    }
-    sleep(0.3);
-    clicked=false;
-    }
-
+  }
 }
 
 int main() {
   double wj = 60;
   double hj = 60;
   double canvasDistance = -30;
-  const int nLines = 600;
-  const int nColumns = 600;
   double dx = wj / nColumns;
   double dy = hj / nLines;
 
-  Scene * scene = new Scene;
+  scene = new Scene();
   
-  constructScene(*scene);
+  constructScene();
   // Canvas creation
-  Canvas<nLines,nColumns> *canvas = new Canvas<nLines,nColumns>();
+  canvas = new Canvas<nLines,nColumns>();
   canvas->setCanvasDistance(-30);
   canvas->setGridSize({dx,dy});
   canvas->setWindowsSize({wj,hj});
   
   //Canvas Loop
-  run<nLines,nColumns>(scene,canvas);
+  run();
+  display();
+
   
-  display<nLines,nColumns>(scene,canvas);
+
   //Write to file(will be changed)
   //writePPM<nLines,nColumns>(canvas);
 
