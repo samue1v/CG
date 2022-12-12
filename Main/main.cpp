@@ -21,6 +21,7 @@ para -canvas_distance
 #include "../World/Scene.h"
 #include "../World/Space3D.h"
 #include "../libs/glfw/include/GLFW/glfw3.h"
+#include <unistd.h>
 #include <math.h>
 #include <string>
 #include <fstream>
@@ -29,6 +30,10 @@ para -canvas_distance
 #include <SDL2/SDL.h>
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL_image.h>
+
+double xMousePos;
+double yMousePos;
+bool clicked = false;
 
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
@@ -187,9 +192,9 @@ void constructScene(Scene & scene){
   //mesh->setTexture("../TextureFiles/kaguya.png",renderer);
   
   //Object
-  char name[] = "circulo";
-  char plano[] = "plane";
-  char quadronome[] = "quadro";
+  std::string name = "circulo";
+  std::string plano = "plane";
+  std::string quadronome = "quadro";
 
   Object * quadro = new Object(quadronome);
   //Object *obj = new Object(name);
@@ -234,12 +239,12 @@ void constructScene(Scene & scene){
   //Setting lights
 
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
-  AmbientLight *ambientLight = new AmbientLight(ambientIntensity);
+  AmbientLight *ambientLight = new AmbientLight(ambientIntensity,"Ambiente Light");
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
   //PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,0,70));//Coordinate(0,60,-30))
   //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
-  PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(5,5,15));
-  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1));
+  PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(5,5,15),"PointLight3");
+  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1),"DirLIght");
   //Creating the scene
   
   scene.setObject(quadro);
@@ -257,8 +262,6 @@ void constructScene(Scene & scene){
   
 }
 
-
-
 template<int nLines,int nColumns>
 void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
   Pair<double,double> windowSize = canvas->getWindowSize();
@@ -275,13 +278,13 @@ void run(Scene * scene,Canvas<nLines,nColumns> * canvas){
       Coordinate canvasPoint = Coordinate(x, y, canvas->getCanvasDistance());
       Vector3D dr = Vector3D(canvasPoint - P0);
       dr.normalize();
-      Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF);
-      canvas->setObjectAt(l,c,hitData.left);
+      Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF); 
+      canvas->setObjectAt(c,l,hitData.left);
       if(hitData.right.hasInit){
-        canvas->pushColorBuffer(hitData.right * hitData.middle);
+        canvas->pushColorBuffer(l,c,hitData.right * hitData.middle);
       }
       else{
-        canvas->pushColorBuffer(scene->getNaturalColor() * hitData.middle);
+        canvas->pushColorBuffer(l,c,scene->getNaturalColor() * hitData.middle);
       }
     }
   }
@@ -291,38 +294,50 @@ void ErrorCallback(int, const char* err_str)
 {
     std::cout << "GLFW Error: " << err_str << std::endl;
 }
-
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
     {
-       double xpos, ypos;
+      clicked = true;
        //getting cursor position
-       glfwGetCursorPos(window, &xpos, &ypos);
-       std::cout << "Cursor Position at (" << xpos << " : " << ypos << ")"<<"\n";
+       glfwGetCursorPos(window, &xMousePos, &yMousePos);
+       //cout << "Cursor Position at (" << xpos << " : " << ypos << endl;
+       
     }
 }
+
 template<int nLines,int nColumns>
-void display(Canvas<nLines,nColumns> * canvas){
+void processCLick(Scene * scene, Canvas<nLines,nColumns> * canvas){
+  std::cout<<"x: "<<(int)xMousePos << "y: "<<(int)yMousePos<<"\n";
+  Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
+  if(obj){
+    std::cout << obj->getName();
+    std::cout << "\n";
+    obj->setTransform(new RotateZ(90));
+    run(scene,canvas);
+  }
+  else{
+   std::cout << "void";
+  }
+  std::cout << "\n";
+}
+
+template<int nLines,int nColumns>
+void display(Scene * scene,Canvas<nLines,nColumns> * canvas){
   GLFWwindow* window;
-  
   glfwSetErrorCallback(ErrorCallback);
   if (!glfwInit()) {
       std::cout<< "Couldn't init GLFW\n";
       exit(-1);
   }
-
-  
-
   window = glfwCreateWindow(nLines, nColumns, "CG", NULL, NULL);
-  glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
   if (!window) {
       std::cout<<"Couldn't open window\n";
       exit(-1);
   }
-
-
+  glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
+    glfwSetMouseButtonCallback(window,mouseButtonCallback);
     uint8_t * data = canvas->getColorBuffer();
     GLuint tex_handle;
     glGenTextures(1, &tex_handle);
@@ -334,10 +349,9 @@ void display(Canvas<nLines,nColumns> * canvas){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    //glfwSetMouseButtonCallback(window, mouseButtonCallback);
   while (!glfwWindowShouldClose(window)) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // Set up orphographic projection
     int window_width, window_height;
     glfwGetFramebufferSize(window, &window_width, &window_height);
@@ -359,8 +373,14 @@ void display(Canvas<nLines,nColumns> * canvas){
 
     glfwSwapBuffers(window);
     glfwWaitEvents();
+    //std::cout<<canvas->getObjectAtCoord(264,513)<<"\n";
+    if(clicked){
+      //std::cout<<"x: "<<xMousePos << "y: "<<yMousePos<<"\n";
+      processCLick(scene,canvas);
     }
-  
+    sleep(0.3);
+    clicked=false;
+    }
 
 }
 
@@ -385,7 +405,7 @@ int main() {
   //Canvas Loop
   run<nLines,nColumns>(scene,canvas);
   
-  display<nLines,nColumns>(canvas);
+  display<nLines,nColumns>(scene,canvas);
   //Write to file(will be changed)
   //writePPM<nLines,nColumns>(canvas);
 

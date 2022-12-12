@@ -4,7 +4,6 @@
 #include "../DataStructures/Pair.h"
 #include "../Object_/Object.h"
 #include "../Ilumination/Color.h"
-#include <GLFW/glfw3.h>
 
 template <int l,int k>
 class Canvas{
@@ -19,11 +18,11 @@ class Canvas{
       double getCanvasDistance();
       bool setCanvasDistance(double newCanvasDistance);
       Color getColorAt(int i,int j);
-      bool pushColorBuffer(Color c);
+      bool pushColorBuffer(int i,int j,Color c);
       void clearCanvas();
+      Object * getObjectAtCoord(int x,int y);
       Pair<double,double> getWindowSize();
       Pair<double,double> getGridSize();
-      Object * getObjectAtCoords(int x,int y);
       bool setWindowsSize(Pair<double,double> newWindowSize);
       bool setGridSize(Pair<double,double> newGridSize);
 
@@ -35,7 +34,6 @@ class Canvas{
       uint8_t * colorBuffer;
       int nLines;
       int nColumns;
-      GLFWwindow* window;
       Matrix<Object *,l,k> * canvas;
 };
 template <int l, int k>
@@ -45,7 +43,6 @@ Canvas<l,k>::Canvas(){
   this->nColumns = k;
   this->colorBuffer = new uint8_t[l*k*3];
   this->colorBufferCount = 0;
-  
 }
 
 template <int l, int k>
@@ -59,13 +56,7 @@ int Canvas<l,k>::getNumberColumns(){
 
 template <int l, int k>
 Matrix<Object *,l,k> * Canvas<l,k>::getCanvas(){
-  return
-   (this->canvas);
-}
-
-template <int l, int k>
-Object * Canvas<l,k>::getObjectAtCoords(int x,int y){
-  return this->canvas->getVal(x,y);
+  return (this->canvas);
 }
 /*
 template <int l, int k>
@@ -132,7 +123,8 @@ bool Canvas<l,k>::setGridSize(Pair<double,double> newGridSize){
 
 
 template <int l, int k>
-bool Canvas<l,k>::pushColorBuffer(Color c){
+bool Canvas<l,k>::pushColorBuffer(int i,int j,Color c){
+  int begin = (i*l + j)*3;
 /*   std::cout<<"red:";
   std::cout<<std::hex <<(c.red>>0);
   std::cout<<"\n";
@@ -142,12 +134,17 @@ bool Canvas<l,k>::pushColorBuffer(Color c){
   std::cout<<"blue:";
   std::cout<<std::hex <<(c.blue>>0);
   std::cout<<"\n"; */
-  colorBuffer[colorBufferCount++] = c.red;
-  colorBuffer[colorBufferCount++] = c.green;
-  colorBuffer[colorBufferCount++] = c.blue;
+  colorBuffer[begin] = c.red;
+  colorBuffer[begin+1] = c.green;
+  colorBuffer[begin+2] = c.blue;
   //std::cout<<colorBufferCount<<"\n";
   //exit(-1);
   return true;
+}
+
+template <int l, int k>
+Object * Canvas<l,k>::getObjectAtCoord(int x,int y){
+  return canvas->getVal(x,y);
 }
 
 //uma observação, talvez, depois que seja preenchido o buffer pela primeira vez, o contador

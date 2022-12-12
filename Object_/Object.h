@@ -6,14 +6,15 @@
 #include "Transformation.h"
 #include "Mesh.h"
 #include "Shapes.h"
+#include <string>
 class Object{
     public:
         Object();
-        Object(char *name);
+        Object(std::string name);
         int getShapeCount();
         int getMeshCount();
-        char * getName();
-        bool setName(char * newName);
+        std::string getName();
+        bool setName(std::string newName);
         bool setShape(Shape3D * shape);
         bool setMesh(Mesh * newMesh);
         bool setTransform(Transformation * t);
@@ -25,7 +26,7 @@ class Object{
     private:
         Array<Mesh*> meshes;
         Array<Shape3D*> shapes;
-        char *name;
+        std::string  name;
 
 };
 #endif

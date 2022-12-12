@@ -2,10 +2,13 @@
 #include "Object.h"
 #include "Mesh.h"
 
-Object::Object(){};
+Object::Object(){
+    this->name = "void";
+};
 
-Object::Object(char *name) : name(name){
+Object::Object(std::string name){
     //this->shapes={nullptr};
+    this->name = name + '\0';
 }
 
 
@@ -16,11 +19,11 @@ int Object::getShapeCount(){
 int Object::getMeshCount(){
     return (this->meshes).getSize();
 }
-char * Object::getName(){
+std::string Object::getName(){
     return this->name;
 }
 
-bool Object::setName(char * newName){
+bool Object::setName(std::string newName){
     this->name = newName;
     return true;
 }

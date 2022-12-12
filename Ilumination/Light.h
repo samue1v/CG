@@ -1,8 +1,3 @@
-
-
-
-
-
 #ifndef LIGHT_H
 #define LIGHT_H
 
@@ -11,6 +6,7 @@
 #include "../DataStructures/Matrix.h"
 #include "../Object_/Material.h"
 #include "Intensity.h"
+#include <string>
 
 class Light {
 public:
@@ -21,16 +17,18 @@ public:
   virtual Vector3D getReference() = 0;
   virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
   Light();
+protected:
+  Intensity intensity;
+  std::string name;
 
 
-private:
   //Intensity intensity = Intensity(1.0, 1.0, 1.0);
 };
 
 class AmbientLight : public Light {
 public:
   AmbientLight();
-  AmbientLight(Intensity intensity);
+  AmbientLight(Intensity intensity,std::string name);
   Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
@@ -39,13 +37,13 @@ public:
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
 
 private:
-  Intensity intensity;
+
 };
 
 class DirectionalLight : public Light {
 public:
   DirectionalLight();
-  DirectionalLight(Intensity intensity, Vector3D direction);
+  DirectionalLight(Intensity intensity, Vector3D direction,std::string name);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D getDirection();
   bool setDirection(Vector3D);
@@ -57,13 +55,12 @@ public:
 
 private:
   Vector3D direction;
-  Intensity intensity;
 };
 
 class PointLight : public Light {
 public:
   PointLight();
-  PointLight(Intensity intensity, Coordinate position);
+  PointLight(Intensity intensity, Coordinate position,std::string name);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Coordinate getPosition();
   bool setPosition(Coordinate);
@@ -75,7 +72,6 @@ public:
 
 private:
   Coordinate position;
-  Intensity intensity;
 };
 
 #endif

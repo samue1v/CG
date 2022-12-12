@@ -10,7 +10,7 @@ Light::Light() {}
 
 AmbientLight::AmbientLight(){}
 
-AmbientLight::AmbientLight(Intensity intensity) : intensity(intensity) {}
+AmbientLight::AmbientLight(Intensity intensity,std::string name) {this->intensity = intensity;this->name = name;}
 
 Intensity AmbientLight::getIntensity() { return this->intensity; }
 
@@ -43,8 +43,8 @@ void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
 
 DirectionalLight::DirectionalLight() {}
 
-DirectionalLight::DirectionalLight(Intensity intensity, Vector3D direction)
-    : intensity(intensity), direction(direction) {}
+DirectionalLight::DirectionalLight(Intensity intensity, Vector3D direction,std::string name)
+    : direction(direction) {this->intensity = intensity;this->name = name;}
 
 Intensity DirectionalLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                           Material *material) {
@@ -96,8 +96,8 @@ void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
 
 PointLight::PointLight() {}
 
-PointLight::PointLight(Intensity intensity, Coordinate position)
-    : intensity(intensity), position(position) {}
+PointLight::PointLight(Intensity intensity, Coordinate position,std::string name)
+    :  position(position) {this->intensity = intensity;this->name = name;}
 
 Intensity PointLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                     Material *material) {

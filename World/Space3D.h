@@ -31,7 +31,7 @@ public:
       for (int j = 0; j < object->getShapeCount(); j++) {
         Shape3D *shape = object->getShapeAt(j);
         double t = shape->IntersectRay(O, D,t_min,t_max);
-        if (t >= t_min && t <= t_max && t < closest_shape_t) {
+        if (t >= t_min && t <= t_max && t < closest_shape_t && t<closest_mesh_t) {
           closest_shape_t = t;
           closestShape = shape;
           closestObject = object;
@@ -40,7 +40,7 @@ public:
       for(int k = 0;k<object->getMeshCount();k++){
         Mesh * mesh = object->getMeshAt(k);
         double t = mesh->IntersectRay(O,D,t_min,t_max);
-        if (t >= t_min && t <= t_max && t < closest_mesh_t) {
+        if (t >= t_min && t <= t_max && t < closest_mesh_t && t< closest_shape_t) {
           closest_mesh_t = t;
           closestMesh = mesh;
           closestObject = object;
