@@ -338,7 +338,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 }
 
-void menuTransform(Shape3D * shape){
+void menuTransform(Shape3D * inp){
   int option;
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)Apply Translate.\n";
@@ -355,69 +355,390 @@ void menuTransform(Shape3D * shape){
   std::cout<<"(12)Apply ShearZX.\n";
   std::cout<<"(13)Apply ShearYZ.\n";
   std::cout<<"(14)Apply ShearZY.\n";
-  std::cout<<"(15)Exit"
+  std::cout<<"(15)Exit";
   std::cout<<"Option: \n";
   std::cin >> option;
   std::cout<< "\n" << std::flush;
 
   if(option == 1){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>y;
+    std::cout<<"\n";
+    inp->setTransform(new Translate(x,y,z));
 
   }
   else if(option == 2){
-
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>y;
+    std::cout<<"\n";
+    inp->setTransform(new Scale(x,y,z));
   }
   else if(option == 3){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateX(degree));
+
 
   }
   else if(option == 4){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateY(degree));
 
   }
   else if(option == 5){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateZ(degree));
 
   }
   else if(option == 6){
-
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
   }
   else if(option == 7){
-
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
   }
   else if(option == 8){
-
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
   }
   else if(option == 9){
-
+    std::cout<<"Operação não suportada.\n";
+    return;
   }
   else if(option == 10){
-
+    std::cout<<"Operação não suportada.\n";
+    return;
   }
   else if(option == 11){
-
+    std::cout<<"Operação não suportada.\n";
+    return;
   }
   else if(option == 12){
-
+    std::cout<<"Operação não suportada.\n";
+    return;
   }
   else if(option == 13){
-
+    std::cout<<"Operação não suportada.\n";
+    return;
   }
   else if(option == 14){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else{
+    return;
+  }
+  
+  auto a = std::async(std::launch::async,run);
+}
+
+void menuTransform(Object * inp){
+  int option;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)Apply Translate.\n";
+  std::cout<<"(2)Apply Scale.\n";
+  std::cout<<"(3)Apply RotateX.\n";
+  std::cout<<"(4)Apply RotateY.\n";
+  std::cout<<"(5)Apply RotateZ.\n";
+  std::cout<<"(6)Apply RotateFixedX.\n";
+  std::cout<<"(7)Apply RotateFixedY.\n";
+  std::cout<<"(8)Apply RotateFixedZ.\n";
+  std::cout<<"(9)Apply ShearXY.\n";
+  std::cout<<"(10)Apply ShearYX.\n";
+  std::cout<<"(11)Apply ShearXZ.\n";
+  std::cout<<"(12)Apply ShearZX.\n";
+  std::cout<<"(13)Apply ShearYZ.\n";
+  std::cout<<"(14)Apply ShearZY.\n";
+  std::cout<<"(15)Exit";
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  std::cout<< "\n" << std::flush;
+
+  if(option == 1){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>z;
+    std::cout<<"\n";
+    inp->setTransform(new Translate(x,y,z));
 
   }
-  else
+  else if(option == 2){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>z;
+    std::cout<<"\n";
+    inp->setTransform(new Scale(x,y,z));
+  }
+  else if(option == 3){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateX(degree));
 
 
+  }
+  else if(option == 4){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateY(degree));
+
+  }
+  else if(option == 5){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateZ(degree));
+
+  }
+  else if(option == 6){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 7){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 8){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 9){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 10){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 11){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 12){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 13){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 14){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else{
+    return;
+  }
+  
+  auto a = std::async(std::launch::async,run);
 }
 
-void menuTransform(Object * obj){
+void menuTransform(Mesh * inp){
+  int option;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)Apply Translate.\n";
+  std::cout<<"(2)Apply Scale.\n";
+  std::cout<<"(3)Apply RotateX.\n";
+  std::cout<<"(4)Apply RotateY.\n";
+  std::cout<<"(5)Apply RotateZ.\n";
+  std::cout<<"(6)Apply RotateFixedX.\n";
+  std::cout<<"(7)Apply RotateFixedY.\n";
+  std::cout<<"(8)Apply RotateFixedZ.\n";
+  std::cout<<"(9)Apply ShearXY.\n";
+  std::cout<<"(10)Apply ShearYX.\n";
+  std::cout<<"(11)Apply ShearXZ.\n";
+  std::cout<<"(12)Apply ShearZX.\n";
+  std::cout<<"(13)Apply ShearYZ.\n";
+  std::cout<<"(14)Apply ShearZY.\n";
+  std::cout<<"(15)Exit";
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  std::cout<< "\n" << std::flush;
 
-}
+  if(option == 1){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>z;
+    std::cout<<"\n";
+    inp->setTransform(new Translate(x,y,z));
 
-void menuTransform(Mesh * mesh){
+  }
+  else if(option == 2){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>z;
+    std::cout<<"\n";
+    inp->setTransform(new Scale(x,y,z));
+  }
+  else if(option == 3){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateX(degree));
 
+
+  }
+  else if(option == 4){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateY(degree));
+
+  }
+  else if(option == 5){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new RotateZ(degree));
+
+  }
+  else if(option == 6){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 7){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 8){
+    double degree,x,y,z;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    std::cout<<"Digite o valor de x da coordenada: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y da coordenada: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z da coordenda: \n";
+    std::cin>>z;
+    inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
+  }
+  else if(option == 9){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 10){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 11){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 12){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 13){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else if(option == 14){
+    std::cout<<"Operação não suportada.\n";
+    return;
+  }
+  else{
+    return;
+  }
+  
+  auto a = std::async(std::launch::async,run);
 }
 
 void menuObj(Object * clickedObj){
   int option;
-  while(true){
     std::cout<< clickedObj->getName();
     std::cout<<"Chose any option: \n";
     std::cout<<"(1)Apply Transform.\n";
@@ -429,16 +750,19 @@ void menuObj(Object * clickedObj){
     std::cin >> option;
     std::cout<< "\n" << std::flush;
     if(option == 1){
-      clickedObj->setTransform(new RotateZ(-45));
+      menuTransform(clickedObj);
+      //clickedObj->setTransform(new RotateZ(-45));
       //glfwPostEmptyEvent();
-      auto a = std::async(std::launch::async,run);
+      //auto a = std::async(std::launch::async,run);
       //run();
       //std::cout<<"continuei!\n";
       //glfwWaitEventsTimeout(100);
     }
+    else{
+    }
     //glfwPostEmptyEvent();
-    return 1;
-  }
+    //return 1;
+    std::cout<<"success.\n";
     
 }
 
