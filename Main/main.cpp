@@ -35,7 +35,6 @@ para -canvas_distance
 const int nLines = 600;
 const int nColumns = 600;
 
-bool clicked = false; 
 Canvas<nLines,nColumns> * canvas;
 Scene * scene;
 GLFWwindow* window;
@@ -45,6 +44,11 @@ void display();
 void constructScene();
 double run();
 void menuObj(Object *);
+void menuMain();
+bool menuShape(Object *);
+bool menuTransform(Object *);
+bool menuTransform(Shape3D *);
+bool menuTransform(Mesh *);
 
 template<int l,int k>
 bool writePPM(Canvas<l,k> *canvas) {
@@ -118,22 +122,22 @@ void constructScene(){
   Marble *marble = new Marble();
 
   Object * lamp = new Object("lampada");
-  Cylinder * lampBase = new Cylinder(Coordinate(0,0,0),Vector3D(0,1,0),0.5,0.3,marble);
-  Sphere * lampBulb = new Sphere(Coordinate(0,-0.1,0),0.25,marble);
+  Cylinder * lampBase = new Cylinder(Coordinate(0,0,0),Vector3D(0,1,0),0.5,0.3,marble,"base lampada.");
+  Sphere * lampBulb = new Sphere(Coordinate(0,-0.1,0),0.25,marble,"bulbo lampada");
 
   lamp->setShape(lampBase);
   lamp->setShape(lampBulb);
   lamp->setTransform(new Translate(0,2,5));
 
   //Sphere
-  Sphere *circle = new Sphere(Coordinate(0,0,-10), 1, rubber);
+  Sphere *circle = new Sphere(Coordinate(0,0,-10), 1, rubber,"esfera teste");
   //circle->setTransform(new Scale(0.5,1,1));
   //circle->setTransform(new Translate(50,10,-100));
   
 
   //Cylinder
   Vector3D cylinderAxis = Vector3D(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
-  Cylinder * cylinder = new Cylinder(Coordinate(10,0,-100),Vector3D(1,0,0),20,50,marble);
+  Cylinder * cylinder = new Cylinder(Coordinate(10,0,-100),Vector3D(1,0,0),20,50,marble,"cilindro teste");
   Coordinate cylinderTop = (cylinderAxis*3*radius)+center;
 
   //cylinder->setTransform(new RotateX(120));
@@ -144,10 +148,10 @@ void constructScene(){
   //Cone
   double coneRadius = 1.5*radius;
   //Cone * cone = new Cone(cylinderTop,cylinderAxis,coneRadius,coneRadius/3,marble);
-  Cone * coneup = new Cone(Coordinate(0,10,-100),Vector3D(0,1,0),10,20,marble);
-  Cone * conedown = new Cone(Coordinate(0,-10,-100),Vector3D(0,-1,0),10,20,rubber);
-  Cone * coneleft = new Cone(Coordinate(-10,0,-100),Vector3D(-1,0,0),10,20,marble);
-  Cone * coneright = new Cone(Coordinate(10,0,-100),Vector3D(1,0,0),10,20,marble);
+  Cone * coneup = new Cone(Coordinate(0,10,-100),Vector3D(0,1,0),10,20,marble,"coneup estrela");
+  Cone * conedown = new Cone(Coordinate(0,-10,-100),Vector3D(0,-1,0),10,20,rubber,"conedown estrela");
+  Cone * coneleft = new Cone(Coordinate(-10,0,-100),Vector3D(-1,0,0),10,20,marble,"coneleft estrela");
+  Cone * coneright = new Cone(Coordinate(10,0,-100),Vector3D(1,0,0),10,20,marble,"coneright estrela");
   //Cone * cone = new Cone(Coordinate(0,0,-100),Vector3D(-1,0,0),radius,radius*2,marble);
   //cone->setTransform(new Translate(-50,100,10));
   //cone->setTransform(new RotateX(-45));
@@ -335,11 +339,17 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
        //std::cout << "Cursor Position at (" << xMousePos << " : " << yMousePos <<")"<< "\n";
        
     }
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) 
+    {
+      menuMain();
+       
+    }
 
 }
 
-void menuTransform(Shape3D * inp){
+bool menuTransform(Shape3D * inp){
   int option;
+  bool flag = false;
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)Apply Translate.\n";
   std::cout<<"(2)Apply Scale.\n";
@@ -370,6 +380,7 @@ void menuTransform(Shape3D * inp){
     std::cin>>y;
     std::cout<<"\n";
     inp->setTransform(new Translate(x,y,z));
+    flag =  true;
 
   }
   else if(option == 2){
@@ -382,12 +393,14 @@ void menuTransform(Shape3D * inp){
     std::cin>>y;
     std::cout<<"\n";
     inp->setTransform(new Scale(x,y,z));
+    flag =  true;
   }
   else if(option == 3){
     double degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
+    flag =  true;
 
 
   }
@@ -396,6 +409,7 @@ void menuTransform(Shape3D * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
+    flag = true;
 
   }
   else if(option == 5){
@@ -403,6 +417,7 @@ void menuTransform(Shape3D * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
+    flag = true;
 
   }
   else if(option == 6){
@@ -415,6 +430,7 @@ void menuTransform(Shape3D * inp){
     std::cin>>y;
     std::cout<<"Digite o valor de Z da coordenda: \n";
     inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 7){
     double degree,x,y,z;
@@ -426,6 +442,7 @@ void menuTransform(Shape3D * inp){
     std::cin>>y;
     std::cout<<"Digite o valor de Z da coordenda: \n";
     inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 8){
     double degree,x,y,z;
@@ -437,40 +454,43 @@ void menuTransform(Shape3D * inp){
     std::cin>>y;
     std::cout<<"Digite o valor de Z da coordenda: \n";
     inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 9){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 10){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 11){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 12){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 13){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 14){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else{
-    return;
+    flag = false;
   }
-  
-  auto a = std::async(std::launch::async,run);
+
+
+  return flag;
 }
 
-void menuTransform(Object * inp){
+bool menuTransform(Object * inp){
   int option;
+  bool flag = false;
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)Apply Translate.\n";
   std::cout<<"(2)Apply Scale.\n";
@@ -501,6 +521,7 @@ void menuTransform(Object * inp){
     std::cin>>z;
     std::cout<<"\n";
     inp->setTransform(new Translate(x,y,z));
+    flag = true;
 
   }
   else if(option == 2){
@@ -519,6 +540,7 @@ void menuTransform(Object * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
+    flag = true;
 
 
   }
@@ -527,14 +549,14 @@ void menuTransform(Object * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
-
+    flag = true;
   }
   else if(option == 5){
     double degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
-
+    flag = true;
   }
   else if(option == 6){
     double degree,x,y,z;
@@ -547,6 +569,7 @@ void menuTransform(Object * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 7){
     double degree,x,y,z;
@@ -559,6 +582,7 @@ void menuTransform(Object * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 8){
     double degree,x,y,z;
@@ -571,40 +595,42 @@ void menuTransform(Object * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 9){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 10){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 11){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 12){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 13){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else if(option == 14){
     std::cout<<"Operação não suportada.\n";
-    return;
+    flag = false;
   }
   else{
-    return;
+    std::cout<<"Invalid option.\n";
+    flag = false;
   }
-  
-  auto a = std::async(std::launch::async,run);
+  return flag;
 }
 
-void menuTransform(Mesh * inp){
+bool menuTransform(Mesh * inp){
   int option;
+  bool flag = false;
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)Apply Translate.\n";
   std::cout<<"(2)Apply Scale.\n";
@@ -635,6 +661,7 @@ void menuTransform(Mesh * inp){
     std::cin>>z;
     std::cout<<"\n";
     inp->setTransform(new Translate(x,y,z));
+    flag = true;
 
   }
   else if(option == 2){
@@ -647,13 +674,14 @@ void menuTransform(Mesh * inp){
     std::cin>>z;
     std::cout<<"\n";
     inp->setTransform(new Scale(x,y,z));
+    flag = true;
   }
   else if(option == 3){
     double degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
-
+    flag = true;
 
   }
   else if(option == 4){
@@ -661,7 +689,7 @@ void menuTransform(Mesh * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
-
+    flag = true;
   }
   else if(option == 5){
     double degree;
@@ -681,6 +709,7 @@ void menuTransform(Mesh * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateXfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 7){
     double degree,x,y,z;
@@ -693,6 +722,7 @@ void menuTransform(Mesh * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateYfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 8){
     double degree,x,y,z;
@@ -705,65 +735,153 @@ void menuTransform(Mesh * inp){
     std::cout<<"Digite o valor de Z da coordenda: \n";
     std::cin>>z;
     inp->setTransform(new RotateZfixed(degree,Coordinate(x,y,z)));
+    flag = true;
   }
   else if(option == 9){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearXY(degree));
+    flag = true;
   }
   else if(option == 10){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearYX(degree));
+    flag = true;
   }
   else if(option == 11){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearXZ(degree));
+    flag = true;
   }
   else if(option == 12){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearZX(degree));
+    flag = true;
   }
   else if(option == 13){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearYZ(degree));
+    flag = true;
   }
   else if(option == 14){
-    std::cout<<"Operação não suportada.\n";
-    return;
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    inp->setTransform(new ShearZY(degree));
+    flag = true;
   }
   else{
-    return;
+    flag = false;
   }
   
-  auto a = std::async(std::launch::async,run);
+  return flag;
+}
+
+bool menuLight(){
+  int size = scene->getNumberOfLights();
+  bool flag = false;
+  int option;
+  std::cout<<"Choose a Light\n";
+  for(int i = 0;i<size;i++){
+    std::cout<<"("<<i+1<<")"<<scene->getLightAt(i)->getName() <<"\n";
+  }
+  std::cin>>option;
+  if(option<size+1 && option > 0){
+    //flag = menuChangeLight(scene->getLightAt(option-1));
+  }
+  else{
+    std::cout<<"escolha inválida\n";
+  }
+  return flag;
+}
+
+void menuMain(){
+  int option;
+  bool flag = false;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)See Lights.\n";
+  std::cout<<"(2)See Camera.\n";
+  std::cout<<"(3)Set Projection.\n";
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  std::cout<< "\n" << std::flush;
+  if(option == 1){
+    flag = menuLight();
+  }
+  else{
+  }
+  if(flag){
+    std::cout<<"Success\n";
+  }
+  else{
+    std::cout<<"Failed\n";
+  }
+}
+
+bool menuShape(Object * clickedObj){
+  int size = clickedObj->getShapeCount();
+  bool flag = false;
+  int option;
+  std::cout<<"Choose a shape\n";
+  for(int i = 0;i<size;i++){
+    std::cout<<"("<<i+1<<")"<<clickedObj->getShapeAt(i)->getName() <<"\n";
+  }
+  std::cin>>option;
+  if(option<size+1 && option > 0){
+    flag = menuTransform(clickedObj->getShapeAt(option-1));
+  }
+  else{
+    std::cout<<"escolha inválida\n";
+  }
+  return flag;
 }
 
 void menuObj(Object * clickedObj){
   int option;
-    std::cout<< clickedObj->getName();
-    std::cout<<"Chose any option: \n";
-    std::cout<<"(1)Apply Transform.\n";
-    std::cout<<"(2)Change Material.\n";
-    std::cout<<"(3)See shapes.\n";
-    std::cout<<"(4)See meshes.\n";
-    std::cout<<"(9)Sair.\n";
-    std::cout<<"Option: \n";
-    std::cin >> option;
-    std::cout<< "\n" << std::flush;
-    if(option == 1){
-      menuTransform(clickedObj);
-      //clickedObj->setTransform(new RotateZ(-45));
+  bool flag;
+  std::cout<< clickedObj->getName();
+  std::cout<<"\nChose any option: \n";
+  std::cout<<"(1)Apply Transform.\n";
+  std::cout<<"(2)Change Material.\n";
+  std::cout<<"(3)See shapes.\n";
+  std::cout<<"(4)See meshes.\n";
+  std::cout<<"(9)Sair.\n";
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  std::cout<< "\n" << std::flush;
+  if(option == 1){
+    flag = menuTransform(clickedObj);
+    //clickedObj->setTransform(new RotateZ(-45));
       //glfwPostEmptyEvent();
       //auto a = std::async(std::launch::async,run);
       //run();
       //std::cout<<"continuei!\n";
       //glfwWaitEventsTimeout(100);
-    }
-    else{
-    }
-    //glfwPostEmptyEvent();
-    //return 1;
-    std::cout<<"success.\n";
-    
+  }
+  else if(option == 3){
+    flag = menuShape(clickedObj);
+  }
+  else{
+    flag = false;
+  }
+  //glfwPostEmptyEvent();
+  //return 1;
+  if(flag){
+    auto a = std::async(std::launch::async,run);
+    std::cout<<"Success.\n";
+  }
+  else{
+    std::cout<<"Failed.\n";
+  }
 }
 
 
@@ -781,7 +899,7 @@ void display(){
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
   glfwMakeContextCurrent(window);
   glfwSetMouseButtonCallback(window,mouseButtonCallback);
-  glfwWaitEventsTimeout(20);
+  glfwWaitEventsTimeout(30);
   uint8_t * data = canvas->getColorBuffer();
   glGenTextures(1, &tex_handle);
   glBindTexture(GL_TEXTURE_2D, tex_handle);

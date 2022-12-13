@@ -6,12 +6,24 @@
 
 Shape3D::Shape3D() {}
 
-Sphere::Sphere(Coordinate center, double radius, Material *material)
-    : Shape3D() {
+Sphere::Sphere(Coordinate center, double radius, Material *material){
   this->center = center;
   this->radius = radius;
   this->material = (material);
   this->texture = nullptr;
+  this->name = "undefined";
+}
+
+Sphere::Sphere(Coordinate center, double radius, Material *material,std::string name){
+  this->center = center;
+  this->radius = radius;
+  this->material = (material);
+  this->texture = nullptr;
+  this->name = name;
+}
+
+std::string Sphere::getName(){
+    return this->name;
 }
 
 Texture * Sphere::getTexture(){
@@ -142,6 +154,19 @@ Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material) {
   this->normal = normal;
   this->material = material;
   this->texture = nullptr;
+  this->name = "undefined";
+}
+
+Plane::Plane(Coordinate planePoint, Vector3D normal, Material * material,std::string name) {
+  this->planePoint = planePoint;
+  this->normal = normal;
+  this->material = material;
+  this->texture = nullptr;
+  this->name = name;
+}
+
+std::string Plane::getName(){
+    return this->name;
 }
 
 Material *Plane::getMaterial() { return this->material; }
@@ -312,11 +337,27 @@ Cylinder::Cylinder(){}
 Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double height,Material * material)
 : baseCenter(baseCenter),  axis(axis), radius(radius), height(height){
 
+  this->name = "undefined";
   this->material = material;
   this->topCenter = (axis*height) + baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
   this->topLid = Plane(topCenter,axis,new Cooper());
   this->texture = nullptr;
+}
+
+Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double height,Material * material,std::string name)
+: baseCenter(baseCenter),  axis(axis), radius(radius), height(height){
+
+  this->name = name;
+  this->material = material;
+  this->topCenter = (axis*height) + baseCenter;
+  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
+  this->topLid = Plane(topCenter,axis,new Cooper());
+  this->texture = nullptr;
+}
+
+std::string Cylinder::getName(){
+    return this->name;
 }
 
 Material * Cylinder::getMaterial(){
@@ -517,12 +558,27 @@ bool Cylinder::setTransform(Transformation * t){
 Cone::Cone(){}
 
 Cone::Cone(Coordinate baseCenter,Vector3D axis,double radius,double height,Material * material) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
+  this->name = "undefined";
   this->material = material;
   this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
   this->vertex = (axis*height)+baseCenter;
   this->baseLid = Plane(baseCenter,axis*-1,material);
   this->texture = nullptr;
 
+}
+
+Cone::Cone(Coordinate baseCenter,Vector3D axis,double radius,double height,Material * material,std::string name) : baseCenter(baseCenter),axis(axis),radius(radius),height(height){
+  this->name = name;
+  this->material = material;
+  this->cosTeta = this->height /(std::sqrt(radius*radius + height*height));
+  this->vertex = (axis*height)+baseCenter;
+  this->baseLid = Plane(baseCenter,axis*-1,material);
+  this->texture = nullptr;
+
+}
+
+std::string Cone::getName(){
+    return this->name;
 }
 
 Texture * Cone::getTexture(){

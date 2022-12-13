@@ -15,6 +15,7 @@ public:
   virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
   virtual Vector3D calcDirection(Coordinate o) = 0;
   virtual Vector3D getReference() = 0;
+  virtual std::string getName() = 0;
   virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
   Light();
 protected:
@@ -35,6 +36,7 @@ public:
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  std::string getName();
 
 private:
 
@@ -52,6 +54,7 @@ public:
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  std::string getName();
 
 private:
   Vector3D direction;
@@ -69,9 +72,20 @@ public:
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  std::string getName();
 
 private:
   Coordinate position;
 };
+
+class SpotLight : public Light{
+  Intensity getIntensity() = 0;
+  bool setIntensity(Intensity) = 0;
+  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
+  Vector3D calcDirection(Coordinate o) = 0;
+  Vector3D getReference() = 0;
+  std::string getName() = 0;
+  void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
+}
 
 #endif

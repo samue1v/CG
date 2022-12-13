@@ -41,6 +41,10 @@ void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
 
 }
 
+std::string AmbientLight::getName(){
+  return this->name;
+}
+
 DirectionalLight::DirectionalLight() {}
 
 DirectionalLight::DirectionalLight(Intensity intensity, Vector3D direction,std::string name)
@@ -92,6 +96,10 @@ Vector3D DirectionalLight::getReference(){
 
 void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   
+}
+
+std::string DirectionalLight::getName(){
+  return this->name;
 }
 
 PointLight::PointLight() {}
@@ -149,4 +157,8 @@ Vector3D PointLight::getReference(){
 
 void PointLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   
+}
+
+std::string PointLight::getName(){
+  return this->name;
 }
