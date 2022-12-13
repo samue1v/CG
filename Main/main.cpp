@@ -29,7 +29,7 @@ para -canvas_distance
 #include <unistd.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "../libs/glfw/include/GLFW/glfw3.h"
+//#include "../libs/glfw/include/GLFW/glfw3.h"
 #include <GLFW/glfw3.h>
 
 const int nLines = 600;
@@ -43,7 +43,7 @@ GLuint tex_handle;
 
 void display();
 void constructScene();
-void run();
+double run();
 void menuObj(Object *);
 
 template<int l,int k>
@@ -176,7 +176,7 @@ void constructScene(){
   std::string casa_mesh = "../MeshFiles/casa.obj";
   std::string quadro_mesh = "../MeshFiles/frame.obj";
   Mesh * moldura = new Mesh(moldura_mesh,marble);
-  moldura->setTexture("../TextureFiles/woodp.png",renderer);
+  moldura->setTexture("../TextureFiles/3ano.png",renderer);
   Mesh * pintura = new Mesh(quadro_mesh,marble);
   pintura->setTexture("../TextureFiles/kaguya.png",renderer);
   
@@ -283,7 +283,7 @@ void constructScene(){
   
 }
 
-void run(){
+double run(){
   Pair<double,double> windowSize = canvas->getWindowSize();
   double wj = windowSize.left;
   double hj = windowSize.right;
@@ -308,6 +308,7 @@ void run(){
       }
     }
   }
+  return 1.0;
 }
 
 void ErrorCallback(int, const char* err_str)
@@ -324,13 +325,99 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
        double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
        menuObj(canvas->getObjectAtCoord(xMousePos,yMousePos));
-       //cout << "Cursor Position at (" << xpos << " : " << ypos << endl;
+       
+       //auto a = std::async(std::launch::async, menuObj,canvas->getObjectAtCoord(xMousePos,yMousePos));
+       
+       //std::cout<<"passei\n";
+       //canvas->getObjectAtCoord(xMousePos,yMousePos)->setTransform(new RotateZ(-45));
+        //std::async(std::launch::async,run); 
+
+       //std::cout << "Cursor Position at (" << xMousePos << " : " << yMousePos <<")"<< "\n";
        
     }
+
+}
+
+void menuTransform(Shape3D * shape){
+  int option;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)Apply Translate.\n";
+  std::cout<<"(2)Apply Scale.\n";
+  std::cout<<"(3)Apply RotateX.\n";
+  std::cout<<"(4)Apply RotateY.\n";
+  std::cout<<"(5)Apply RotateZ.\n";
+  std::cout<<"(6)Apply RotateFixedX.\n";
+  std::cout<<"(7)Apply RotateFixedY.\n";
+  std::cout<<"(8)Apply RotateFixedZ.\n";
+  std::cout<<"(9)Apply ShearXY.\n";
+  std::cout<<"(10)Apply ShearYX.\n";
+  std::cout<<"(11)Apply ShearXZ.\n";
+  std::cout<<"(12)Apply ShearZX.\n";
+  std::cout<<"(13)Apply ShearYZ.\n";
+  std::cout<<"(14)Apply ShearZY.\n";
+  std::cout<<"(15)Exit"
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  std::cout<< "\n" << std::flush;
+
+  if(option == 1){
+
+  }
+  else if(option == 2){
+
+  }
+  else if(option == 3){
+
+  }
+  else if(option == 4){
+
+  }
+  else if(option == 5){
+
+  }
+  else if(option == 6){
+
+  }
+  else if(option == 7){
+
+  }
+  else if(option == 8){
+
+  }
+  else if(option == 9){
+
+  }
+  else if(option == 10){
+
+  }
+  else if(option == 11){
+
+  }
+  else if(option == 12){
+
+  }
+  else if(option == 13){
+
+  }
+  else if(option == 14){
+
+  }
+  else
+
+
+}
+
+void menuTransform(Object * obj){
+
+}
+
+void menuTransform(Mesh * mesh){
+
 }
 
 void menuObj(Object * clickedObj){
-  int option = 1;
+  int option;
+  while(true){
     std::cout<< clickedObj->getName();
     std::cout<<"Chose any option: \n";
     std::cout<<"(1)Apply Transform.\n";
@@ -338,70 +425,22 @@ void menuObj(Object * clickedObj){
     std::cout<<"(3)See shapes.\n";
     std::cout<<"(4)See meshes.\n";
     std::cout<<"(9)Sair.\n";
-    std::cout<<"Option: ";
-    //std::cin >> option;
+    std::cout<<"Option: \n";
+    std::cin >> option;
     std::cout<< "\n" << std::flush;
-    switch (option)
-    {
-    case 1:
+    if(option == 1){
       clickedObj->setTransform(new RotateZ(-45));
-      run(); 
-      std::cout<<"done\n";
-
-    case 2:
-      run();
-
-    case 3:
-      run();
-
-    case 4:
-      run();
-
-    case 9:
-      exit(-1);
-    default:
-      exit(-1);
+      //glfwPostEmptyEvent();
+      auto a = std::async(std::launch::async,run);
+      //run();
+      //std::cout<<"continuei!\n";
+      //glfwWaitEventsTimeout(100);
     }
-    //clickedObj->setTransform(new RotateZ(-45));
-    //run();
-}
-
-
-/*
-void processCLick(){
-  //std::cout<<"x: "<<(int)xMousePos << "y: "<<(int)yMousePos<<"\n";
-  Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
-  if(obj){
-    std::async(std::launch::async,display);
-    menuObj(obj);
-    //obj->setTransform(new RotateZ(-45));
-    //run();
+    //glfwPostEmptyEvent();
+    return 1;
   }
-  else{
-   std::cout << "void";
-  }
-  std::cout << "\n";
+    
 }
-*/
-/*
-void waitForCLick(){
-  
-  while(true){
-    if(clicked){
-      Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
-      if(obj){
-        menuObj(obj);
-      }
-      else{
-        std::cout << "void";
-      }
-    std::cout << "\n";  
-    }
-    sleep(0.3);
-    clicked=false;   
-  }
-}
-*/
 
 
 void display(){
@@ -418,6 +457,7 @@ void display(){
   glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
   glfwMakeContextCurrent(window);
   glfwSetMouseButtonCallback(window,mouseButtonCallback);
+  glfwWaitEventsTimeout(20);
   uint8_t * data = canvas->getColorBuffer();
   glGenTextures(1, &tex_handle);
   glBindTexture(GL_TEXTURE_2D, tex_handle);
@@ -428,34 +468,28 @@ void display(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-  glClearColor(255.0,255.0,255.0,0.0);
-  //ImGui::StyleColorsDark();
-  int cont = 0;
+     
   while (!glfwWindowShouldClose(window)) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    // Set up orphographic projection
+     // Set up orphographic projection
     int window_width, window_height;
     glfwGetFramebufferSize(window, &window_width, &window_height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, window_width, 0, window_height, -1, 1);
     glMatrixMode(GL_MODELVIEW);
-
     // Render whatever you want
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, tex_handle);
     glBegin(GL_QUADS);
       glTexCoord2d(0,1); glVertex2i(0, 0);
-      glTexCoord2d(1,1); glVertex2i(0 + nLines, 0);
-      glTexCoord2d(1,0); glVertex2i(nLines,+ nColumns);
+      glTexCoord2d(1,1); glVertex2i(nLines, 0);
+      glTexCoord2d(1,0); glVertex2i(nLines,nColumns);
       glTexCoord2d(0,0); glVertex2i(0, nColumns);
     glEnd();
     
     glDisable(GL_TEXTURE_2D);
-    std::cout<<(cont++) % 10<<"\n";
     glfwSwapBuffers(window);
     glfwWaitEvents();
   }

@@ -179,7 +179,6 @@ Color Plane::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld
  Vector3D e12 = Vector3D::cross(this->normal,Vector3D(0,0,1));
  if(e12.getLength()>e1.getLength()){
   e1 =e12;
-  std::cout<<"erro\n";
  }
   e1.normalize();
   Vector3D e2 = Vector3D::cross(this->normal,e1);

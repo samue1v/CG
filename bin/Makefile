@@ -51,7 +51,7 @@ program: ../Links/coordinate.o ../Links/vector.o ../Links/color.o ../Links/inten
 ../Links/camera.o: ../Camera/Camera.cpp ../Camera/Camera.h ../DataStructures/Vector.h ../DataStructures/Coordinate.h
 	g++ -Ofast -o ../Links/camera.o ../Camera/Camera.cpp -c
 
-../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h ../Camera/Camera.h ../libs/glfw/include/GLFW/glfw3.h
+../Links/main.o: ../Main/main.cpp ../Canvas_/Canvas.h ../DataStructures/Coordinate.h ../DataStructures/DataConsts.h ../DataStructures/Matrix.h ../DataStructures/Vector.h ../Ilumination/Color.h ../Ilumination/Intensity.h ../Ilumination/Light.h ../Ilumination/Reflect.h ../Object_/Object.h ../Object_/Shapes.h ../World/Scene.h ../World/Space3D.h ../Camera/Camera.h# ../libs/glfw/include/GLFW/glfw3.h
 	g++ -Ofast -pthread -o ../Links/main.o ../Main/main.cpp -c
 
 clean:
