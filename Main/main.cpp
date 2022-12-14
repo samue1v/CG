@@ -1,7 +1,5 @@
 /*
-Lembrar de olhar o calculo da normal da malha, lembra da ordem g o f
-lembra que eu mudei canvas distance pra ser positivo, logo no loop principal deve-se mudar
-para -canvas_distance
+LEMBRAR!!!! lembre do que ocorreu com a camera e a transformaçaõ em objeto.
 */
 
 #include "../Canvas_/Canvas.h"
@@ -40,18 +38,22 @@ Scene * scene;
 GLFWwindow* window;
 GLuint tex_handle;
 
+void setGlfw();
 void display();
 void constructScene();
 double run();
-void menuObj(Object *);
+bool menuObj(Object *);
 void menuMain();
+bool shapeListMenu(Shape3D *);
 bool menuShape(Object *);
 bool menuTransform(Object *);
 bool menuTransform(Shape3D *);
 bool menuTransform(Mesh *);
+bool menuMaterial(Object *);
+bool menuMaterial(Shape3D *);
+bool menuMaterial(Mesh *);
 
-template<int l,int k>
-bool writePPM(Canvas<l,k> *canvas) {
+bool writePPM() {
   std::ofstream myfile;
   //Matrix<Color,l,k> *m = canvas->getCanvas();
   myfile.open("image.ppm");
@@ -129,6 +131,12 @@ void constructScene(){
   lamp->setShape(lampBulb);
   lamp->setTransform(new Translate(0,2,5));
 
+  Object * house = new Object("house");
+  Mesh * house_mesh = new Mesh("../MeshFiles/casa.obj",marble,"house_mesh");
+  house_mesh->setTransform(new Scale(0.2,0.2,0.2));
+  house_mesh->setTexture("../TextureFiles/wood.png",renderer);
+  house->setMesh(house_mesh);
+
   //Sphere
   Sphere *circle = new Sphere(Coordinate(0,0,-10), 1, rubber,"esfera teste");
   //circle->setTransform(new Scale(0.5,1,1));
@@ -180,7 +188,7 @@ void constructScene(){
   std::string casa_mesh = "../MeshFiles/casa.obj";
   std::string quadro_mesh = "../MeshFiles/frame.obj";
   Mesh * moldura = new Mesh(moldura_mesh,marble);
-  moldura->setTexture("../TextureFiles/3ano.png",renderer);
+  moldura->setTexture("../TextureFiles/wood_moldura.png",renderer);
   Mesh * pintura = new Mesh(quadro_mesh,marble);
   pintura->setTexture("../TextureFiles/kaguya.png",renderer);
   
@@ -237,7 +245,11 @@ void constructScene(){
   //quadro->setMesh(rightwood);
   quadro->setMesh(moldura);
   quadro->setMesh(pintura);
+  quadro->setTransform(new Translate(2,2,0));
+  quadro->setTransform(new RotateX(45));
+  quadro->setTransform(new RotateX(30));
   
+  quadro->setTransform(new RotateX(-75));
   //obj->setShape(cylinder);
   //obj->setShape(coneleft);  
   //obj->setShape(coneright);
@@ -275,6 +287,7 @@ void constructScene(){
   scene->setObject(quadro);
   scene->setObject(objPlane);
   scene->setObject(lamp);
+  //scene->setObject(house);
 
 
   scene->setLight(ambientLight);
@@ -322,13 +335,26 @@ void ErrorCallback(int, const char* err_str)
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
+    bool flag = false;
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
     {
       //clicked = true;
        //getting cursor position
        double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
-       menuObj(canvas->getObjectAtCoord(xMousePos,yMousePos));
+       Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
+       obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
+       flag = menuObj(obj);
+       obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
+       if(flag){
+        run();
+        std::cout<<"Success.\n";
+       }
+       else{
+        std::cout<<"Nothing done.\n";
+       }
+       //canvas->getObjectAtCoord(xMousePos,yMousePos)->setTransform(new RotateX(45));
+       //run();
        
        //auto a = std::async(std::launch::async, menuObj,canvas->getObjectAtCoord(xMousePos,yMousePos));
        
@@ -344,6 +370,64 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
       menuMain();
        
     }
+
+}
+
+bool menuChangeLight(Light * light){
+  int option;
+  bool flag = false;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)Flip Switch.\n";
+  std::cout<<"(2)Change Location.\n";
+  std::cout<<"(3)Change Intensity.\n";
+  std::cout<<"(4)Exit.\n";
+  std::cout<<"Option: \n";
+  std::cin >> option;
+  if(option == 1){
+    light->flipSwitch();
+    flag = true;
+  }
+  else if(option == 2){
+    if(static_cast<DirectionalLight *>(light)){
+      double x,y,z;
+      DirectionalLight * dirlight = static_cast<DirectionalLight *>(light);
+      std::cout<<"Digite o valor de x da direção: \n";
+      std::cin>>x;
+      std::cout<<"Digite o valor de y da direção: \n";
+      std::cin>>y;
+      std::cout<<"Digite o valor de Z da direção: \n";
+      dirlight->setDirection(Vector3D(x,y,z));
+      flag = true;
+    }
+    else if(static_cast<PointLight *>(light)){
+      double x,y,z;
+      PointLight * pointlight = static_cast<PointLight *>(light);
+      std::cout<<"Digite o valor de x da coordenada: \n";
+      std::cin>>x;
+      std::cout<<"Digite o valor de y da coordenada: \n";
+      std::cin>>y;
+      std::cout<<"Digite o valor de Z da coordenada: \n";
+      pointlight->setPosition(Coordinate(x,y,z));
+      flag = true;
+    }
+    else if(static_cast<AmbientLight *>(light)){}
+    //else if(spotlight)
+  }
+  else if(option == 3){
+    double ir,ig,ib;
+    std::cout<<"Digite o valor de ir: \n";
+    std::cin>>ir;
+    std::cout<<"Digite o valor de ig: \n";
+    std::cin>>ig;
+    std::cout<<"Digite o valor de ib: \n";
+    std::cin>>ib;
+    light->setIntensity(Intensity(ir,ig,ib));
+    flag = true;
+  }
+  else{
+
+  }
+  return flag;
 
 }
 
@@ -534,6 +618,7 @@ bool menuTransform(Object * inp){
     std::cin>>z;
     std::cout<<"\n";
     inp->setTransform(new Scale(x,y,z));
+    flag = true;
   }
   else if(option == 3){
     double degree;
@@ -625,6 +710,7 @@ bool menuTransform(Object * inp){
     std::cout<<"Invalid option.\n";
     flag = false;
   }
+  //std::cout<<option<<"\n";
   return flag;
 }
 
@@ -786,6 +872,110 @@ bool menuTransform(Mesh * inp){
   return flag;
 }
 
+bool menuMaterial(Shape3D * shape){
+  int option;
+  bool flag = false;
+  Material * material = shape->getMaterial();
+  std::cout<<material;
+  std::cout<<"(1)Change Ka\n";
+  std::cout<<"(2)Change Kd\n";
+  std::cout<<"(3)Change Ke\n";
+  std::cout<<"(4)Exit\n";
+  std::cin>>option;
+  if(option == 1){
+    double kr,kg,kb;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    material->setKa(AmbientReflectiveness(Coeficients(kr,kg,kb)));
+    flag = true;
+
+  }
+  else if(option == 2){
+    double kr,kg,kb;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    material->setKd(DifuseReflectiveness(Coeficients(kr,kg,kb)));
+    flag = true;
+  }
+  else if(option == 3){
+    double kr,kg,kb,shininess;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    std::cout<<"shininess: \n";
+    std::cin>>shininess;
+    material->setKe(SpecularReflectiveness(Coeficients(kr,kg,kb),shininess));
+    flag = true;
+
+  }
+  return flag;
+
+  
+
+  
+}
+
+bool menuMaterial(Mesh * mesh){
+  int option;
+  bool flag = false;
+  Material * material = mesh->getMaterial();
+  std::cout<<material;
+  std::cout<<"(1)Change Ka\n";
+  std::cout<<"(2)Change Kd\n";
+  std::cout<<"(3)Change Ke\n";
+  std::cout<<"(4)Exit\n";
+  std::cin>>option;
+  if(option == 1){
+    double kr,kg,kb;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    material->setKa(AmbientReflectiveness(Coeficients(kr,kg,kb)));
+    flag = true;
+
+  }
+  else if(option == 2){
+    double kr,kg,kb;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    material->setKd(DifuseReflectiveness(Coeficients(kr,kg,kb)));
+    flag = true;
+  }
+  else if(option == 3){
+    double kr,kg,kb,shininess;
+    std::cout<<"kr: \n";
+    std::cin>>kr;
+    std::cout<<"kg: \n";
+    std::cin>>kg;
+    std::cout<<"kb: \n";
+    std::cin>>kb;
+    std::cout<<"shininess: \n";
+    std::cin>>shininess;
+    material->setKe(SpecularReflectiveness(Coeficients(kr,kg,kb),shininess));
+    flag = true;
+
+  }
+  return flag;
+}
+
 bool menuLight(){
   int size = scene->getNumberOfLights();
   bool flag = false;
@@ -796,7 +986,7 @@ bool menuLight(){
   }
   std::cin>>option;
   if(option<size+1 && option > 0){
-    //flag = menuChangeLight(scene->getLightAt(option-1));
+    flag = menuChangeLight(scene->getLightAt(option-1));
   }
   else{
     std::cout<<"escolha inválida\n";
@@ -820,14 +1010,34 @@ void menuMain(){
   else{
   }
   if(flag){
+    run();
     std::cout<<"Success\n";
   }
   else{
-    std::cout<<"Failed\n";
+    std::cout<<"Nothing done\n";
   }
 }
 
-bool menuShape(Object * clickedObj){
+bool menuShape(Shape3D * shape){
+  int option;
+  bool flag= false;
+  std::cout<< shape->getName();
+  std::cout<<"\nChoose any option: \n";
+  std::cout<<"(1)Apply Transform.\n"; //ok
+  std::cout<<"(2)Change Material.\n";
+  std::cout<<"(3)Exit.\n";    
+  std::cin>>option;
+  if(option == 1){
+    flag = menuTransform(shape);
+  }
+  else if(option == 2){
+    flag = menuMaterial(shape);
+  }
+  return flag;
+
+}
+
+bool ShapeListMenu(Object * clickedObj){
   int size = clickedObj->getShapeCount();
   bool flag = false;
   int option;
@@ -837,7 +1047,7 @@ bool menuShape(Object * clickedObj){
   }
   std::cin>>option;
   if(option<size+1 && option > 0){
-    flag = menuTransform(clickedObj->getShapeAt(option-1));
+    flag = menuShape(clickedObj->getShapeAt(option-1));
   }
   else{
     std::cout<<"escolha inválida\n";
@@ -845,47 +1055,30 @@ bool menuShape(Object * clickedObj){
   return flag;
 }
 
-void menuObj(Object * clickedObj){
+bool menuObj(Object * clickedObj){
   int option;
-  bool flag;
+  bool flag = false;
   std::cout<< clickedObj->getName();
-  std::cout<<"\nChose any option: \n";
-  std::cout<<"(1)Apply Transform.\n";
-  std::cout<<"(2)Change Material.\n";
-  std::cout<<"(3)See shapes.\n";
-  std::cout<<"(4)See meshes.\n";
+  std::cout<<"\nChoose any option: \n";
+  std::cout<<"(1)Apply Transform.\n"; //ok
+  std::cout<<"(2)See shapes.\n";
+  std::cout<<"(3)See meshes.\n";
   std::cout<<"(9)Sair.\n";
   std::cout<<"Option: \n";
   std::cin >> option;
-  std::cout<< "\n" << std::flush;
+  //std::cout<< "\n" << std::flush;
   if(option == 1){
     flag = menuTransform(clickedObj);
-    //clickedObj->setTransform(new RotateZ(-45));
-      //glfwPostEmptyEvent();
-      //auto a = std::async(std::launch::async,run);
-      //run();
-      //std::cout<<"continuei!\n";
-      //glfwWaitEventsTimeout(100);
   }
-  else if(option == 3){
-    flag = menuShape(clickedObj);
-  }
-  else{
-    flag = false;
+  else if(option == 2){
+    flag = ShapeListMenu(clickedObj);
   }
   //glfwPostEmptyEvent();
   //return 1;
-  if(flag){
-    auto a = std::async(std::launch::async,run);
-    std::cout<<"Success.\n";
-  }
-  else{
-    std::cout<<"Failed.\n";
-  }
+  return flag;
 }
 
-
-void display(){
+void setGlfw(){
   glfwSetErrorCallback(ErrorCallback);
   if (!glfwInit()) {
       std::cout<< "Couldn't init GLFW\n";
@@ -909,9 +1102,14 @@ void display(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-     
+  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+}
+
+void display(){
+  uint8_t * data = canvas->getColorBuffer();
+  glfwMakeContextCurrent(window);
   while (!glfwWindowShouldClose(window)) {
+    //glfwMakeContextCurrent(window);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nLines, nColumns, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set up orphographic projection
@@ -933,7 +1131,7 @@ void display(){
     
     glDisable(GL_TEXTURE_2D);
     glfwSwapBuffers(window);
-    glfwWaitEvents();
+    //glfwPollEvents();
   }
 }
 
@@ -955,7 +1153,13 @@ int main() {
   
   //Canvas Loop
   run();
-  display();
+  setGlfw();
+  glfwMakeContextCurrent(NULL);
+  std::thread renderThread(display);
+  while (true) {
+    glfwPollEvents();
+  }
+  renderThread.join();
 
   
 

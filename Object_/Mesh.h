@@ -13,6 +13,7 @@
 
 class Mesh{
     private:
+    std::string name;
     Texture * texture;
     Face intersectedFace;
     Array<Vertex> vertexList;
@@ -39,6 +40,7 @@ class Mesh{
     Mesh();
     Mesh(const std::string & filePath);
     Mesh(const std::string & filePath,Material * material);
+    Mesh(const std::string & filePath,Material * material,std::string name);
     Vector3D computeNormal();
     Material * getMaterial();
     bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
@@ -47,6 +49,7 @@ class Mesh{
     bool setTransform(Transformation * t);
     double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
     void transformView(Matrix<double,4,4> transformMatrix);
+    std::string getName();
 };
 
 

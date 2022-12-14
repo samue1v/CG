@@ -10,16 +10,19 @@
 
 class Light {
 public:
-  virtual Intensity getIntensity() = 0;
-  virtual bool setIntensity(Intensity) = 0;
+  Intensity getIntensity();
+  std::string getName();
+  bool getSwitchState();
+  void flipSwitch();
+  bool setIntensity(Intensity);
   virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
   virtual Vector3D calcDirection(Coordinate o) = 0;
   virtual Vector3D getReference() = 0;
-  virtual std::string getName() = 0;
   virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
   Light();
 protected:
   Intensity intensity;
+  bool isOn;
   std::string name;
 
 
@@ -30,13 +33,11 @@ class AmbientLight : public Light {
 public:
   AmbientLight();
   AmbientLight(Intensity intensity,std::string name);
-  Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-  std::string getName();
 
 private:
 
@@ -49,12 +50,10 @@ public:
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D getDirection();
   bool setDirection(Vector3D);
-  Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-  std::string getName();
 
 private:
   Vector3D direction;
@@ -67,17 +66,15 @@ public:
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Coordinate getPosition();
   bool setPosition(Coordinate);
-  Intensity getIntensity();
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
   Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-  std::string getName();
 
 private:
   Coordinate position;
 };
-
+/*
 class SpotLight : public Light{
   Intensity getIntensity() = 0;
   bool setIntensity(Intensity) = 0;
@@ -86,6 +83,6 @@ class SpotLight : public Light{
   Vector3D getReference() = 0;
   std::string getName() = 0;
   void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
-}
+}*/
 
 #endif

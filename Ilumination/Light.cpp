@@ -8,13 +8,7 @@
 
 Light::Light() {}
 
-AmbientLight::AmbientLight(){}
-
-AmbientLight::AmbientLight(Intensity intensity,std::string name) {this->intensity = intensity;this->name = name;}
-
-Intensity AmbientLight::getIntensity() { return this->intensity; }
-
-bool AmbientLight::setIntensity(Intensity i) {
+bool Light::setIntensity(Intensity i){
   if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
       i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
       i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
@@ -23,6 +17,26 @@ bool AmbientLight::setIntensity(Intensity i) {
   this->intensity = i;
   return true;
 }
+
+Intensity Light::getIntensity(){
+  return this->intensity;
+}
+
+std::string Light::getName(){
+  return this->name;
+}
+
+void Light::flipSwitch(){
+  this->isOn = !isOn;
+}
+
+bool Light::getSwitchState(){
+  return this->isOn;
+}
+
+AmbientLight::AmbientLight(){}
+
+AmbientLight::AmbientLight(Intensity intensity,std::string name) {this->intensity = intensity;this->name = name;;this->isOn = true;}
 
 Intensity AmbientLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                       Material *material) {
@@ -41,14 +55,10 @@ void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
 
 }
 
-std::string AmbientLight::getName(){
-  return this->name;
-}
-
 DirectionalLight::DirectionalLight() {}
 
 DirectionalLight::DirectionalLight(Intensity intensity, Vector3D direction,std::string name)
-    : direction(direction) {this->intensity = intensity;this->name = name;}
+    : direction(direction) {this->intensity = intensity;this->name = name;this->isOn = true;}
 
 Intensity DirectionalLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                           Material *material) {
@@ -65,18 +75,6 @@ Intensity DirectionalLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
   }
 
   return i;
-}
-
-Intensity DirectionalLight::getIntensity() { return this->intensity; }
-
-bool DirectionalLight::setIntensity(Intensity i) {
-  if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
-      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
-      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
-    return false;
-  }
-  this->intensity = i;
-  return true;
 }
 
 Vector3D DirectionalLight::getDirection() { return this->direction; }
@@ -98,14 +96,10 @@ void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   
 }
 
-std::string DirectionalLight::getName(){
-  return this->name;
-}
-
 PointLight::PointLight() {}
 
 PointLight::PointLight(Intensity intensity, Coordinate position,std::string name)
-    :  position(position) {this->intensity = intensity;this->name = name;}
+    :  position(position) {this->intensity = intensity;this->name = name;this->isOn = true;}
 
 Intensity PointLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                     Material *material) {
@@ -127,18 +121,6 @@ Intensity PointLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
   return i;
 }
 
-Intensity PointLight::getIntensity() { return this->intensity; }
-
-bool PointLight::setIntensity(Intensity i) {
-  if (i.getRed() > INTENSITY_MAX || i.getRed() < INTENSITY_MIN ||
-      i.getGreen() > INTENSITY_MAX || i.getGreen() < INTENSITY_MIN ||
-      i.getBlue() > INTENSITY_MAX || i.getBlue() < INTENSITY_MIN) {
-    return false;
-  }
-  this->intensity = i;
-  return true;
-}
-
 Coordinate PointLight::getPosition() { return this->position; }
 
 bool PointLight::setPosition(Coordinate newVector) {
@@ -157,8 +139,4 @@ Vector3D PointLight::getReference(){
 
 void PointLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   
-}
-
-std::string PointLight::getName(){
-  return this->name;
 }

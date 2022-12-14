@@ -18,6 +18,7 @@ Mesh::Mesh(const std::string & filePath){
     this->transformMatrix = Matrix<double,4,4>::identity();
     this->stackedTransformMatrix = this->transformMatrix; 
     this->inverseMatrix = this->transformMatrix;
+    this->name = "undefined";
 }
 
 Mesh::Mesh(const std::string & filePath,Material * material){
@@ -29,7 +30,19 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     this->stackedTransformMatrix = this->transformMatrix; 
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
-    //std::cout << this->faceList;
+    this->name = "undefined";
+}
+
+Mesh::Mesh(const std::string & filePath,Material * material,std::string name){
+    std::ifstream file;
+    file.open(filePath);
+    parseFile(file);
+    this->texture = nullptr;
+    this->transformMatrix = Matrix<double,4,4>::identity();
+    this->stackedTransformMatrix = this->transformMatrix; 
+    this->inverseMatrix = this->transformMatrix;
+    this->material = material;
+    this->name = name;
 }
 
 void Mesh::parseFile(std::ifstream & file){
@@ -169,6 +182,10 @@ Material * Mesh::getMaterial(){
     return this->material;
 }
 
+std::string Mesh::getName(){
+    return this->name;
+}
+
 void Mesh::transformView(Matrix<double,4,4> transformMatrix){
     for(int i = 0;i<this->vertexList.getSize();i++){
         this->vertexList.setElementAt(i,(transformMatrix*Matrix<double,4,1>(this->vertexList.getElementAt(i))).toVertex());
@@ -282,8 +299,8 @@ void Mesh::applyTransform(Coordinate point){
 
 void Mesh::applyTransform(){
     Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
-    Vertex translateVertex = Vertex(-stackedTransformMatrix.getVal(0,3),-stackedTransformMatrix.getVal(1,3),-stackedTransformMatrix.getVal(2,3));
-    Vertex goBackVertex = Vertex(stackedTransformMatrix.getVal(0,3),stackedTransformMatrix.getVal(1,3),stackedTransformMatrix.getVal(2,3));
+    Vertex translateVertex = Vertex(stackedTransformMatrix.getVal(0,3),stackedTransformMatrix.getVal(1,3),stackedTransformMatrix.getVal(2,3));
+    Vertex goBackVertex = Vertex(-stackedTransformMatrix.getVal(0,3),-stackedTransformMatrix.getVal(1,3),-stackedTransformMatrix.getVal(2,3));
     tempTransform(translateVertex); 
     for(int i=0;i<this->vertexList.getSize();i++){
         Vertex currentVertex = this->vertexList.getElementAt(i);
@@ -312,10 +329,12 @@ void Mesh::applyTransform(){
 }
 
 void Mesh::tempTransform(Vertex v){
+    std::cout<<v<<"\n";
     for(int i = 0;i<this->vertexList.getSize();i++){
         Vertex currentV = this->vertexList.getElementAt(i);
-        this->vertexList.setElementAt(i,Vertex(currentV.x+v.x,currentV.y+v.y,currentV.z+v.z));
+        this->vertexList.setElementAt(i,Vertex(currentV.x-v.x,currentV.y-v.y,currentV.z-v.z));
     }
+    std::cout<<v<<"\n";
 }
 
 bool Mesh::setTexture(const std::string & filePath,SDL_Renderer * renderer){

@@ -80,7 +80,8 @@ public:
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
         Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
         double p_lightDirLength = p_lightDir.getLength();
-        if(dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength) ){
+        Light * curLight = scene->getLightAt(l);
+        if(curLight->getSwitchState() && (dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength) )){
           i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestShape->getMaterial());
           
         }
@@ -92,7 +93,8 @@ public:
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
         Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
         double p_lightDirLength = p_lightDir.getLength();
-        if(dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength) ){
+        Light * curLight = scene->getLightAt(l);
+        if(curLight->getSwitchState() && (dynamic_cast<AmbientLight*>(curLight) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)) ){
           i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
         }
       }
