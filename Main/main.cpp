@@ -105,9 +105,9 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,15);
+  Coordinate eye = Coordinate(0,0,10);
   Coordinate up = Coordinate(0,2000,20);
-  Coordinate lookAt = Coordinate(0,0,-100);  
+  Coordinate lookAt = Coordinate(0,-20,-20);  
 
   Camera * camera  = new Camera(eye,lookAt,up);
 
@@ -132,6 +132,7 @@ void constructScene(){
   lamp->setShape(lampBase);
   lamp->setShape(lampBulb);
   lamp->setTransform(new Translate(0,2,5));
+  //lamp->setTransform(new Translate(0,1,0));
 
   Object * house = new Object("house");
   Mesh * house_mesh = new Mesh("../MeshFiles/casa.obj",marble,"house_mesh");
@@ -171,10 +172,10 @@ void constructScene(){
   //Planes
 	Coordinate floorPoint = Coordinate(0,-20,0);
 	Vector3D floorNormal = Vector3D(0,1,0);
-  Coordinate backPoint = Coordinate(0,0,-400);
-	Vector3D backNormal = Vector3D(0,0,-1);
+  Coordinate backPoint = Coordinate(0,0,-50);
+	Vector3D backNormal = Vector3D(0,0,1);
 	Plane *floorPlane = new Plane(floorPoint, floorNormal, rubber);
-	Plane *backPlane = new Plane(backPoint, backNormal, metal);
+	Plane *backPlane = new Plane(backPoint, backNormal, rubber);
 
   //floorPlane->setTransform(new RotateX(30));
 
@@ -235,7 +236,8 @@ void constructScene(){
   Object * quadro = new Object(quadronome);
   //Object *obj = new Object(name);
   Object *objPlane = new Object(plano);
-
+  Object *objWall = new Object("wall");
+  Object *cilindro = new Object("cilindro");
   //Setting shapes and meshes to object
 
   //obj->setShape(circle);
@@ -249,6 +251,8 @@ void constructScene(){
   quadro->setMesh(pintura);
   quadro->setMesh(moldura);
 
+  cilindro->setShape(new Cylinder(Coordinate(0,-15,0),Vector3D(0,1,0),0.5,1,marble,"base lampada."));
+
   //quadro->setTransform(new Translate(2,2,0));
   //quadro->setTransform(new RotateX(45));
   //quadro->setTransform(new RotateX(30));
@@ -260,7 +264,7 @@ void constructScene(){
   //obj->setShape(coneup);
   //obj->setShape(conedown);
 
-
+  objWall->setShape(backPlane);
   objPlane->setShape(floorPlane);
   //objPlane->setMesh(rightwood);
   
@@ -282,24 +286,29 @@ void constructScene(){
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity,"Ambiente Light");
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
+  SpotLight * spottlight = new SpotLight(pointIntensity,Coordinate(0,1,5),Vector3D(0,-1,0),20,"spot");
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,1.4,5),"PointLight");//Coordinate(0,60,-30))
   //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
-  PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(5,5,15),"PointLight3");
-  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.2,0.2,0.2),Vector3D(0,0,-1),"DirLIght");
+  PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(0,2,10),"PointLight3");
+  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.6,0.6,0.6),Vector3D(0,-1,-1),"DirLIght");
   //Creating the scene
   
-  scene->setObject(quadro);
+  //scene->setObject(quadro);
   scene->setObject(objPlane);
-  scene->setObject(lamp);
+  //scene->setObject(lamp);
+  scene->setObject(cilindro);
+  //scene->setObject(objWall);
   //scene->setObject(house);
 
 
-  scene->setLight(ambientLight);
-  //scene->setLight(dirLight);
-  scene->setLight(pointLight);
+  //scene->setLight(ambientLight);
+  scene->setLight(dirLight);
+  //scene->setLight(pointLight);
   //scene.setLight(pointLight2);
-  scene->setLight(pointLight3);
+  scene->setLight(spottlight);
+  //scene->setLight(pointLight3);
   scene->setCamera(camera);
+  //lamp->setTransform(new Translate(10,0,0));
   scene->transformView();
   
 }
@@ -347,9 +356,9 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
        double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
        Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
-       obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
+       //obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
        flag = menuObj(obj);
-       obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
+       //obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
        if(flag){
         run();
         std::cout<<"Success.\n";

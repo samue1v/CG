@@ -6,11 +6,11 @@ TO DO:
 . Fazer o parsing das coordenadas de textura do blender. ✔️
 . Textura em malha. ✔️
 . Rotacionar em relação a um eixo ✔️
-. Transform view nas luzes.
-. Luz spot
+. Transform view nas luzes.✔️
+. Luz spot ✔️
 . Otimização
 . Projeção ortografica.
-. Menu de interação(nanoGUI-SDL) - vide(1).
+. Menu de interação(nanoGUI-SDL) - vide(1).✔️
 
 OBS:
 

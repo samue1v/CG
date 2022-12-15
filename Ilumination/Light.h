@@ -7,6 +7,14 @@
 #include "../Object_/Material.h"
 #include "Intensity.h"
 #include <string>
+#include <math.h> 
+
+enum LightType{
+  ambient = 0,
+  directional = 1,
+  point = 2,
+  spot = 3
+};
 
 class Light {
 public:
@@ -14,15 +22,18 @@ public:
   std::string getName();
   bool getSwitchState();
   void flipSwitch();
+  LightType getLightType();
   bool setIntensity(Intensity);
   virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
   virtual Vector3D calcDirection(Coordinate o) = 0;
-  virtual Vector3D getReference() = 0;
   virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
+  virtual bool getAvaliable() = 0;
   Light();
 protected:
   Intensity intensity;
+  bool isAvaliable;
   bool isOn;
+  LightType lightType;
   std::string name;
 
 
@@ -36,9 +47,8 @@ public:
   bool setIntensity(Intensity newIntensity);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D calcDirection(Coordinate o);
-  Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-
+  bool getAvaliable();
 private:
 
 };
@@ -52,9 +62,8 @@ public:
   bool setDirection(Vector3D);
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
-  Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-
+  bool getAvaliable();
 private:
   Vector3D direction;
 };
@@ -68,21 +77,28 @@ public:
   bool setPosition(Coordinate);
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
-  Vector3D getReference();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
-
+  bool getAvaliable();
 private:
   Coordinate position;
 };
-/*
+
 class SpotLight : public Light{
-  Intensity getIntensity() = 0;
-  bool setIntensity(Intensity) = 0;
-  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
-  Vector3D calcDirection(Coordinate o) = 0;
-  Vector3D getReference() = 0;
-  std::string getName() = 0;
-  void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
-}*/
+public:
+  SpotLight();
+  SpotLight(Intensity intensity, Coordinate position, Vector3D direction, double angle,std::string name);
+  Intensity getIntensity();
+  bool setIntensity(Intensity);
+  Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
+  Vector3D calcDirection(Coordinate P);
+  std::string getName();
+  void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  bool getAvaliable();
+private:
+  double angle;
+  Coordinate position;
+  Vector3D direction;
+
+};
 
 #endif

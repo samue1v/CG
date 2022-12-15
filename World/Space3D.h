@@ -78,12 +78,34 @@ public:
       N.normalize();
       texel =  closestShape->getTexel(P,O,scene->getCamera()->getCameraToWorld());
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
-        Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
-        double p_lightDirLength = p_lightDir.getLength();
         Light * curLight = scene->getLightAt(l);
-        if(curLight->getSwitchState() && (dynamic_cast<AmbientLight*>(scene->getLightAt(l)) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength) )){
-          i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestShape->getMaterial());
-          
+        LightType lightType = curLight->getLightType();
+        
+        if(lightType==ambient){
+          if(curLight->getSwitchState()){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+          }
+        }
+        else if(lightType==point){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = p_lightDir.getLength();
+          if(curLight->getSwitchState() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+          }
+        }
+        else if(lightType==directional){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = 100000;
+          if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+          }
+        }
+        else if(lightType==spot){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = p_lightDir.getLength();
+          if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
+          }
         }
       }
     }
@@ -94,7 +116,7 @@ public:
         Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
         double p_lightDirLength = p_lightDir.getLength();
         Light * curLight = scene->getLightAt(l);
-        if(curLight->getSwitchState() && (dynamic_cast<AmbientLight*>(curLight) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)) ){
+        if(curLight->getSwitchState()  && curLight->getAvaliable() && (dynamic_cast<AmbientLight*>(curLight) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)) ){
           i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
         }
       }
@@ -112,13 +134,14 @@ public:
   }
 
   static bool isOfuscated(Coordinate O,Vector3D D,Scene* scene,double maxLength){
-     D.normalize();
+    D.normalize();
      for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
-
         Shape3D *shape = object->getShapeAt(j);
-        double t = shape->IntersectRay(O, D,1,INF);
+        double t = shape->IntersectRay(O, D,1,maxLength);
+        //std::cout<<t<<"\n";
+        //std::cout<<D<<"\n";
         if(t>=1 && t<=maxLength){
           return true;
         }
@@ -126,7 +149,7 @@ public:
       for (int k = 0; k < object->getMeshCount(); k++) {
 
         Mesh *mesh = object->getMeshAt(k);
-        double t = mesh->IntersectRay(O, D,1,INF);
+        double t = mesh->IntersectRay(O, D,1,maxLength);
         if(t>=1 && t<=maxLength){
           return true;
         }
