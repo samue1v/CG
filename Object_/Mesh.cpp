@@ -16,7 +16,8 @@ Mesh::Mesh(const std::string & filePath){
     file.open(filePath);
     parseFile(file);
     this->transformMatrix = Matrix<double,4,4>::identity();
-    this->stackedTransformMatrix = this->transformMatrix; 
+    //this->stackedTransformMatrix = this->transformMatrix; 
+    this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
     this->name = "undefined";
 }
@@ -27,7 +28,8 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     parseFile(file);
     this->texture = nullptr;
     this->transformMatrix = Matrix<double,4,4>::identity();
-    this->stackedTransformMatrix = this->transformMatrix; 
+    //this->stackedTransformMatrix = this->transformMatrix; 
+    this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
     this->name = "undefined";
@@ -39,7 +41,8 @@ Mesh::Mesh(const std::string & filePath,Material * material,std::string name){
     parseFile(file);
     this->texture = nullptr;
     this->transformMatrix = Matrix<double,4,4>::identity();
-    this->stackedTransformMatrix = this->transformMatrix; 
+    //this->stackedTransformMatrix = this->transformMatrix; 
+    this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
     this->name = name;
@@ -252,15 +255,20 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 }
 
 bool Mesh::setTransform(Transformation * t){
-    (this->transformList).push(t); 
-    this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
-    this->transformMatrix = t->getTransform() * (this->transformMatrix);//ja mudei aqiu
-    this->inverseMatrix = t->getInverse()*(this->inverseMatrix);
+    //(this->transformList).push(t); 
+    //this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
+
+    this->transformMatrix = t->getTransform();
+    this->inverseMatrix = t->getInverse();
     if(dynamic_cast<RotateXfixed*>(t) || dynamic_cast<RotateYfixed*>(t) || dynamic_cast<RotateZfixed*>(t)){
         applyTransform(t->getFixedPoint());
     }
     else{
         applyTransform();
+    }
+
+    if(dynamic_cast<Translate *>(t)){
+        stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
     }
     return true;
     
@@ -299,8 +307,9 @@ void Mesh::applyTransform(Coordinate point){
 
 void Mesh::applyTransform(){
     Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
-    Vertex translateVertex = Vertex(stackedTransformMatrix.getVal(0,3),stackedTransformMatrix.getVal(1,3),stackedTransformMatrix.getVal(2,3));
-    Vertex goBackVertex = Vertex(-stackedTransformMatrix.getVal(0,3),-stackedTransformMatrix.getVal(1,3),-stackedTransformMatrix.getVal(2,3));
+    Vertex translateVertex = Vertex(stackedTranslateMatrix.getVal(0,3),stackedTranslateMatrix.getVal(1,3),stackedTranslateMatrix.getVal(2,3));
+    Vertex goBackVertex = translateVertex*-1;
+    
     tempTransform(translateVertex); 
     for(int i=0;i<this->vertexList.getSize();i++){
         Vertex currentVertex = this->vertexList.getElementAt(i);
@@ -329,12 +338,10 @@ void Mesh::applyTransform(){
 }
 
 void Mesh::tempTransform(Vertex v){
-    std::cout<<v<<"\n";
     for(int i = 0;i<this->vertexList.getSize();i++){
         Vertex currentV = this->vertexList.getElementAt(i);
         this->vertexList.setElementAt(i,Vertex(currentV.x-v.x,currentV.y-v.y,currentV.z-v.z));
     }
-    std::cout<<v<<"\n";
 }
 
 bool Mesh::setTexture(const std::string & filePath,SDL_Renderer * renderer){
@@ -381,5 +388,3 @@ Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld)
 
 
 }
-
-

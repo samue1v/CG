@@ -30,8 +30,8 @@ LEMBRAR!!!! lembre do que ocorreu com a camera e a transformaçaõ em objeto.
 //#include "../libs/glfw/include/GLFW/glfw3.h"
 #include <GLFW/glfw3.h>
 
-const int nLines = 600;
-const int nColumns = 600;
+const int nLines = 500;
+const int nColumns = 500 ;
 
 Canvas<nLines,nColumns> * canvas;
 Scene * scene;
@@ -44,8 +44,10 @@ void constructScene();
 double run();
 bool menuObj(Object *);
 void menuMain();
-bool shapeListMenu(Shape3D *);
-bool menuShape(Object *);
+bool shapeListMenu(Object *);
+bool MeshListMenu(Object *);
+bool menuMesh(Mesh *);
+bool menuShape(Shape3D *);
 bool menuTransform(Object *);
 bool menuTransform(Shape3D *);
 bool menuTransform(Mesh *);
@@ -103,7 +105,7 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,10);
+  Coordinate eye = Coordinate(0,0,15);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -133,7 +135,7 @@ void constructScene(){
 
   Object * house = new Object("house");
   Mesh * house_mesh = new Mesh("../MeshFiles/casa.obj",marble,"house_mesh");
-  house_mesh->setTransform(new Scale(0.2,0.2,0.2));
+  //house_mesh->setTransform(new Scale(0.2,0.2,0.2));
   house_mesh->setTexture("../TextureFiles/wood.png",renderer);
   house->setMesh(house_mesh);
 
@@ -187,9 +189,9 @@ void constructScene(){
   std::string moldura_mesh = "../MeshFiles/moldura.obj";
   std::string casa_mesh = "../MeshFiles/casa.obj";
   std::string quadro_mesh = "../MeshFiles/frame.obj";
-  Mesh * moldura = new Mesh(moldura_mesh,marble);
+  Mesh * moldura = new Mesh(moldura_mesh,marble,"moldura");
   moldura->setTexture("../TextureFiles/wood_moldura.png",renderer);
-  Mesh * pintura = new Mesh(quadro_mesh,marble);
+  Mesh * pintura = new Mesh(quadro_mesh,marble,"pintura");
   pintura->setTexture("../TextureFiles/kaguya.png",renderer);
   
   //rightwood->setTransform(new Scale(10,10,10));
@@ -207,6 +209,7 @@ void constructScene(){
   moldura->setTransform(new RotateX(90));
   pintura->setTransform(new RotateX(90));
   pintura->setTransform(new Scale(4,3,1));
+
   //pintura->setTransform(new RotateY(180));
   //pintura->setTransform(new Translate(0,0,2));
   
@@ -243,13 +246,14 @@ void constructScene(){
   //quadro->setMesh(topwood);
   //quadro->setMesh(leftwood);
   //quadro->setMesh(rightwood);
-  quadro->setMesh(moldura);
   quadro->setMesh(pintura);
-  quadro->setTransform(new Translate(2,2,0));
-  quadro->setTransform(new RotateX(45));
-  quadro->setTransform(new RotateX(30));
+  quadro->setMesh(moldura);
+
+  //quadro->setTransform(new Translate(2,2,0));
+  //quadro->setTransform(new RotateX(45));
+  //quadro->setTransform(new RotateX(30));
   
-  quadro->setTransform(new RotateX(-75));
+  //quadro->setTransform(new RotateX(-75));
   //obj->setShape(cylinder);
   //obj->setShape(coneleft);  
   //obj->setShape(coneright);
@@ -388,7 +392,7 @@ bool menuChangeLight(Light * light){
     flag = true;
   }
   else if(option == 2){
-    if(static_cast<DirectionalLight *>(light)){
+    if(dynamic_cast<DirectionalLight *>(light)){
       double x,y,z;
       DirectionalLight * dirlight = static_cast<DirectionalLight *>(light);
       std::cout<<"Digite o valor de x da direção: \n";
@@ -399,7 +403,7 @@ bool menuChangeLight(Light * light){
       dirlight->setDirection(Vector3D(x,y,z));
       flag = true;
     }
-    else if(static_cast<PointLight *>(light)){
+    else if(dynamic_cast<PointLight *>(light)){
       double x,y,z;
       PointLight * pointlight = static_cast<PointLight *>(light);
       std::cout<<"Digite o valor de x da coordenada: \n";
@@ -410,7 +414,7 @@ bool menuChangeLight(Light * light){
       pointlight->setPosition(Coordinate(x,y,z));
       flag = true;
     }
-    else if(static_cast<AmbientLight *>(light)){}
+    else if(dynamic_cast<AmbientLight *>(light)){}
     //else if(spotlight)
   }
   else if(option == 3){
@@ -683,8 +687,12 @@ bool menuTransform(Object * inp){
     flag = true;
   }
   else if(option == 9){
+    /*
     std::cout<<"Operação não suportada.\n";
     flag = false;
+    */
+   inp->setTransform(new ShearXY(45));
+   flag = true;
   }
   else if(option == 10){
     std::cout<<"Operação não suportada.\n";
@@ -746,7 +754,6 @@ bool menuTransform(Mesh * inp){
     std::cout<<"Digite o valor de Z: \n";
     std::cin>>z;
     std::cout<<"\n";
-    inp->setTransform(new Translate(x,y,z));
     flag = true;
 
   }
@@ -1037,10 +1044,54 @@ bool menuShape(Shape3D * shape){
 
 }
 
+bool menuMesh(Mesh * mesh){
+  int option;
+  bool flag= false;
+  std::cout<< mesh->getName();
+  std::cout<<"\nChoose any option: \n";
+  std::cout<<"(1)Apply Transform.\n"; //ok
+  std::cout<<"(2)Change Material.\n";
+  std::cout<<"(3)Exit.\n";    
+  std::cin>>option;
+  if(option == 1){
+    flag = menuTransform(mesh);
+  }
+  else if(option == 2){
+    flag = menuMaterial(mesh);
+  }
+  return flag;
+}
+
+bool MeshListMenu(Object * clickedObj){
+  int size = clickedObj->getMeshCount();
+  bool flag = false;
+  int option;
+  std::cout<<"Choose a mesh\n";
+  if(size < 1){
+    std::cout<<"There is no mesh!\n";
+    return flag;
+  }
+  for(int i = 0;i<size;i++){
+    std::cout<<"("<<i+1<<")"<<clickedObj->getMeshAt(i)->getName() <<"\n";
+  }
+  std::cin>>option;
+  if(option<size+1 && option > 0){
+    flag = menuMesh(clickedObj->getMeshAt(option-1));
+  }
+  else{
+    std::cout<<"escolha inválida\n";
+  }
+  return flag;
+}
+
 bool ShapeListMenu(Object * clickedObj){
   int size = clickedObj->getShapeCount();
   bool flag = false;
   int option;
+  if(size < 1){
+    std::cout<<"There is no shape!\n";
+    return flag;
+  }
   std::cout<<"Choose a shape\n";
   for(int i = 0;i<size;i++){
     std::cout<<"("<<i+1<<")"<<clickedObj->getShapeAt(i)->getName() <<"\n";
@@ -1061,8 +1112,8 @@ bool menuObj(Object * clickedObj){
   std::cout<< clickedObj->getName();
   std::cout<<"\nChoose any option: \n";
   std::cout<<"(1)Apply Transform.\n"; //ok
-  std::cout<<"(2)See shapes.\n";
-  std::cout<<"(3)See meshes.\n";
+  std::cout<<"(2)See shapes.\n";//ok
+  std::cout<<"(3)See meshes.\n";//ok
   std::cout<<"(9)Sair.\n";
   std::cout<<"Option: \n";
   std::cin >> option;
@@ -1072,6 +1123,9 @@ bool menuObj(Object * clickedObj){
   }
   else if(option == 2){
     flag = ShapeListMenu(clickedObj);
+  }
+  else if(option == 3){
+    flag = MeshListMenu(clickedObj);
   }
   //glfwPostEmptyEvent();
   //return 1;
@@ -1147,7 +1201,7 @@ int main() {
   constructScene();
   // Canvas creation
   canvas = new Canvas<nLines,nColumns>();
-  canvas->setCanvasDistance(-30);
+  canvas->setCanvasDistance(canvasDistance);
   canvas->setGridSize({dx,dy});
   canvas->setWindowsSize({wj,hj});
   

@@ -12,6 +12,15 @@ struct Vertex{
     double x;
     double y;
     double z;
+    Vertex operator+(Vertex right) {
+        return Vertex(x + right.x, y + right.y, z + right.z);
+    }
+    Vertex operator*(Vertex right) {
+        return Vertex(x * right.x, y * right.y, z * right.z);
+    }
+    Vertex operator*(double right) {
+        return Vertex(x * right, y * right, z * right);
+    }
 };
 
 

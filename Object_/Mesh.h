@@ -24,7 +24,7 @@ class Mesh{
     Material * material;
     Vector3D intersectedNormal;
     void tempTransform(Vertex t);
-    Matrix<double,4,4> stackedTransformMatrix;
+    Matrix<double,4,4> stackedTranslateMatrix;
     Matrix<double,4,4> transformMatrix;
     Matrix<double,4,4> inverseMatrix;
     void applyTransform();
