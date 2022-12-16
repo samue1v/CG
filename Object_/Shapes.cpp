@@ -199,7 +199,9 @@ Color Plane::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld
     return Color();
   }
   double u,v;
-  Vector3D Pvec = Vector3D(P-planePoint);
+  Coordinate planePointWorld = (cameraToWorld*Matrix<double,4,4>(planePoint)).toCoordinate();
+  Coordinate PWorld = (cameraToWorld*Matrix<double,4,4>(P)).toCoordinate();
+  Vector3D Pvec = Vector3D(PWorld-planePointWorld);
   Vector3D e1 = Vector3D::cross(this->normal,Vector3D(1,0,0));
  Vector3D e12 = Vector3D::cross(this->normal,Vector3D(0,0,1));
  if(e12.getLength()>e1.getLength()){

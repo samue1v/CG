@@ -2,6 +2,7 @@
 #define CAMERA_H
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/Matrix.h"
+#include "../Object_/Transformation.h"
 class Camera{
     private:
     Coordinate lookAt;
@@ -13,6 +14,7 @@ class Camera{
     public:
     Camera();
     Camera(Coordinate eye,Coordinate lookAt,Coordinate up);
+    void setTransform(Transformation * t);
     bool setLookAt(Coordinate newLookAt);
     bool setEye(Coordinate newEye);
     bool setUp(Coordinate newUp);
@@ -22,7 +24,7 @@ class Camera{
     Coordinate getEye();
     Coordinate getUp();
     Coordinate getLookAt();
-    void calcTransforms();
+    void execEyeTransform();
     
 
 };

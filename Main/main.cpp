@@ -43,7 +43,7 @@ void display();
 void constructScene();
 double run();
 bool menuObj(Object *);
-void menuMain();
+bool menuMain();
 bool shapeListMenu(Object *);
 bool MeshListMenu(Object *);
 bool menuMesh(Mesh *);
@@ -51,6 +51,7 @@ bool menuShape(Shape3D *);
 bool menuTransform(Object *);
 bool menuTransform(Shape3D *);
 bool menuTransform(Mesh *);
+bool menuTransform(Camera *);
 bool menuMaterial(Object *);
 bool menuMaterial(Shape3D *);
 bool menuMaterial(Mesh *);
@@ -105,9 +106,9 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,20,0);
+  Coordinate eye = Coordinate(0,0,20);
   Coordinate up = Coordinate(0,2000,20);
-  Coordinate lookAt = Coordinate(0,-1,0);  
+  Coordinate lookAt = Coordinate(0,0,0);  
 
   Camera * camera  = new Camera(eye,lookAt,up);
 
@@ -240,7 +241,18 @@ void constructScene(){
   Object *cilindro = new Object("cilindro");
   //Setting shapes and meshes to object
   Object * esfera = new Object("esfera");
-  esfera->setShape(new Sphere(Coordinate(0,0,0),5,marble,"esfera"));
+  Sphere * esfera_shape = new Sphere(Coordinate(0,0,0),5,marble,"esfera");
+  esfera_shape->setTexture("../TextureFiles/kaguya.png",renderer);
+  esfera->setShape(esfera_shape);
+
+  Object * banco_bar = new Object("banco bar");
+  Mesh * banco_bar_mesh = new Mesh("../MeshFiles/banco_bar.obj",marble,"banco_bar_mesh");
+  banco_bar->setMesh(banco_bar_mesh);
+
+  Object * teste_eixo = new Object("teste eixo");
+  Mesh * teste_mesh = new Mesh("../MeshFiles/teste_eixo.obj",marble,"teste eixo");
+  teste_eixo->setMesh(teste_mesh);
+  
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
@@ -251,6 +263,7 @@ void constructScene(){
   //quadro->setMesh(rightwood);
   quadro->setMesh(pintura);
   quadro->setMesh(moldura);
+  
 
   cilindro->setShape(new Cylinder(Coordinate(0,-15,0),Vector3D(0,1,0),0.5,1,marble,"base lampada."));
 
@@ -301,12 +314,14 @@ void constructScene(){
   
   //scene->setObject(quadro);
   scene->setObject(objPlane);
-  scene->setObject(banco);
+  //scene->setObject(banco);
+  //scene->setObject(banco_bar);
+  // scene->setObject(teste_eixo);
   //scene->setObject(lamp);
   scene->setObject(cilindro);
-  scene->setObject(esfera);
+  //scene->setObject(esfera);
   //scene->setObject(objWall);
-  //scene->setObject(house);
+  scene->setObject(house);
 
 
   scene->setLight(ambientLight);
@@ -388,7 +403,14 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     }
     if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) 
     {
-      menuMain();
+      flag = menuMain();
+      if(flag){
+        run();
+        std::cout<<"Success\n";
+      }
+      else{
+        std::cout<<"Nothing done.\n";
+      }
        
     }
 
@@ -739,6 +761,52 @@ bool menuTransform(Object * inp){
   return flag;
 }
 
+bool menuTransform(Camera * camera){
+  bool flag= false;
+  int option;
+  std::cout<<"Chose any option: \n";
+  std::cout<<"(1)Apply Translate.\n";
+  std::cout<<"(2)Apply RotateX.\n";
+  std::cout<<"(3)Apply RotateY.\n";
+  std::cout<<"(4)Apply RotateZ.\n";
+  std::cout<<"(5)Exit.\n";
+  std::cin>>option;
+  if(option==1){
+    double x,y,z;
+    std::cout<<"Digite o valor de x: \n";
+    std::cin>>x;
+    std::cout<<"Digite o valor de y: \n";
+    std::cin>>y;
+    std::cout<<"Digite o valor de Z: \n";
+    std::cin>>z;
+    std::cout<<"\n";
+    camera->setTransform(new Translate(x,y,z));
+    flag = true;
+  }
+  else if(option == 2){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    camera->setTransform(new RotateX(degree));
+    flag = true;
+  }
+  else if(option == 3){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    camera->setTransform(new RotateY(degree));
+    flag = true;
+  }
+  else if(option == 4){
+    double degree;
+    std::cout<<"Digite o valor em graus: \n";
+    std::cin>>degree;
+    camera->setTransform(new RotateZ(degree));
+    flag=true;
+  }
+  return flag;
+}
+
 bool menuTransform(Mesh * inp){
   int option;
   bool flag = false;
@@ -771,6 +839,7 @@ bool menuTransform(Mesh * inp){
     std::cout<<"Digite o valor de Z: \n";
     std::cin>>z;
     std::cout<<"\n";
+    inp->setTransform(new Translate(x,y,z));
     flag = true;
 
   }
@@ -1019,7 +1088,7 @@ bool menuLight(){
   return flag;
 }
 
-void menuMain(){
+bool menuMain(){
   int option;
   bool flag = false;
   std::cout<<"Chose any option: \n";
@@ -1032,15 +1101,17 @@ void menuMain(){
   if(option == 1){
     flag = menuLight();
   }
-  else{
+  if(option == 2){
+    Camera * camera = scene->getCamera();
+    flag = menuTransform(camera);
+    if(flag){
+      scene->transformCameraToWorld();
+      camera->execEyeTransform();
+      scene->transformWorldToCamera();
+    }
+    
   }
-  if(flag){
-    run();
-    std::cout<<"Success\n";
-  }
-  else{
-    std::cout<<"Nothing done\n";
-  }
+  return flag;
 }
 
 bool menuShape(Shape3D * shape){

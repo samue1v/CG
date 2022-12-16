@@ -8,7 +8,7 @@ Camera::Camera(){
     this->eye = Coordinate(0,0,0);
     this->lookAt = Coordinate(0,0,-1);
     this->up = Coordinate(0,1,0);
-    calcTransforms();
+    execEyeTransform();
 
 }
 
@@ -17,7 +17,7 @@ Camera::Camera(Coordinate eye,Coordinate lookAt,Coordinate up){
     this->up = up;
     this->lookAt = lookAt;
     
-    calcTransforms();
+    execEyeTransform();
 }
 
 bool Camera::setEye(Coordinate newEye){
@@ -59,9 +59,14 @@ Coordinate Camera::getEyeTransformed(){
     return eyeTransformed;
 }
 
+void Camera::setTransform(Transformation * t){
+    this->eye = (t->getTransform()*Matrix<double,4,1>(this->eye)).toCoordinate();
+    this->lookAt = (t->getTransform()*Matrix<double,4,1>(this->lookAt)).toCoordinate();
+    this->up = (t->getTransform()*Matrix<double,4,1>(this->up)).toCoordinate();
+    
+}
 
-
-void Camera::calcTransforms(){
+void Camera::execEyeTransform(){
     Vector4D k = Vector4D(eye - lookAt);
     k.normalize();
     Vector4D upVec = Vector4D(up - eye);

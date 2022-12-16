@@ -19,6 +19,7 @@ Mesh::Mesh(const std::string & filePath){
     //this->stackedTransformMatrix = this->transformMatrix; 
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
+    this->cluster = nullptr;
     this->name = "undefined";
 }
 
@@ -32,6 +33,7 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
+    this->cluster = nullptr;
     this->name = "undefined";
 }
 
@@ -45,6 +47,7 @@ Mesh::Mesh(const std::string & filePath,Material * material,std::string name){
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
     this->material = material;
+    this->cluster = nullptr;
     this->name = name;
 }
 
@@ -301,11 +304,6 @@ void Mesh::applyTransform(Coordinate point){
     //reseting transforms
     this-> inverseMatrix = Matrix<double,4,4>::identity();
     this-> transformMatrix = Matrix<double,4,4>::identity();
-    for(int k = 0;k<this->transformList.getSize();k++){
-        //delete this->transformList.getElementAt(k);
-        this->transformList.setElementAt(k,nullptr);
-
-    }
 }
 
 void Mesh::applyTransform(){
@@ -333,11 +331,7 @@ void Mesh::applyTransform(){
     //reseting transforms
     this-> inverseMatrix = Matrix<double,4,4>::identity();
     this-> transformMatrix = Matrix<double,4,4>::identity();
-    for(int k = 0;k<this->transformList.getSize();k++){
-        //delete this->transformList.getElementAt(k);
-        this->transformList.setElementAt(k,nullptr);
 
-    }
 }
 
 void Mesh::tempTransform(Vertex v){
@@ -390,4 +384,12 @@ Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld)
   
 
 
+}
+
+void Mesh::setCluster(Mesh * cluster){
+    this->cluster = cluster
+}
+
+Mesh * Mesh::getCluster(){
+    return this->cluster;
 }

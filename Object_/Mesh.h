@@ -35,6 +35,7 @@ class Mesh{
     void parseF(const std::string & line);
     void parseT(const std::string & line);
     void parseFile(std::ifstream & file);
+    Mesh * cluster;
     
     public:
     Mesh();
@@ -50,6 +51,8 @@ class Mesh{
     double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
     void transformView(Matrix<double,4,4> transformMatrix);
     std::string getName();
+    void setCluster(Mesh * cluster);
+    Mesh * getCluster();
 };
 
 
