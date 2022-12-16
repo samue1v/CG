@@ -107,6 +107,7 @@ struct RotateZ : public Transformation{
         this->inverse = this->transform.transpose();
         
     }
+
     Matrix<double,4,4> getTransform(){
         return this->transform;
     }

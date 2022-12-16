@@ -105,9 +105,9 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,10);
+  Coordinate eye = Coordinate(0,20,0);
   Coordinate up = Coordinate(0,2000,20);
-  Coordinate lookAt = Coordinate(0,-20,-20);  
+  Coordinate lookAt = Coordinate(0,-1,0);  
 
   Camera * camera  = new Camera(eye,lookAt,up);
 
@@ -239,7 +239,8 @@ void constructScene(){
   Object *objWall = new Object("wall");
   Object *cilindro = new Object("cilindro");
   //Setting shapes and meshes to object
-
+  Object * esfera = new Object("esfera");
+  esfera->setShape(new Sphere(Coordinate(0,0,0),5,marble,"esfera"));
   //obj->setShape(circle);
   //obj->setShape(floorPlane);
   //obj->setShape(backPlane);
@@ -267,7 +268,12 @@ void constructScene(){
   objWall->setShape(backPlane);
   objPlane->setShape(floorPlane);
   //objPlane->setMesh(rightwood);
-  
+    Object * banco = new Object("banco");
+  Mesh * banco_mesh = new Mesh("../MeshFiles/banco_longo.obj",marble,"banco");
+  //banco_mesh->setTransform(new RotateZ(90));
+  //banco_mesh->setTransform(new RotateZ(90));
+  //banco_mesh->setTransform(new RotateX(90));
+  banco->setMesh(banco_mesh);
  // obj->setTransform(new RotateZ(45));
   //obj->setTransform(new Translate(0,0,50));
   //obj->setTransform(new Scale(20,20,20));
@@ -286,7 +292,7 @@ void constructScene(){
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity,"Ambiente Light");
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  SpotLight * spottlight = new SpotLight(pointIntensity,Coordinate(0,1,5),Vector3D(0,-1,0),20,"spot");
+  SpotLight * spottlight = new SpotLight(pointIntensity,Coordinate(0,20,5),Vector3D(0,-1,0),20,"spot");
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,1.4,5),"PointLight");//Coordinate(0,60,-30))
   //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
   PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(0,2,10),"PointLight3");
@@ -295,13 +301,15 @@ void constructScene(){
   
   //scene->setObject(quadro);
   scene->setObject(objPlane);
+  scene->setObject(banco);
   //scene->setObject(lamp);
   scene->setObject(cilindro);
+  scene->setObject(esfera);
   //scene->setObject(objWall);
   //scene->setObject(house);
 
 
-  //scene->setLight(ambientLight);
+  scene->setLight(ambientLight);
   scene->setLight(dirLight);
   //scene->setLight(pointLight);
   //scene.setLight(pointLight2);
@@ -309,7 +317,7 @@ void constructScene(){
   //scene->setLight(pointLight3);
   scene->setCamera(camera);
   //lamp->setTransform(new Translate(10,0,0));
-  scene->transformView();
+  scene->transformWorldToCamera();
   
 }
 
@@ -356,9 +364,9 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
        double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
        Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
-       //obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
+       obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
        flag = menuObj(obj);
-       //obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
+       obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
        if(flag){
         run();
         std::cout<<"Success.\n";
@@ -798,6 +806,7 @@ bool menuTransform(Mesh * inp){
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
+    flag=true;
 
   }
   else if(option == 6){

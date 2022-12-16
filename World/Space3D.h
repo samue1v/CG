@@ -110,14 +110,38 @@ public:
       }
     }
     else{
-      N = closestMesh->computeNormal();
+      N = closestMesh->computeNormal(); 
+      N.normalize();
       texel =  closestMesh->getTexel(P,O,scene->getCamera()->getCameraToWorld());
       for (int l = 0; l < scene->getNumberOfLights(); l++) {
-        Vector3D p_lightDir = scene->getLightAt(l)->calcDirection(P);
-        double p_lightDirLength = p_lightDir.getLength();
         Light * curLight = scene->getLightAt(l);
-        if(curLight->getSwitchState()  && curLight->getAvaliable() && (dynamic_cast<AmbientLight*>(curLight) || !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)) ){
-          i = i + scene->getLightAt(l)->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
+        LightType lightType = curLight->getLightType();
+        
+        if(lightType==ambient){
+          if(curLight->getSwitchState()){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
+          }
+        }
+        else if(lightType==point){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = p_lightDir.getLength();
+          if(curLight->getSwitchState() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
+          }
+        }
+        else if(lightType==directional){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = 100000;
+          if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
+          }
+        }
+        else if(lightType==spot){
+          Vector3D p_lightDir = curLight->calcDirection(P);
+          double p_lightDirLength = p_lightDir.getLength();
+          if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
+            i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
+          }
         }
       }
     }

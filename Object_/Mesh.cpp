@@ -196,6 +196,7 @@ void Mesh::transformView(Matrix<double,4,4> transformMatrix){
     for(int j = 0;j<this->normalList.getSize();j++){
         this->normalList.setElementAt(j,(transformMatrix*Matrix<double,4,1>(this->normalList.getElementAt(j))).toVector3D());
     }
+    this->stackedTranslateMatrix = stackedTranslateMatrix*transformMatrix ;
 }
 
 Vector3D Mesh::computeNormal(){
@@ -257,6 +258,9 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 bool Mesh::setTransform(Transformation * t){
     //(this->transformList).push(t); 
     //this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
+    if(dynamic_cast<Translate *>(t)){
+        stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
+    }
 
     this->transformMatrix = t->getTransform();
     this->inverseMatrix = t->getInverse();
@@ -267,9 +271,8 @@ bool Mesh::setTransform(Transformation * t){
         applyTransform();
     }
 
-    if(dynamic_cast<Translate *>(t)){
-        stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
-    }
+
+    
     return true;
     
 }

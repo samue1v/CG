@@ -47,12 +47,21 @@ bool Scene::setCamera(Camera * newCamera){
   return true;
 }
 
-void Scene::transformView(){
+void Scene::transformWorldToCamera(){
   for(int i = 0;i<this->elements.getSize();i++){
     this->elements.getElementAt(i)->applyViewTransform(this->camera->getWorldToCamera());
   }
   for(int j = 0;j<this->lights.getSize();j++){
     this->lights.getElementAt(j)->applyViewTransform(this->camera->getWorldToCamera());
+  }
+}
+
+void Scene::transformCameraToWorld(){
+  for(int i = 0;i<this->elements.getSize();i++){
+    this->elements.getElementAt(i)->applyViewTransform(this->camera->getCameraToWorld());
+  }
+  for(int j = 0;j<this->lights.getSize();j++){
+    this->lights.getElementAt(j)->applyViewTransform(this->camera->getCameraToWorld());
   }
 }
 

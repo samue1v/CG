@@ -12,6 +12,8 @@ TO DO:
 . Projeção ortografica.
 . Menu de interação(nanoGUI-SDL) - vide(1).✔️
 
+//lembra de olhar wc e cw
+
 OBS:
 
 1 Caso não haja tempo, considerar fortemente a interação por prompt.

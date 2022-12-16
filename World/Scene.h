@@ -20,7 +20,8 @@ public:
   Intensity getBackgroundIntensity();
   Camera * getCamera();
   bool setCamera(Camera * newCamera);
-  void transformView();
+  void transformWorldToCamera();
+  void transformCameraToWorld();
   Intensity getBgIntensity();
   Color getNaturalColor();
 

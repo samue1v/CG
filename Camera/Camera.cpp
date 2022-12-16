@@ -16,10 +16,7 @@ Camera::Camera(Coordinate eye,Coordinate lookAt,Coordinate up){
     this->eye = eye;
     this->up = up;
     this->lookAt = lookAt;
-    Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
-    //Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
-    Matrix<double,4,1> tmatrix = worldToCamera*eyematrix;
-    this->eyeTransformed = (tmatrix).toCoordinate();
+    
     calcTransforms();
 }
 
@@ -94,17 +91,26 @@ void Camera::calcTransforms(){
     cameraToWorld.setVal(0,0,i.getElementAt(0));
     cameraToWorld.setVal(0,1,j.getElementAt(0));
     cameraToWorld.setVal(0,2,k.getElementAt(0));
-    cameraToWorld.setVal(0,3,Vector4D::dot(eye,i));
+    cameraToWorld.setVal(0,3,eye.x);
 
     cameraToWorld.setVal(1,0,i.getElementAt(1));
     cameraToWorld.setVal(1,1,j.getElementAt(1));
     cameraToWorld.setVal(1,2,k.getElementAt(1));
-    cameraToWorld.setVal(1,3,Vector4D::dot(eye,j));
+    cameraToWorld.setVal(1,3,eye.y);
 
     cameraToWorld.setVal(2,0,i.getElementAt(2));
     cameraToWorld.setVal(2,1,j.getElementAt(2));
     cameraToWorld.setVal(2,2,k.getElementAt(2));
-    cameraToWorld.setVal(2,3,Vector4D::dot(eye,k));
+    cameraToWorld.setVal(2,3,eye.z);
 
     cameraToWorld.setVal(3,3,1);
+
+    Matrix<double,4,4> mtc = worldToCamera * cameraToWorld;
+    std::cout<<mtc;
+    //worldToCamera = worldToCamera.transpose();
+    Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
+    //Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
+    Matrix<double,4,1> tmatrix = worldToCamera*eyematrix;
+    this->eyeTransformed = (tmatrix).toCoordinate();
+    //this->eyeTransformed = eye;
 }
