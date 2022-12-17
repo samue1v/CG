@@ -193,6 +193,10 @@ std::string Mesh::getName(){
 }
 
 void Mesh::transformView(Matrix<double,4,4> transformMatrix){
+    if(cluster){
+        cluster->transformView(transformMatrix);
+    }
+
     for(int i = 0;i<this->vertexList.getSize();i++){
         this->vertexList.setElementAt(i,(transformMatrix*Matrix<double,4,1>(this->vertexList.getElementAt(i))).toVertex());
     }
@@ -214,6 +218,16 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
     Vector3D N;
     double t_plane;
     double closest_t = INF;
+    double cluster_t = INF;
+
+    if(cluster){
+        cluster_t = cluster->IntersectRay(O,D,t_min,t_max);
+        if(cluster_t >=t_max){
+            return INF;
+        }
+    }
+    //std::cout<<this->getName()<<"\n";
+
     for(int i = 0;i<this->faceList.getSize();i++){
         current_face = this->faceList.getElementAt(i);
         N = this->normalList.getElementAt(current_face.n);
@@ -242,7 +256,7 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
         b2 = Vector3D::dot(Vector3D::cross(V0_V2,P_V2),N);
         bFace = Vector3D::dot(Vector3D::cross(V1_V0,V2_V0),N);
 
-        if(b0>=0 && b1>=0 && b2>=0 && t_plane<closest_t){
+        if(t_plane<closest_t&& b0>=0 && b1>=0 && b2>=0){
             current_face.faceArea = bFace;
             closest_t = t_plane;
             //confundi b com area, lembrar de arrumar.
@@ -261,6 +275,9 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 bool Mesh::setTransform(Transformation * t){
     //(this->transformList).push(t); 
     //this->stackedTransformMatrix = (this->stackedTransformMatrix)* t->getTransform();
+    if(cluster){
+        this->cluster->setTransform(t);
+    }
     if(dynamic_cast<Translate *>(t)){
         stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
     }
@@ -387,7 +404,7 @@ Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld)
 }
 
 void Mesh::setCluster(Mesh * cluster){
-    this->cluster = cluster
+    this->cluster = cluster;
 }
 
 Mesh * Mesh::getCluster(){

@@ -11,6 +11,7 @@ TO DO:
 . Luz spot ✔️
 . Otimização
 . Projeção ortografica.
+. Cluster ✔️
 . Menu de interação(nanoGUI-SDL) - vide(1).✔️
 . Plano está acompanhando o observador ✔️
 //lembra de olhar wc e cw

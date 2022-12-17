@@ -106,7 +106,7 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,20);
+  Coordinate eye = Coordinate(0,0,50);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,0);  
 
@@ -137,8 +137,9 @@ void constructScene(){
 
   Object * house = new Object("house");
   Mesh * house_mesh = new Mesh("../MeshFiles/casa.obj",marble,"house_mesh");
+  house_mesh->setCluster(new Mesh("../MeshFiles/casa_cluster.obj"));
   //house_mesh->setTransform(new Scale(0.2,0.2,0.2));
-  house_mesh->setTexture("../TextureFiles/wood.png",renderer);
+  //house_mesh->setTexture("../TextureFiles/wood_moldura.png",renderer);
   house->setMesh(house_mesh);
 
   //Sphere
@@ -247,7 +248,12 @@ void constructScene(){
 
   Object * banco_bar = new Object("banco bar");
   Mesh * banco_bar_mesh = new Mesh("../MeshFiles/banco_bar.obj",marble,"banco_bar_mesh");
+  banco_bar_mesh->setCluster(new Mesh("../MeshFiles/banco_bar_cluster.obj"));
   banco_bar->setMesh(banco_bar_mesh);
+
+  Object * cluster_teste = new Object("cluster_test");
+  Mesh * cluster_mesh_teste = new Mesh("../MeshFiles/casa_cluster.obj",marble,"teste_cluster");
+  cluster_teste->setMesh(cluster_mesh_teste);
 
   Object * teste_eixo = new Object("teste eixo");
   Mesh * teste_mesh = new Mesh("../MeshFiles/teste_eixo.obj",marble,"teste eixo");
@@ -319,6 +325,7 @@ void constructScene(){
   // scene->setObject(teste_eixo);
   //scene->setObject(lamp);
   scene->setObject(cilindro);
+  //scene->setObject(cluster_teste);
   //scene->setObject(esfera);
   //scene->setObject(objWall);
   scene->setObject(house);
