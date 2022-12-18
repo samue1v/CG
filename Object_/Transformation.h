@@ -5,13 +5,35 @@
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/DataConsts.h"
 #include <math.h>
+
+enum TransformType{
+  translate = 0,
+  scale = 1,
+  rotatex = 2,
+  rotatey = 3,
+  rotatez = 4,
+  rotatexfixed = 5,
+  rotateyfixed = 6,
+  rotatezfixed = 7,
+  shearxy = 8,
+  shearyx = 9,
+  shearxz = 10,
+  shearzx = 11,
+  shearyz = 12,
+  shearzy = 13,
+};
+
 struct Transformation{
     
     Transformation(){}
     virtual Matrix<double,4,4> getTransform() = 0;
     virtual Matrix<double,4,4> getInverse() = 0;
     virtual Coordinate getFixedPoint() = 0;
+    TransformType getType(){
+        return this->transformType;
+    }
     protected:
+    TransformType transformType;
     Coordinate fixedPoint;
     Matrix<double,4,4> transform;
     Matrix<double,4,4> inverse;
@@ -28,7 +50,7 @@ struct Translate : public Transformation{
         (this->inverse).setVal(0,3,-x);
         (this->inverse).setVal(1,3,-y);
         (this->inverse).setVal(2,3,-z);
-        
+        this->transformType = translate;
     }
     
     Matrix<double,4,4> getTransform(){
@@ -56,6 +78,8 @@ struct RotateX : public Transformation{
         (this->transform).setVal(1,2,-sine);
         (this->transform).setVal(2,1,sine);
         this->inverse = this->transform.transpose();
+        this->transformType = rotatex;
+    
 
     }
     Matrix<double,4,4> getTransform(){
@@ -81,6 +105,7 @@ struct RotateY : public Transformation{
         (this->transform).setVal(2,0,-sine);
         (this->transform).setVal(2,2,cosine);
         this->inverse = this->transform.transpose();
+        this->transformType = rotatey;
     }
     Matrix<double,4,4> getTransform(){
         return this->transform;
@@ -105,7 +130,7 @@ struct RotateZ : public Transformation{
         (this->transform).setVal(0,1,-sine);
         (this->transform).setVal(1,1,cosine);
         this->inverse = this->transform.transpose();
-        
+        this->transformType = rotatez;
     }
 
     Matrix<double,4,4> getTransform(){
@@ -132,6 +157,7 @@ struct RotateXfixed : public Transformation{
         (this->transform).setVal(1,2,-sine);
         (this->transform).setVal(2,1,sine);
         this->inverse = this->transform.transpose();
+        this->transformType = rotatexfixed;
 
     }
     Matrix<double,4,4> getTransform(){
@@ -158,6 +184,7 @@ struct RotateYfixed : public Transformation{
         (this->transform).setVal(2,0,-sine);
         (this->transform).setVal(2,2,cosine);
         this->inverse = this->transform.transpose();
+        this->transformType = rotateyfixed;
     }
     Matrix<double,4,4> getTransform(){
         return this->transform;
@@ -183,6 +210,7 @@ struct RotateZfixed : public Transformation{
         (this->transform).setVal(0,1,-sine);
         (this->transform).setVal(1,1,cosine);
         this->inverse = this->transform.transpose();
+        this->transformType = rotatezfixed;
         
     }
     Matrix<double,4,4> getTransform(){
@@ -208,6 +236,7 @@ struct Scale : public Transformation{
         (this->inverse).setVal(0,0,1.0/x);
         (this->inverse).setVal(1,1,1.0/y);
         (this->inverse).setVal(2,2,1.0/z);
+        this->transformType = scale;
     }
     Matrix<double,4,4> getTransform(){
         return this->transform;
@@ -283,6 +312,7 @@ struct ShearXY : public Transformation{
         (this->transform).setVal(1,0,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(1,0,-tangent);
+        this->transformType = shearxy;
     
     }
     Matrix<double,4,4> getTransform(){
@@ -305,6 +335,7 @@ struct ShearYX : public Transformation{
         (this->transform).setVal(0,1,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(0,1,-tangent);
+        this->transformType = shearyx;
     
     }
     Matrix<double,4,4> getTransform(){
@@ -327,6 +358,7 @@ struct ShearXZ : public Transformation{
         (this->transform).setVal(2,0,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(2,0,-tangent);
+        this->transformType = shearxz;
     
     }
     Matrix<double,4,4> getTransform(){
@@ -349,6 +381,7 @@ struct ShearZX : public Transformation{
         (this->transform).setVal(0,2,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(0,2,-tangent);
+        this->transformType = shearzx;
     
     }
     Matrix<double,4,4> getTransform(){
@@ -371,6 +404,7 @@ struct ShearYZ : public Transformation{
         (this->transform).setVal(2,1,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(2,1,-tangent);
+        this->transformType = shearyz;
     }
     Matrix<double,4,4> getTransform(){
         return this->transform;
@@ -392,6 +426,7 @@ struct ShearZY : public Transformation{
         (this->transform).setVal(1,2,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(1,2,-tangent);
+        this->transformType = shearzy;
     }
     Matrix<double,4,4> getTransform(){
         return this->transform;

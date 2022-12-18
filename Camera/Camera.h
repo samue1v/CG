@@ -2,6 +2,7 @@
 #define CAMERA_H
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/Matrix.h"
+#include "../DataStructures/Vector.h"
 #include "../Object_/Transformation.h"
 class Camera{
     private:
@@ -11,6 +12,9 @@ class Camera{
     Coordinate eyeTransformed;
     Matrix<double,4,4> worldToCamera;
     Matrix<double,4,4> cameraToWorld;
+    Vector3D i;
+    Vector3D k;
+    Vector3D j;
     public:
     Camera();
     Camera(Coordinate eye,Coordinate lookAt,Coordinate up);

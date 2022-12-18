@@ -10,17 +10,14 @@ TO DO:
 . Camera ✔️
 . Luz spot ✔️
 . Otimização
-. Projeção ortografica.
 . Cluster ✔️
 . Menu de interação(nanoGUI-SDL) - vide(1).✔️
 . Plano está acompanhando o observador ✔️
-//lembra de olhar wc e cw
+. Projeção ortografica.
 
 OBS:
 
 1 Caso não haja tempo, considerar fortemente a interação por prompt.
 
 Notas:
-- banco_bar tem medidas :
-x = 0.6(-0.3,0.3)
-y = (0.19,0.22716)
+    

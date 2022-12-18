@@ -8,6 +8,13 @@ Camera::Camera(){
     this->eye = Coordinate(0,0,0);
     this->lookAt = Coordinate(0,0,-1);
     this->up = Coordinate(0,1,0);
+    k = Vector3D(eye - lookAt);
+    k.normalize();
+    Vector3D upVec = Vector3D(up - eye);
+    i = Vector3D::cross(upVec,k);
+    i.normalize();
+    j = Vector3D::cross(k,i);
+    j.normalize();
     execEyeTransform();
 
 }
@@ -16,7 +23,13 @@ Camera::Camera(Coordinate eye,Coordinate lookAt,Coordinate up){
     this->eye = eye;
     this->up = up;
     this->lookAt = lookAt;
-    
+    k = Vector3D(eye - lookAt);
+    k.normalize();
+    Vector3D upVec = Vector3D(up - eye);
+    i = Vector3D::cross(upVec,k);
+    i.normalize();
+    j = Vector3D::cross(k,i);
+    j.normalize();
     execEyeTransform();
 }
 
@@ -60,22 +73,26 @@ Coordinate Camera::getEyeTransformed(){
 }
 
 void Camera::setTransform(Transformation * t){
-    this->eye = (t->getTransform()*Matrix<double,4,1>(this->eye)).toCoordinate();
-    this->lookAt = (t->getTransform()*Matrix<double,4,1>(this->lookAt)).toCoordinate();
-    this->up = (t->getTransform()*Matrix<double,4,1>(this->up)).toCoordinate();
+
+    if(t->getType() == translate){
+        this->eye = (t->getTransform()*Matrix<double,4,1>(this->eye)).toCoordinate();
+        this->lookAt = (t->getTransform()*Matrix<double,4,1>(this->lookAt)).toCoordinate();
+        this->up = (t->getTransform()*Matrix<double,4,1>(this->up)).toCoordinate();
+    }
+
+    else{
+        this->i = (t->getTransform()*Matrix<double,4,1>(this->i)).toVector3D();
+        this->j = (t->getTransform()*Matrix<double,4,1>(this->j)).toVector3D();
+        this->k = (t->getTransform()*Matrix<double,4,1>(this->k)).toVector3D();
+
+    }
+    
+
     
 }
 
 void Camera::execEyeTransform(){
-    Vector4D k = Vector4D(eye - lookAt);
-    k.normalize();
-    Vector4D upVec = Vector4D(up - eye);
-    Vector4D i = Vector4D::cross(upVec,k);
-    i.normalize();
-    
-    
-    Vector4D j = Vector4D::cross(k,i);
-    j.normalize();
+
     worldToCamera.setVal(0,0,i.getElementAt(0));
     worldToCamera.setVal(0,1,i.getElementAt(1));
     worldToCamera.setVal(0,2,i.getElementAt(2));

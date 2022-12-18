@@ -28,6 +28,16 @@ public:
     Triple<Object *,Intensity,Color> hitData;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
+
+      for(int k = 0;k<object->getMeshCount();k++){
+        Mesh * mesh = object->getMeshAt(k);
+        double t = mesh->IntersectRay(O,D,t_min,t_max);
+        if (t >= t_min && t <= t_max && t < closest_mesh_t/* && t< closest_shape_t*/) {
+          closest_mesh_t = t;
+          closestMesh = mesh;
+          closestObject = object;
+        }
+      }
       for (int j = 0; j < object->getShapeCount(); j++) {
         Shape3D *shape = object->getShapeAt(j);
         double t = shape->IntersectRay(O, D,t_min,t_max);
@@ -37,15 +47,7 @@ public:
           closestObject = object;
         }
       }
-      for(int k = 0;k<object->getMeshCount();k++){
-        Mesh * mesh = object->getMeshAt(k);
-        double t = mesh->IntersectRay(O,D,t_min,t_max);
-        if (t >= t_min && t <= t_max && t < closest_mesh_t && t< closest_shape_t) {
-          closest_mesh_t = t;
-          closestMesh = mesh;
-          closestObject = object;
-        }
-      }
+
 
     }
     
@@ -59,10 +61,10 @@ public:
     }
     
     
-    if(closest_mesh_t<closest_shape_t && closest_mesh_t<closest_t){
+    if(closest_mesh_t<closest_shape_t){// && closest_mesh_t<closest_t){
       closest_t = closest_mesh_t;
     }
-    else if(closest_shape_t<closest_mesh_t && closest_shape_t<closest_t){
+    else if(closest_shape_t<closest_mesh_t){//&& closest_shape_t<closest_t){
       closest_t = closest_shape_t;
     }
     

@@ -284,7 +284,7 @@ bool Mesh::setTransform(Transformation * t){
 
     this->transformMatrix = t->getTransform();
     this->inverseMatrix = t->getInverse();
-    if(dynamic_cast<RotateXfixed*>(t) || dynamic_cast<RotateYfixed*>(t) || dynamic_cast<RotateZfixed*>(t)){
+    if(t->getType() == rotatexfixed || t->getType() ==rotateyfixed || t->getType()==rotatezfixed){
         applyTransform(t->getFixedPoint());
     }
     else{
