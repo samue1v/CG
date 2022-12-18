@@ -274,24 +274,17 @@ void constructScene(){
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.6,0.6,0.6),Vector3D(0,-1,-1),"DirLIght");
   //Creating the scene
 
-  //scene->setObject(objPlane);
-  //scene->setObject(banco);
- // scene->setObject(banco_bar);
-  //scene->setObject(teste_eixo);
-  //scene->setObject(lamp);
-  //scene->setObject(cilindro);
-  //scene->setObject(sky);
-  //scene->setObject(teste);
+
   scene->setObject(paredes);
   scene->setObject(quadro1);
   scene->setObject(quadro2);
   scene->setObject(quadro3);
   scene->setObject(quadro4);
   scene->setObject(quadro5);
-  scene->setObject(bancoLongo1);
-  scene->setObject(bancoLongo2);
-  scene->setObject(bancoPequeno);
-  scene->setObject(piso);
+  //scene->setObject(bancoLongo1);
+  //scene->setObject(bancoLongo2);
+  //scene->setObject(bancoPequeno);
+  //scene->setObject(piso);
 
 
 
@@ -315,6 +308,7 @@ void run(){
   double dx = gridSize.left;
   double dy = gridSize.right;
   Coordinate P0 = scene->getCamera()->getEyeTransformed();
+  canvas->clearCanvas();
   for (int l = 0; l < nLines; l++) {
     double y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
@@ -1337,6 +1331,7 @@ int main() {
   canvas->setCanvasDistance(canvasDistance);
   canvas->setGridSize({dx,dy});
   canvas->setWindowsSize({wj,hj});
+  //exit(-1);
   
   //Canvas Loop
   run();

@@ -26,21 +26,6 @@ std::ostream& operator<<(std::ostream& os,Vertex& v){
     return os;
 }
 
-Edge::Edge(){}
-
-Edge::Edge(int v1, int v2){
-    this->v1 = v1;
-    this->v2 = v2;
-}
-
-std::ostream& operator<<(std::ostream& os,Edge& e){
-    os <<"Edge:\n";
-    os << e.v1;
-    os<< " ";
-    os << e.v2;
-    os<<"\n";
-    return os;
-}
 Face::Face(){}
 
 Face::Face(int v1, int v2, int v3,int n,int v1t,int v2t,int v3t){
@@ -51,9 +36,6 @@ Face::Face(int v1, int v2, int v3,int n,int v1t,int v2t,int v3t){
     this->v2t = v2t;
     this->v3t = v3t;
     this->n = n;
-    edges.push(Edge(v1,v3));
-    edges.push(Edge(v2,v1));
-    //edges.push(Edge(v2,v1));
 
 }
 

@@ -6,6 +6,7 @@ template <class T> class Array {
 public:
   Array(int initCapacity);
   Array();
+  ~Array();
   bool push(T value);
   bool remove(int index);
   bool setElementAt(int index,T val);
@@ -26,6 +27,11 @@ Array<T>::Array() {
   this->capacity = 10;
   this->size = 0;
   container = new T[capacity];
+}
+
+template <class T> 
+Array<T>::~Array(){
+  container = nullptr;
 }
 
 template <class T> 

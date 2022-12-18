@@ -24,19 +24,9 @@ struct Vertex{
 };
 
 
-struct Edge{
-    Edge();
-    Edge(int v1, int v2);
-    friend std::ostream& operator<<(std::ostream& os, Edge& a);
-    int v1;
-    int v2;
-};
-
-
 struct Face{
     Face();
     Face(int v1, int v2, int v3,int n,int v1t,int v2t,int v3t);
-    Array<Edge> edges;
     friend std::ostream& operator<<(std::ostream& os, Face& a);
     int v1;
     int v2;
