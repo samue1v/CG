@@ -4,6 +4,7 @@
 #include "../DataStructures/Coordinate.h"
 #include "../DataStructures/Vector.h"
 #include "../DataStructures/Matrix.h"
+#include "../Object_/Transformation.h"
 #include "../Object_/Material.h"
 #include "Intensity.h"
 #include <string>
@@ -28,6 +29,7 @@ public:
   virtual Vector3D calcDirection(Coordinate o) = 0;
   virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
   virtual bool getAvaliable() = 0;
+  virtual void setTransform(Transformation * t) = 0;
   Light();
 protected:
   Intensity intensity;
@@ -49,6 +51,7 @@ public:
   Vector3D calcDirection(Coordinate o);
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
   bool getAvaliable();
+  void setTransform(Transformation * t);
 private:
 
 };
@@ -64,6 +67,8 @@ public:
   Vector3D calcDirection(Coordinate o);
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
   bool getAvaliable();
+  void setTransform(Transformation * t);
+  
 private:
   Vector3D direction;
 };
@@ -79,6 +84,7 @@ public:
   Vector3D calcDirection(Coordinate o);
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
   bool getAvaliable();
+  void setTransform(Transformation * t);
 private:
   Coordinate position;
 };
@@ -94,6 +100,8 @@ public:
   std::string getName();
   void applyViewTransform(Matrix<double,4,4> transformMatrix);
   bool getAvaliable();
+  void setTransform(Transformation * t);
+  void setAngle(double angle);
 private:
   double angle;
   Coordinate position;

@@ -99,6 +99,7 @@ Triple<int,int,int> Mesh::parseFaceData(const std::string & line){
     return t;
 
 }
+
 void Mesh::parseV(const std::string & line){
     Array<double> a;
     std::string delimiter = " ";

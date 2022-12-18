@@ -69,13 +69,14 @@ public:
   }
   template <class C,int l,int k>
   Matrix<C,rows,k> operator*(Matrix<C,l,k> md){
+    /*
     if(this->nColumns != md.getDimensions().left){
       return Matrix<C,rows,k>();
-    }
+    }*/
 
     Matrix<C,rows,k> m = Matrix<C,rows,k>();
-    for(int i =0;i<this->nLines;i++){
-      for(int j = 0;j<md.getDimensions().right;j++){
+    for(int i =0;i<rows;i++){
+      for(int j = 0;j<k;j++){
         T sum = 0;
         for(int s = 0;s<columns;s++){
           sum = sum + (this->getVal(i,s)*md.getVal(s,j));
@@ -97,9 +98,10 @@ public:
   }
   
   Matrix<T,rows,columns> operator-(Matrix<T,rows,columns> md){
+    /*
     if((this->nLines != md.getDimensions().left)&&(this->nColumns != md.getDimensions().right)){
       return Matrix<T,rows,columns>();
-    }
+    }*/
     Matrix<T,rows,columns> m = Matrix<T,rows,columns>();
     for(int i =0;i<rows;i++){
       for(int j = 0;j<columns;j++){
@@ -153,9 +155,10 @@ template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector3D v){
   //std::cout<<v.getElementAt(2)<<'\n';
   this->nLines = l;
   this->nColumns = 1;
-  for (int i = 0; i < l; i++) {
+  for (int i = 0; i < l-1; i++) {
     this->matrix[i][0] = v.getElementAt(i);
   }
+  this->matrix[3][0] = 0;
 }
 
 template <class T,int l, int k> Matrix<T,l,k>::Matrix(Vector4D v){  

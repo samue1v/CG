@@ -61,9 +61,9 @@ bool AmbientLight::getAvaliable(){
   return this->isAvaliable;
 }
 
-void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
+void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){}
 
-}
+void AmbientLight::setTransform(Transformation * t){}
 
 DirectionalLight::DirectionalLight() {}
 
@@ -115,6 +115,10 @@ void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   //this->minu
 }
 
+void DirectionalLight::setTransform(Transformation * t){
+  this->direction = (t->getTransform() * Matrix<double,4,1>(direction)).toVector3D();
+}
+
 PointLight::PointLight() {}
 
 PointLight::PointLight(Intensity intensity, Coordinate position,std::string name){
@@ -164,6 +168,10 @@ Vector3D PointLight::calcDirection(Coordinate O){
 
 void PointLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   this->position = (transformMatrix * Matrix<double,4,1>(position)).toCoordinate();
+}
+
+void PointLight::setTransform(Transformation * t){
+  this->position = (t->getTransform() * Matrix<double,4,1>(position)).toCoordinate();
 }
 
 SpotLight::SpotLight(){}
@@ -245,4 +253,17 @@ std::string SpotLight::getName(){
 void SpotLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
   this->position = (transformMatrix * Matrix<double,4,1>(position)).toCoordinate();
   this->direction = (transformMatrix * Matrix<double,4,1>(direction)).toVector3D();
+}
+
+void SpotLight::setTransform(Transformation * t){
+  if(t->getType() == translate){
+    this->position = (t->getTransform() * Matrix<double,4,1>(position)).toCoordinate();
+  }
+  else{
+    this->direction = (t->getTransform() * Matrix<double,4,1>(direction)).toVector3D();
+  }
+}
+
+void SpotLight::setAngle(double angle){
+  this->angle  = angle;
 }

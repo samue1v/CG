@@ -59,20 +59,12 @@ public:
       return hitData;
       
     }
-    
-    
-    if(closest_mesh_t<closest_shape_t){// && closest_mesh_t<closest_t){
-      closest_t = closest_mesh_t;
-    }
-    else if(closest_shape_t<closest_mesh_t){//&& closest_shape_t<closest_t){
-      closest_t = closest_shape_t;
-    }
+    closest_t = std::min(closest_mesh_t,closest_shape_t);
     
     
     Intensity i = Intensity(); // 0,0,0
     Coordinate P = (D * closest_t) + O;
-    Vector3D N; 
-    Vector3D V;
+    Vector3D N,V; 
     V = D;
     V.normalize();
     if(closest_shape_t<closest_mesh_t){
@@ -97,7 +89,7 @@ public:
         }
         else if(lightType==directional){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = 100000;
+          double p_lightDirLength = 1000;
           if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
           }
@@ -166,8 +158,6 @@ public:
       for (int j = 0; j < object->getShapeCount(); j++) {
         Shape3D *shape = object->getShapeAt(j);
         double t = shape->IntersectRay(O, D,1,maxLength);
-        //std::cout<<t<<"\n";
-        //std::cout<<D<<"\n";
         if(t>=1 && t<=maxLength){
           return true;
         }

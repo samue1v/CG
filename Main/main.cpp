@@ -41,7 +41,7 @@ GLuint tex_handle;
 void setGlfw();
 void display();
 void constructScene();
-double run();
+void run();
 bool menuObj(Object *);
 bool menuMain();
 bool shapeListMenu(Object *);
@@ -55,6 +55,7 @@ bool menuTransform(Camera *);
 bool menuMaterial(Object *);
 bool menuMaterial(Shape3D *);
 bool menuMaterial(Mesh *);
+bool menuTransform(Light * light);
 
 bool writePPM() {
   std::ofstream myfile;
@@ -127,14 +128,24 @@ void constructScene(){
   Marble *marble = new Marble();
 
 
+  //testes
+  Object * teste = new Object("teste");
+  Mesh * cluster_teste_mesh = new Mesh("../MeshFiles/paredes_cluster.obj",marble,"paredes_mesh");
+  teste->setMesh(cluster_teste_mesh);
+
   //casa
   Object * paredes = new Object("paredes");
-  Mesh * paredes_mesh = new Mesh("../MeshFiles/paredes.obj",marble,"paredes_mesh");
+  Mesh * paredes_mesh = new Mesh("../MeshFiles/paredes_novas.obj",marble,"paredes_mesh");
   Mesh * parede_azul = new Mesh("../MeshFiles/parede_azul.obj",marble,"parede_azul");
   parede_azul->setTexture("../TextureFiles/kaguya.png",renderer);
   paredes_mesh->setCluster(new Mesh("../MeshFiles/paredes_cluster.obj"));
   paredes->setMesh(paredes_mesh);
   paredes->setMesh(parede_azul);
+
+  Object * sky = new Object("sky");
+  Plane * skyPlane = new Plane(Coordinate(0,0,-060),Vector3D(0,0,1),marble,"skymesh");
+  skyPlane->setTexture("../TextureFiles/sky.png",renderer);
+  sky->setShape(skyPlane);
 
   //lampada
   Object * lamp = new Object("lampada");
@@ -142,6 +153,12 @@ void constructScene(){
   Sphere * lampBulb = new Sphere(Coordinate(0,-0.1,0),0.25,marble,"bulbo lampada");
   lamp->setShape(lampBase);
   lamp->setShape(lampBulb);
+
+  //solo
+  Object * piso = new Object("piso");
+  Mesh * piso_mesh = new Mesh("../MeshFiles/piso.obj",marble,"piso mesh");
+  piso_mesh->setTexture("../TextureFiles/carpete.png",renderer);
+  piso->setMesh(piso_mesh);
 
   //quadro1
   Object * quadro1 = new Object("quadro1");
@@ -156,7 +173,7 @@ void constructScene(){
   moldura1->setTransform(new Translate(2.8,0,-9.1));
   quadro1->setMesh(moldura1);
   quadro1->setMesh(frame1);
-  
+
   
 
 
@@ -193,7 +210,7 @@ void constructScene(){
   Mesh * frame4 = new Mesh("../MeshFiles/frame45.obj",marble,"frame4");
   frame4->setTexture("../TextureFiles/kaguya.png",renderer);
   frame4->setTransform(new RotateX(180));
-  //frame4->setTransform(new Scale(1.023,1,1));
+  frame4->setTransform(new Scale(1.023,1,1));
   frame4->setTransform(new Translate(22.3,0,-4.4));
   Mesh * moldura4 = new Mesh("../MeshFiles/moldura45.obj",marble,"moldura4");
   moldura4->setTexture("../TextureFiles/wood_moldura.png",renderer);
@@ -201,7 +218,6 @@ void constructScene(){
   moldura4->setTransform(new Translate(22.3,0,-4.4));
   quadro4->setMesh(moldura4);
   quadro4->setMesh(frame4);
-  //quadro4->setTransform(new RotateY(180));
 
   
     //quadro5
@@ -209,7 +225,7 @@ void constructScene(){
   Mesh * frame5 = new Mesh("../MeshFiles/frame45.obj",marble,"frame5");
   frame5->setTexture("../TextureFiles/kaguya.png",renderer);
   frame5->setTransform(new RotateX(180));
-  //frame4->setTransform(new Scale(1.023,1,1));
+  frame4->setTransform(new Scale(1.023,1,1));
   frame5->setTransform(new Translate(22.3,0,4.4));
   Mesh * moldura5 = new Mesh("../MeshFiles/moldura45.obj",marble,"moldura5");
   moldura5->setTexture("../TextureFiles/wood_moldura.png",renderer);
@@ -217,7 +233,6 @@ void constructScene(){
   moldura5->setTransform(new Translate(22.3,0,4.4));
   quadro5->setMesh(moldura5);
   quadro5->setMesh(frame5);
-  //quadro4->setTransform(new RotateY(180));
   
   //banco longo1
   Object * bancoLongo1 = new Object("banco longo1");
@@ -261,10 +276,12 @@ void constructScene(){
 
   //scene->setObject(objPlane);
   //scene->setObject(banco);
-  //scene->setObject(banco_bar);
-  // scene->setObject(teste_eixo);
+ // scene->setObject(banco_bar);
+  //scene->setObject(teste_eixo);
   //scene->setObject(lamp);
   //scene->setObject(cilindro);
+  //scene->setObject(sky);
+  //scene->setObject(teste);
   scene->setObject(paredes);
   scene->setObject(quadro1);
   scene->setObject(quadro2);
@@ -274,6 +291,7 @@ void constructScene(){
   scene->setObject(bancoLongo1);
   scene->setObject(bancoLongo2);
   scene->setObject(bancoPequeno);
+  scene->setObject(piso);
 
 
 
@@ -289,7 +307,7 @@ void constructScene(){
   
 }
 
-double run(){
+void run(){
   Pair<double,double> windowSize = canvas->getWindowSize();
   double wj = windowSize.left;
   double hj = windowSize.right;
@@ -314,7 +332,6 @@ double run(){
       }
     }
   }
-  return 1.0;
 }
 
 void ErrorCallback(int, const char* err_str)
@@ -374,7 +391,7 @@ bool menuChangeLight(Light * light){
   bool flag = false;
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)Flip Switch.\n";
-  std::cout<<"(2)Change Location.\n";
+  std::cout<<"(2)Transform.\n";
   std::cout<<"(3)Change Intensity.\n";
   std::cout<<"(4)Exit.\n";
   std::cout<<"Option: \n";
@@ -384,30 +401,7 @@ bool menuChangeLight(Light * light){
     flag = true;
   }
   else if(option == 2){
-    if(dynamic_cast<DirectionalLight *>(light)){
-      double x,y,z;
-      DirectionalLight * dirlight = static_cast<DirectionalLight *>(light);
-      std::cout<<"Digite o valor de x da direção: \n";
-      std::cin>>x;
-      std::cout<<"Digite o valor de y da direção: \n";
-      std::cin>>y;
-      std::cout<<"Digite o valor de Z da direção: \n";
-      dirlight->setDirection(Vector3D(x,y,z));
-      flag = true;
-    }
-    else if(dynamic_cast<PointLight *>(light)){
-      double x,y,z;
-      PointLight * pointlight = static_cast<PointLight *>(light);
-      std::cout<<"Digite o valor de x da coordenada: \n";
-      std::cin>>x;
-      std::cout<<"Digite o valor de y da coordenada: \n";
-      std::cin>>y;
-      std::cout<<"Digite o valor de Z da coordenada: \n";
-      pointlight->setPosition(Coordinate(x,y,z));
-      flag = true;
-    }
-    else if(dynamic_cast<AmbientLight *>(light)){}
-    //else if(spotlight)
+      flag = menuTransform(light);
   }
   else if(option == 3){
     double ir,ig,ib;
@@ -419,9 +413,6 @@ bool menuChangeLight(Light * light){
     std::cin>>ib;
     light->setIntensity(Intensity(ir,ig,ib));
     flag = true;
-  }
-  else{
-
   }
   return flag;
 
@@ -757,6 +748,106 @@ bool menuTransform(Camera * camera){
     camera->setTransform(new RotateZ(degree));
     flag=true;
   }
+  return flag;
+}
+
+bool menuTransform(Light * light){
+  bool flag = false;
+  light->applyViewTransform(scene->getCamera()->getCameraToWorld());
+  if(light->getLightType() == directional){
+    DirectionalLight * dirlight = static_cast<DirectionalLight *>(light);
+    double angle;
+    int option;
+    std::cout<<"Choose a transform:\n";
+    std::cout<<"(1)RotateX.\n";
+    std::cout<<"(2)RotateY.\n";
+    std::cout<<"(3)RotateZ.\n";
+    std::cin>>option;
+    std::cout<<"Digite o angulo: \n";
+    std::cin>>angle;
+    if(option == 1){
+      dirlight->setTransform(new RotateX(angle));
+      flag = true;
+    }
+    else if(option == 2){
+      dirlight->setTransform(new RotateY(angle));
+      flag = true;
+    }
+    else if(option == 3){
+      dirlight->setTransform(new RotateZ(angle));
+      flag = true;
+    }
+
+  }
+  else if(light->getLightType() == point){
+    PointLight * plight = static_cast<PointLight*>(light);
+    int option;
+    std::cout<<"Choose a transform:\n";
+    std::cout<<"(1)Translate";
+    if(option == 1){
+      double x,y,z;
+      std::cout<<"Value for X:\n";
+      std::cin>>x;
+      std::cout<<"Value for Y:\n";
+      std::cin>>y;
+      std::cout<<"Value for Z:\n";
+      std::cin>>z;
+      plight->setTransform(new Translate(x,y,z));
+      flag = true;
+    }
+  }
+  else if(light->getLightType() == spot){
+    SpotLight * splight = static_cast<SpotLight *>(light);
+    int option;
+    std::cout<<"Choose a transform:\n";
+    std::cout<<"(1)Translate.\n";
+    std::cout<<"(2)RotateX.\n";
+    std::cout<<"(3)RotateY.\n";
+    std::cout<<"(4)RotateZ.\n";
+    std::cout<<"(5)Change angle.\n";
+    std::cin>>option;
+    if(option == 1){
+      double x,y,z;
+      std::cout<<"Value for X:\n";
+      std::cin>>x;
+      std::cout<<"Value for Y:\n";
+      std::cin>>y;
+      std::cout<<"Value for Z:\n";
+      std::cin>>z;
+      std::cout<<x<<"\n";
+      splight->setTransform(new Translate(x,y,z));
+      flag = true;
+    }
+    else if(option == 2){
+      double angle;
+      std::cout<<"Angle:\n";
+      std::cin>>angle;
+      splight->setTransform(new RotateX(angle));
+      flag = true;
+    }
+    else if(option ==3){
+      double angle;
+      std::cout<<"Angle:\n";
+      std::cin>>angle;
+      splight->setTransform(new RotateY(angle));
+      flag = true;
+    }
+    else if(option == 4){
+      double angle;
+      std::cout<<"Angle:\n";
+      std::cin>>angle;
+      splight->setTransform(new RotateZ(angle));
+      flag = true;
+    }
+    else if(option == 5){
+      double angle;
+      std::cout<<"Angle:\n";
+      std::cin>>angle;
+      splight->setAngle(angle);
+      flag = true;
+    }
+  }
+  light->applyViewTransform(scene->getCamera()->getWorldToCamera());
   return flag;
 }
 

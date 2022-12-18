@@ -127,8 +127,8 @@ void Camera::execEyeTransform(){
 
     cameraToWorld.setVal(3,3,1);
 
-    Matrix<double,4,4> mtc = worldToCamera * cameraToWorld;
-    std::cout<<mtc;
+    //Matrix<double,4,4> mtc = worldToCamera * cameraToWorld;
+    //std::cout<<mtc;
     //worldToCamera = worldToCamera.transpose();
     Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
     //Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
