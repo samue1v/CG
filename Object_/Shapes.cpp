@@ -342,8 +342,8 @@ Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double h
   this->name = "undefined";
   this->material = material;
   this->topCenter = (axis*height) + baseCenter;
-  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
-  this->topLid = Plane(topCenter,axis,new Cooper());
+  this->baseLid = Plane(baseCenter,axis*-1,nullptr);
+  this->topLid = Plane(topCenter,axis,nullptr);
   this->texture = nullptr;
 }
 
@@ -353,8 +353,8 @@ Cylinder::Cylinder(Coordinate baseCenter, Vector3D axis, double radius, double h
   this->name = name;
   this->material = material;
   this->topCenter = (axis*height) + baseCenter;
-  this->baseLid = Plane(baseCenter,axis*-1,new Cooper());
-  this->topLid = Plane(topCenter,axis,new Cooper());
+  this->baseLid = Plane(baseCenter,axis*-1,nullptr);
+  this->topLid = Plane(topCenter,axis,nullptr);
   this->texture = nullptr;
 }
 
@@ -602,6 +602,7 @@ Material * Cone::getMaterial(){
 }
 
 void Cone::transformView(Matrix<double,4,4> transformMatrix){
+  
   this->axis = (transformMatrix * Matrix<double,4,1>(this->axis)).toVector3D();
   this->baseCenter = (transformMatrix * Matrix<double,4,1>(this->baseCenter)).toCoordinate();
   this->vertex = (transformMatrix * Matrix<double,4,1>(this->vertex)).toCoordinate();
@@ -646,7 +647,7 @@ double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
   double beta;
   double tBase;
   double closest_t = INF;
-  Vector3D wv = Vector3D(this->vertex - O);
+  Vector3D wv = Vector3D(this->vertex);
   
   Matrix<double,3,1> dr = Matrix<double,3,1>(D);
   Matrix<double,3,1> dc = Matrix<double,3,1>(this->axis);
@@ -658,7 +659,7 @@ double Cone::IntersectRay(Coordinate O, Vector3D D, double tMin, double tMax){
   a = (dr.transpose()*M*dr).getVal(0,0);
   b = -2*((dr.transpose()*M*w).getVal(0,0));
   c = (w.transpose()*M*w).getVal(0,0);
-  
+  //std::cout<<"auqi\n";
   /*
   double drDotdc = Vector3D::dot(D,this->axis);
   a = (drDotdc*drDotdc) - Vector3D::dot(D,D)*(this->cosTeta*this->cosTeta);

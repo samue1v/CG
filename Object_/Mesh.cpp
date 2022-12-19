@@ -220,6 +220,7 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
     double t_plane;
     double closest_t = INF;
     double cluster_t = INF;
+    Vertex v1,v2,v3;
 
     if(cluster){
         cluster_t = cluster->IntersectRay(O,D,t_min,t_max);
@@ -231,10 +232,13 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
 
     for(int i = 0;i<this->faceList.getSize();i++){
         current_face = this->faceList.getElementAt(i);
+        v1 = this->vertexList.getElementAt(current_face.v1);
+        v2 = this->vertexList.getElementAt(current_face.v2);
+        v3 = this->vertexList.getElementAt(current_face.v3);
         N = this->normalList.getElementAt(current_face.n);
-        V0 = Coordinate(this->vertexList.getElementAt(current_face.v1).x,this->vertexList.getElementAt(current_face.v1).y,this->vertexList.getElementAt(current_face.v1).z);
-        V1 = Coordinate(this->vertexList.getElementAt(current_face.v2).x,this->vertexList.getElementAt(current_face.v2).y,this->vertexList.getElementAt(current_face.v2).z);
-        V2 = Coordinate(this->vertexList.getElementAt(current_face.v3).x,this->vertexList.getElementAt(current_face.v3).y,this->vertexList.getElementAt(current_face.v3).z);
+        V0 = Coordinate(v1.x,v1.y,v1.z);
+        V1 = Coordinate(v2.x,v2.y,v2.z);
+        V2 = Coordinate(v3.x,v3.y,v3.z);
         
         plane = Plane(V1,N,nullptr);
         t_plane = plane.IntersectRay(O,D,t_min,t_max);
@@ -279,7 +283,7 @@ bool Mesh::setTransform(Transformation * t){
     if(cluster){
         this->cluster->setTransform(t);
     }
-    if(dynamic_cast<Translate *>(t)){
+    if(t->getType == translate){
         stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
     }
 

@@ -25,6 +25,7 @@ class Canvas{
       Pair<double,double> getGridSize();
       bool setWindowsSize(Pair<double,double> newWindowSize);
       bool setGridSize(Pair<double,double> newGridSize);
+      bool isOrtho;
 
     private:
       Pair<double,double> windowSize;
@@ -43,6 +44,7 @@ Canvas<l,k>::Canvas(){
   this->nColumns = k;
   this->colorBuffer = new uint8_t[l*k*3];
   this->colorBufferCount = 0;
+  this->isOrtho = false;
 }
 
 template <int l, int k>

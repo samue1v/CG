@@ -107,7 +107,7 @@ void constructScene(){
   SDL_Renderer * renderer = nullptr;
   double sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,20);
+  Coordinate eye = Coordinate(0,0,0);
   Coordinate up = Coordinate(0,2000,20);
   Coordinate lookAt = Coordinate(0,0,-100);  
 
@@ -121,38 +121,56 @@ void constructScene(){
   
 
   //Materials
-  Rubber *rubber = new Rubber();
-  Metal *metal = new Metal();
-  Plastic *plastic = new Plastic();
-  Cooper *cooper = new Cooper();
-  Marble *marble = new Marble();
+  Rubber * rubber =new Rubber();
+  Metal * metal = new Metal();
+  Plastic * plastic = new Plastic();
+  Copper * copper = new Copper();
+  Marble * marble = new Marble();
+  Wood * wood = new Wood();
+  Brick * brick = new Brick();
+  BlueConcrete * blueconcrete = new BlueConcrete();
 
 
   //testes
+  /*
   Object * teste = new Object("teste");
   Mesh * cluster_teste_mesh = new Mesh("../MeshFiles/paredes_cluster.obj",marble,"paredes_mesh");
   teste->setMesh(cluster_teste_mesh);
+  */
+ 
+  //globo
+  Cylinder * globoBase = new Cylinder(Coordinate(-6,-5.5,6),Vector3D(0,1,0),2,10.6,metal,"base lampada.");
+  Object * globo = new Object("globo");
+  Sphere * globo_sphere = new Sphere(Coordinate(10,-2.36,1.6),1,plastic,"globo");
+  globo_sphere->setTexture("../TextureFiles/world.png",renderer);
+  globo->setShape(globo_sphere);
+  globo->setShape(globoBase);
 
   //casa
   Object * paredes = new Object("paredes");
-  Mesh * paredes_mesh = new Mesh("../MeshFiles/paredes_novas.obj",marble,"paredes_mesh");
-  Mesh * parede_azul = new Mesh("../MeshFiles/parede_azul.obj",marble,"parede_azul");
-  parede_azul->setTexture("../TextureFiles/kaguya.png",renderer);
+  Mesh * paredes_mesh = new Mesh("../MeshFiles/paredes_novas2.obj",marble,"paredes_mesh");
+  Mesh * parede_azul = new Mesh("../MeshFiles/parede_azul.obj",blueconcrete,"parede_azul");
+  //Mesh * muros = new Mesh("../MeshFiles/muros.obj",marble,"muros");
+  Mesh * teto = new Mesh("../MeshFiles/teto.obj",marble,"teto");
+  Mesh * porta_entrada = new Mesh("../MeshFiles/porta_entrada.obj",marble,"porta entrada");
+  Mesh * porta_saida = new Mesh("../MeshFiles/porta_saida.obj",marble,"porta saida");
+  porta_entrada->setTexture("../TextureFiles/porta.png",renderer);
+  porta_saida->setTexture("../TextureFiles/porta.png",renderer);
   paredes_mesh->setCluster(new Mesh("../MeshFiles/paredes_cluster.obj"));
   paredes->setMesh(paredes_mesh);
   paredes->setMesh(parede_azul);
+  paredes->setMesh(porta_entrada);
+  paredes->setMesh(porta_saida);
 
-  Object * sky = new Object("sky");
-  Plane * skyPlane = new Plane(Coordinate(0,0,-060),Vector3D(0,0,1),marble,"skymesh");
-  skyPlane->setTexture("../TextureFiles/sky.png",renderer);
-  sky->setShape(skyPlane);
+  //paredes->setMesh(muros);
+  paredes->setMesh(teto);
 
-  //lampada
-  Object * lamp = new Object("lampada");
-  Cylinder * lampBase = new Cylinder(Coordinate(0,0,0),Vector3D(0,1,0),0.5,0.3,marble,"base lampada.");
-  Sphere * lampBulb = new Sphere(Coordinate(0,-0.1,0),0.25,marble,"bulbo lampada");
-  lamp->setShape(lampBase);
-  lamp->setShape(lampBulb);
+  Object * ground = new Object("ground");
+  Plane * groundPlane = new Plane(Coordinate(0,-4.95,0),Vector3D(0,1,0),marble,"groundplane");
+  groundPlane->setTexture("../TextureFiles/ground.png",renderer);
+  ground->setShape(groundPlane);
+
+
 
   //solo
   Object * piso = new Object("piso");
@@ -162,12 +180,12 @@ void constructScene(){
 
   //quadro1
   Object * quadro1 = new Object("quadro1");
-  Mesh * frame1 = new Mesh("../MeshFiles/frame123.obj",marble,"frame1");
+  Mesh * frame1 = new Mesh("../MeshFiles/frame123.obj",plastic,"frame1");
   frame1->setTransform(new RotateZ(180));
   frame1->setTransform(new Scale(1.023,1,1));
-  frame1->setTexture("../TextureFiles/kaguya.png",renderer);
+  frame1->setTexture("../TextureFiles/notRep_rene.png",renderer);
   frame1->setTransform(new Translate(2.76,0,-9.1));
-  Mesh * moldura1 = new Mesh("../MeshFiles/moldura123.obj",marble,"moldura1");
+  Mesh * moldura1 = new Mesh("../MeshFiles/moldura123.obj",wood,"moldura1");
   moldura1->setTexture("../TextureFiles/wood_moldura.png",renderer);
   moldura1->setCluster(new Mesh("../MeshFiles/moldura123_cluster.obj"));
   moldura1->setTransform(new Translate(2.8,0,-9.1));
@@ -178,12 +196,12 @@ void constructScene(){
 
 
   Object * quadro2 = new Object("quadro2");
-  Mesh * frame2 = new Mesh("../MeshFiles/frame123.obj",marble,"frame2");
+  Mesh * frame2 = new Mesh("../MeshFiles/frame123.obj",plastic,"frame2");
   frame2->setTransform(new RotateZ(180));
   frame2->setTransform(new Scale(1.023,1,1));
-  frame2->setTexture("../TextureFiles/kaguya.png",renderer);
+  frame2->setTexture("../TextureFiles/reve_picasso.png",renderer);
   frame2->setTransform(new Translate(10.2,0,-9.1));
-  Mesh * moldura2 = new Mesh("../MeshFiles/moldura123.obj",marble,"moldura2");
+  Mesh * moldura2 = new Mesh("../MeshFiles/moldura123.obj",wood,"moldura2");
   moldura2->setTexture("../TextureFiles/wood_moldura.png",renderer);
   moldura2->setCluster(new Mesh("../MeshFiles/moldura123_cluster.obj"));
   moldura2->setTransform(new Translate(10.2,0,-9.1));
@@ -192,12 +210,12 @@ void constructScene(){
 
 
   Object * quadro3 = new Object("quadro3");
-  Mesh * frame3 = new Mesh("../MeshFiles/frame123.obj",marble,"frame3");
+  Mesh * frame3 = new Mesh("../MeshFiles/frame123.obj",plastic,"frame3");
   frame3->setTransform(new RotateZ(180));
   frame3->setTransform(new Scale(1.023,1,1));
-  frame3->setTexture("../TextureFiles/kaguya.png",renderer);
+  frame3->setTexture("../TextureFiles/filho_rene.png",renderer);
   frame3->setTransform(new Translate(17.7,0,-9.1));
-  Mesh * moldura3 = new Mesh("../MeshFiles/moldura123.obj",marble,"moldura3");
+  Mesh * moldura3 = new Mesh("../MeshFiles/moldura123.obj",wood,"moldura3");
   moldura3->setTexture("../TextureFiles/wood_moldura.png",renderer);
   moldura3->setCluster(new Mesh("../MeshFiles/moldura123_cluster.obj"));
   moldura3->setTransform(new Translate(17.7,0,-9.1));
@@ -207,12 +225,12 @@ void constructScene(){
 
   //quadro4
   Object * quadro4 = new Object("quadro4");
-  Mesh * frame4 = new Mesh("../MeshFiles/frame45.obj",marble,"frame4");
-  frame4->setTexture("../TextureFiles/kaguya.png",renderer);
+  Mesh * frame4 = new Mesh("../MeshFiles/frame45.obj",plastic,"frame4");
+  frame4->setTexture("../TextureFiles/guernica_picasso.png",renderer);
   frame4->setTransform(new RotateX(180));
   frame4->setTransform(new Scale(1.023,1,1));
   frame4->setTransform(new Translate(22.3,0,-4.4));
-  Mesh * moldura4 = new Mesh("../MeshFiles/moldura45.obj",marble,"moldura4");
+  Mesh * moldura4 = new Mesh("../MeshFiles/moldura45.obj",wood,"moldura4");
   moldura4->setTexture("../TextureFiles/wood_moldura.png",renderer);
   moldura4->setCluster(new Mesh("../MeshFiles/moldura45_cluster.obj"));
   moldura4->setTransform(new Translate(22.3,0,-4.4));
@@ -222,12 +240,12 @@ void constructScene(){
   
     //quadro5
   Object * quadro5 = new Object("quadro4");
-  Mesh * frame5 = new Mesh("../MeshFiles/frame45.obj",marble,"frame5");
-  frame5->setTexture("../TextureFiles/kaguya.png",renderer);
+  Mesh * frame5 = new Mesh("../MeshFiles/frame45.obj",plastic,"frame5");
+  frame5->setTexture("../TextureFiles/memoria_dali.png",renderer);
   frame5->setTransform(new RotateX(180));
   frame4->setTransform(new Scale(1.023,1,1));
   frame5->setTransform(new Translate(22.3,0,4.4));
-  Mesh * moldura5 = new Mesh("../MeshFiles/moldura45.obj",marble,"moldura5");
+  Mesh * moldura5 = new Mesh("../MeshFiles/moldura45.obj",wood,"moldura5");
   moldura5->setTexture("../TextureFiles/wood_moldura.png",renderer);
   moldura5->setCluster(new Mesh("../MeshFiles/moldura45_cluster.obj"));
   moldura5->setTransform(new Translate(22.3,0,4.4));
@@ -236,7 +254,8 @@ void constructScene(){
   
   //banco longo1
   Object * bancoLongo1 = new Object("banco longo1");
-  Mesh * banco_longo1_mesh = new Mesh("../MeshFiles/banco_longo.obj",plastic,"banco longo 1 mesh");
+  Mesh * banco_longo1_mesh = new Mesh("../MeshFiles/banco_longo.obj",wood,"banco longo 1 mesh");
+  banco_longo1_mesh->setTexture("../TextureFiles/banco_longo.png",renderer);
   banco_longo1_mesh->setCluster(new Mesh("../MeshFiles/banco_longo_cluster.obj"));
   banco_longo1_mesh->setTransform(new Translate(16.4,-4,2));
   bancoLongo1->setMesh(banco_longo1_mesh);
@@ -244,14 +263,16 @@ void constructScene(){
   
   //banco longo2
   Object * bancoLongo2 = new Object("banco longo2");
-  Mesh * banco_longo2_mesh = new Mesh("../MeshFiles/banco_longo2.obj",plastic,"banco longo 2 mesh");
+  Mesh * banco_longo2_mesh = new Mesh("../MeshFiles/banco_longo2.obj",wood,"banco longo 2 mesh");
+  banco_longo2_mesh->setTexture("../TextureFiles/banco_longo.png",renderer);
   banco_longo2_mesh->setCluster(new Mesh("../MeshFiles/banco_longo2_cluster.obj"));
   banco_longo2_mesh->setTransform(new Translate(10,-4,-3.7));
   bancoLongo2->setMesh(banco_longo2_mesh);
 
   //banco pequeno
   Object * bancoPequeno = new Object("banco pequeno");
-  Mesh * banco_pequeno_mesh = new Mesh("../MeshFiles/banco_bar.obj",plastic,"banco pequeno mesh");
+  Mesh * banco_pequeno_mesh = new Mesh("../MeshFiles/banco_bar.obj",wood,"banco pequeno mesh");
+  banco_pequeno_mesh->setTexture("../TextureFiles/banco_bar.png",renderer);
   banco_pequeno_mesh->setCluster(new Mesh("../MeshFiles/banco_bar_cluster.obj"));
   banco_pequeno_mesh->setTransform(new Translate(10,-3.36,1.6));
   bancoPequeno->setMesh(banco_pequeno_mesh);
@@ -263,17 +284,28 @@ void constructScene(){
 
   
   //Setting lights
-
+  
   Intensity ambientIntensity = Intensity(0.2, 0.2, 0.2);
   AmbientLight *ambientLight = new AmbientLight(ambientIntensity,"Ambiente Light");
+  /*
   Intensity pointIntensity = Intensity(0.7, 0.7, 0.7);
-  SpotLight * spottlight = new SpotLight(pointIntensity,Coordinate(0,20,5),Vector3D(0,-1,0),20,"spot");
+  //SpotLight * spottlight = new SpotLight(pointIntensity,Coordinate(0,20,5),Vector3D(0,-1,0),20,"spot");
   PointLight *pointLight =new PointLight(pointIntensity, Coordinate(0,1.4,5),"PointLight");//Coordinate(0,60,-30))
   //PointLight *pointLight2 =new PointLight(pointIntensity, Coordinate(0,200 ,1000));
   PointLight *pointLight3 =new PointLight(pointIntensity, Coordinate(0,0,0),"PointLight3");
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.6,0.6,0.6),Vector3D(0,-1,-1),"DirLIght");
-  //Creating the scene
+  */
 
+  SpotLight * spot1 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(2.8,4.5,-6.5),Vector3D(0,-0.7,-1),20,"spot1");
+  SpotLight * spot2 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(10.2,4.5,-6.5),Vector3D(0,-0.7,-1),20,"spot2");
+  SpotLight * spot3 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(17.6,4.5,-6.5),Vector3D(0,-0.7,-1),20,"spot3");
+  SpotLight * spot4 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(18.2,4.2,-4.5),Vector3D(1,-0.6,0),15,"spot4");
+  SpotLight * spot5 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(18.2,4.2,4.5),Vector3D(1,-0.6,0),15,"spot5");
+  
+  PointLight * pointmiddle = new PointLight(Intensity(0.7,0.7,0.7),Coordinate(10,4.8,1.6),"pointlightmiddle");
+  PointLight * pointdoor = new PointLight(Intensity(0.4,0.4,0.4),Coordinate(-9.63, 4.8, -6),"pointlightdoor");
+  DirectionalLight * dirLight = new DirectionalLight(Intensity(0.5,0.5,0.5),Vector3D(0,-1,-0.1),"DirLIght");
+  //Creating the scene
 
   scene->setObject(paredes);
   scene->setObject(quadro1);
@@ -281,19 +313,28 @@ void constructScene(){
   scene->setObject(quadro3);
   scene->setObject(quadro4);
   scene->setObject(quadro5);
-  //scene->setObject(bancoLongo1);
-  //scene->setObject(bancoLongo2);
-  //scene->setObject(bancoPequeno);
-  //scene->setObject(piso);
+  scene->setObject(ground);
+  scene->setObject(bancoLongo1);
+  scene->setObject(bancoLongo2);
+  scene->setObject(bancoPequeno);
+  scene->setObject(globo);
+  scene->setObject(piso);
 
 
 
   scene->setLight(ambientLight);
+  scene->setLight(spot1);
+  scene->setLight(spot2);
+  scene->setLight(spot3);
+  scene->setLight(spot4);
+  scene->setLight(spot5);
+  scene->setLight(pointmiddle);
+  //scene->setLight(pointdoor);
   scene->setLight(dirLight);
   //scene->setLight(pointLight);
   //scene.setLight(pointLight2);
-  scene->setLight(spottlight);
-  scene->setLight(pointLight3);
+  //scene->setLight(spottlight);
+  //scene->setLight(pointLight3);
   scene->setCamera(camera);
   //lamp->setTransform(new Translate(10,0,0));
   scene->transformWorldToCamera();
@@ -301,21 +342,38 @@ void constructScene(){
 }
 
 void run(){
+  Vector3D dr;
+  Vector3D orthoDir = Vector3D(0,0,-1);
+  Vector3D ortho = (scene->getCamera()->getWorldToCamera() * Matrix<double,4,1>(orthoDir)).toVector3D() ;
+  Coordinate canvasPoint;
   Pair<double,double> windowSize = canvas->getWindowSize();
   double wj = windowSize.left;
   double hj = windowSize.right;
   Pair<double,double> gridSize = canvas->getGridSize();
   double dx = gridSize.left;
   double dy = gridSize.right;
+  bool isO = canvas->isOrtho;
+  if(isO){
+    wj = 60;
+    hj = 60;
+    dx = wj/nColumns;
+    dy = hj/nLines;
+  }
   Coordinate P0 = scene->getCamera()->getEyeTransformed();
   canvas->clearCanvas();
   for (int l = 0; l < nLines; l++) {
     double y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
       double x = -wj / 2 + dx / 2 + c * dx;
-      Coordinate canvasPoint = Coordinate(x, y, canvas->getCanvasDistance());
-      Vector3D dr = Vector3D(canvasPoint - P0);
-      dr.normalize();
+      canvasPoint = Coordinate(x, y, canvas->getCanvasDistance());
+      if(isO){
+        dr = ortho;
+        P0 = canvasPoint;
+      }
+      else{
+        dr= Vector3D(canvasPoint - P0);
+        dr.normalize();
+      }
       Triple<Object *,Intensity,Color> hitData = Space3D::TraceRay(scene, P0, dr, 1, INF); 
       canvas->setObjectAt(c,l,hitData.left);
       if(hitData.right.hasInit){
@@ -343,9 +401,15 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
        double xMousePos,yMousePos;
        glfwGetCursorPos(window, &xMousePos, &yMousePos);
        Object * obj = canvas->getObjectAtCoord(xMousePos,yMousePos);
-       obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
-       flag = menuObj(obj);
-       obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
+       if(obj){
+        obj->applyViewTransform(scene->getCamera()->getCameraToWorld());
+        flag = menuObj(obj);
+        obj->applyViewTransform(scene->getCamera()->getWorldToCamera());
+       }
+       else{
+        std::cout<<"ceu.\n";
+        flag = false;
+       }
        if(flag){
         run();
         std::cout<<"Success.\n";
@@ -1132,14 +1196,14 @@ bool menuMain(){
   std::cout<<"Chose any option: \n";
   std::cout<<"(1)See Lights.\n";
   std::cout<<"(2)See Camera.\n";
-  std::cout<<"(3)Set Projection.\n";
+  std::cout<<"(3)Change Projection.\n";
   std::cout<<"Option: \n";
   std::cin >> option;
   std::cout<< "\n" << std::flush;
   if(option == 1){
     flag = menuLight();
   }
-  if(option == 2){
+  else if(option == 2){
     Camera * camera = scene->getCamera();
     flag = menuTransform(camera);
     if(flag){
@@ -1148,6 +1212,10 @@ bool menuMain(){
       scene->transformWorldToCamera();
     }
     
+  }
+  else if(option == 3){
+    canvas->isOrtho = !canvas->isOrtho;
+    flag = true;
   }
   return flag;
 }

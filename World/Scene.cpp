@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 Scene::Scene(){
-  bgIntensity = Intensity(0, 0, 0);
+  bgIntensity = Intensity(0.53, 0.81, 0.92);
   naturalColor = Color(255, 255, 255);
 }
 
