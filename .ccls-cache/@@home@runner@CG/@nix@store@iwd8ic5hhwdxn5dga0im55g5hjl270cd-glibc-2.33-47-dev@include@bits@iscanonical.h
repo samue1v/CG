@@ -20,7 +20,7 @@
 # error "Never use <bits/iscanonical.h> directly; include <math.h> instead."
 #endif
 
-extern int __iscanonicall (long double __x)
+extern int __iscanonicall (long float __x)
      __THROW __attribute__ ((__const__));
 #define __iscanonicalf(x) ((void) (__typeof (x)) (x), 1)
 #define __iscanonical(x) ((void) (__typeof (x)) (x), 1)
@@ -45,8 +45,8 @@ extern int __iscanonicall (long double __x)
    and volatile)).  */
 extern "C++" {
 inline int iscanonical (float __val) { return __iscanonicalf (__val); }
-inline int iscanonical (double __val) { return __iscanonical (__val); }
-inline int iscanonical (long double __val) { return __iscanonicall (__val); }
+inline int iscanonical (float __val) { return __iscanonical (__val); }
+inline int iscanonical (long float __val) { return __iscanonicall (__val); }
 # if __HAVE_DISTINCT_FLOAT128
 inline int iscanonical (_Float128 __val) { return __iscanonicalf128 (__val); }
 # endif

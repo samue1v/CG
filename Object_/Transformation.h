@@ -26,8 +26,8 @@ enum TransformType{
 struct Transformation{
     
     Transformation(){}
-    virtual Matrix<double,4,4> getTransform() = 0;
-    virtual Matrix<double,4,4> getInverse() = 0;
+    virtual Matrix<float,4,4> getTransform() = 0;
+    virtual Matrix<float,4,4> getInverse() = 0;
     virtual Coordinate getFixedPoint() = 0;
     TransformType getType(){
         return this->transformType;
@@ -35,14 +35,14 @@ struct Transformation{
     protected:
     TransformType transformType;
     Coordinate fixedPoint;
-    Matrix<double,4,4> transform;
-    Matrix<double,4,4> inverse;
+    Matrix<float,4,4> transform;
+    Matrix<float,4,4> inverse;
 };
 
 struct Translate : public Transformation{
     Translate(){}
-    Translate(double x, double y, double z){
-        this->transform = Matrix<double,4,4>::identity();
+    Translate(float x, float y, float z){
+        this->transform = Matrix<float,4,4>::identity();
         (this->transform).setVal(0,3,x);
         (this->transform).setVal(1,3,y);
         (this->transform).setVal(2,3,z);
@@ -53,10 +53,10 @@ struct Translate : public Transformation{
         this->transformType = translate;
     }
     
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -68,11 +68,11 @@ struct Translate : public Transformation{
 
 struct RotateX : public Transformation{
     RotateX(){}
-    RotateX(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+    RotateX(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(1,1,cosine);
         (this->transform).setVal(2,2,cosine);
         (this->transform).setVal(1,2,-sine);
@@ -82,10 +82,10 @@ struct RotateX : public Transformation{
     
 
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -95,11 +95,11 @@ struct RotateX : public Transformation{
 
 struct RotateY : public Transformation{
     RotateY(){}
-    RotateY(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+    RotateY(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(0,0,cosine);
         (this->transform).setVal(0,2,sine);
         (this->transform).setVal(2,0,-sine);
@@ -107,10 +107,10 @@ struct RotateY : public Transformation{
         this->inverse = this->transform.transpose();
         this->transformType = rotatey;
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -120,11 +120,11 @@ struct RotateY : public Transformation{
 
 struct RotateZ : public Transformation{
     RotateZ(){}
-    RotateZ(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+    RotateZ(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(0,0,cosine);
         (this->transform).setVal(1,0,sine);
         (this->transform).setVal(0,1,-sine);
@@ -133,10 +133,10 @@ struct RotateZ : public Transformation{
         this->transformType = rotatez;
     }
 
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -146,12 +146,12 @@ struct RotateZ : public Transformation{
 
 struct RotateXfixed : public Transformation{
     RotateXfixed(){}
-    RotateXfixed(double angle,Coordinate point){
+    RotateXfixed(float angle,Coordinate point){
         this->fixedPoint;
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(1,1,cosine);
         (this->transform).setVal(2,2,cosine);
         (this->transform).setVal(1,2,-sine);
@@ -160,10 +160,10 @@ struct RotateXfixed : public Transformation{
         this->transformType = rotatexfixed;
 
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -173,12 +173,12 @@ struct RotateXfixed : public Transformation{
 
 struct RotateYfixed : public Transformation{
     RotateYfixed(){}
-    RotateYfixed(double angle,Coordinate point){
+    RotateYfixed(float angle,Coordinate point){
         this->fixedPoint = point;
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(0,0,cosine);
         (this->transform).setVal(0,2,sine);
         (this->transform).setVal(2,0,-sine);
@@ -186,10 +186,10 @@ struct RotateYfixed : public Transformation{
         this->inverse = this->transform.transpose();
         this->transformType = rotateyfixed;
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -199,12 +199,12 @@ struct RotateYfixed : public Transformation{
 
 struct RotateZfixed : public Transformation{
     RotateZfixed(){}
-    RotateZfixed(double angle,Coordinate point){
+    RotateZfixed(float angle,Coordinate point){
         this->fixedPoint = point;
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double cosine = cos(radiansAngle);
-        double sine = sin(radiansAngle);
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float cosine = cos(radiansAngle);
+        float sine = sin(radiansAngle);
         (this->transform).setVal(0,0,cosine);
         (this->transform).setVal(1,0,sine);
         (this->transform).setVal(0,1,-sine);
@@ -213,10 +213,10 @@ struct RotateZfixed : public Transformation{
         this->transformType = rotatezfixed;
         
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -227,8 +227,8 @@ struct RotateZfixed : public Transformation{
 
 struct Scale : public Transformation{
     Scale(){}
-    Scale(double x,double y,double z){
-        this->transform = Matrix<double,4,4>::identity();
+    Scale(float x,float y,float z){
+        this->transform = Matrix<float,4,4>::identity();
         this->inverse = this->transform;
         (this->transform).setVal(0,0,x);
         (this->transform).setVal(1,1,y);
@@ -238,10 +238,10 @@ struct Scale : public Transformation{
         (this->inverse).setVal(2,2,1.0/z);
         this->transformType = scale;
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -251,15 +251,15 @@ struct Scale : public Transformation{
 
 struct ReflectXY : public Transformation{
     ReflectXY(){
-        this->transform = Matrix<double,4,4>::identity();
+        this->transform = Matrix<float,4,4>::identity();
         (this->transform).setVal(2,2,-1);
         this->inverse = this->transform;
 
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -269,15 +269,15 @@ struct ReflectXY : public Transformation{
 
 struct ReflectXZ : public Transformation{
     ReflectXZ(){
-        this->transform = Matrix<double,4,4>::identity();
+        this->transform = Matrix<float,4,4>::identity();
         (this->transform).setVal(1,1,-1);
         this->inverse = this->transform;
 
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -287,15 +287,15 @@ struct ReflectXZ : public Transformation{
 
 struct ReflectYZ : public Transformation{
     ReflectYZ(){
-        this->transform = Matrix<double,4,4>::identity();
+        this->transform = Matrix<float,4,4>::identity();
         (this->transform).setVal(0,0,-1);
         this->inverse = this->transform;
 
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -305,20 +305,20 @@ struct ReflectYZ : public Transformation{
 
 struct ShearXY : public Transformation{
     ShearXY(){}
-    ShearXY(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearXY(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(1,0,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(1,0,-tangent);
         this->transformType = shearxy;
     
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -328,20 +328,20 @@ struct ShearXY : public Transformation{
 
 struct ShearYX : public Transformation{
     ShearYX(){}
-    ShearYX(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearYX(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(0,1,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(0,1,-tangent);
         this->transformType = shearyx;
     
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -351,20 +351,20 @@ struct ShearYX : public Transformation{
 
 struct ShearXZ : public Transformation{
     ShearXZ(){}
-    ShearXZ(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearXZ(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(2,0,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(2,0,-tangent);
         this->transformType = shearxz;
     
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -374,20 +374,20 @@ struct ShearXZ : public Transformation{
 
 struct ShearZX : public Transformation{
     ShearZX(){}
-    ShearZX(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearZX(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(0,2,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(0,2,-tangent);
         this->transformType = shearzx;
     
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -397,19 +397,19 @@ struct ShearZX : public Transformation{
 
 struct ShearYZ : public Transformation{
     ShearYZ(){}
-    ShearYZ(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearYZ(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(2,1,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(2,1,-tangent);
         this->transformType = shearyz;
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){
@@ -419,19 +419,19 @@ struct ShearYZ : public Transformation{
 
 struct ShearZY : public Transformation{
     ShearZY(){}
-    ShearZY(double angle){
-        this->transform = Matrix<double,4,4>::identity();
-        double radiansAngle = (angle*PI)/180.0;
-        double tangent = tan(radiansAngle);
+    ShearZY(float angle){
+        this->transform = Matrix<float,4,4>::identity();
+        float radiansAngle = (angle*PI)/180.0;
+        float tangent = tan(radiansAngle);
         (this->transform).setVal(1,2,tangent);
         this->inverse = this->transform;
         (this->inverse).setVal(1,2,-tangent);
         this->transformType = shearzy;
     }
-    Matrix<double,4,4> getTransform(){
+    Matrix<float,4,4> getTransform(){
         return this->transform;
     }
-    Matrix<double,4,4> getInverse(){
+    Matrix<float,4,4> getInverse(){
         return this->inverse;
     }
     Coordinate getFixedPoint(){

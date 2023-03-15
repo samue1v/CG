@@ -24,9 +24,9 @@ class Mesh{
     Material * material;
     Vector3D intersectedNormal;
     void tempTransform(Vertex t);
-    Matrix<double,4,4> stackedTranslateMatrix;
-    Matrix<double,4,4> transformMatrix;
-    Matrix<double,4,4> inverseMatrix;
+    Matrix<float,4,4> stackedTranslateMatrix;
+    Matrix<float,4,4> transformMatrix;
+    Matrix<float,4,4> inverseMatrix;
     void applyTransform();
     void applyTransform(Coordinate point);
     Triple<int,int,int> parseFaceData(const std::string & line);
@@ -46,10 +46,10 @@ class Mesh{
     Material * getMaterial();
     bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
     Texture * getTexture();
-    Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
+    Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld);
     bool setTransform(Transformation * t);
-    double IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max);
-    void transformView(Matrix<double,4,4> transformMatrix);
+    float IntersectRay(Coordinate O,Vector3D D,float t_min,float t_max);
+    void transformView(Matrix<float,4,4> transformMatrix);
     std::string getName();
     void setCluster(Mesh * cluster);
     Mesh * getCluster();

@@ -37,8 +37,8 @@ void legal(Nome * nomep){
 }
 
 int main() {
-    Array<double> a;
-    Array<double> b;
+    Array<float> a;
+    Array<float> b;
     a.push(1);
     a.push(2);
     b = a;

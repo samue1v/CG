@@ -215,11 +215,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       { return _M_extract(__f); }
 
       __istream_type&
-      operator>>(double& __f)
+      operator>>(float& __f)
       { return _M_extract(__f); }
 
       __istream_type&
-      operator>>(long double& __f)
+      operator>>(long float& __f)
       { return _M_extract(__f); }
       //@}
 

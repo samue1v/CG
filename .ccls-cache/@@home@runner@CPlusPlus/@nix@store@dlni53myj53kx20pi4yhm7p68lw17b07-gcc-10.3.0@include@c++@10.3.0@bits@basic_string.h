@@ -6582,11 +6582,11 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   stof(const string& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::strtof, "stof", __str.c_str(), __idx); }
 
-  inline double
+  inline float
   stod(const string& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::strtod, "stod", __str.c_str(), __idx); }
 
-  inline long double
+  inline long float
   stold(const string& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::strtold, "stold", __str.c_str(), __idx); }
 #endif // _GLIBCXX_USE_C99_STDLIB
@@ -6664,19 +6664,19 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   }
 
   inline string
-  to_string(double __val)
+  to_string(float __val)
   {
     const int __n = 
-      __gnu_cxx::__numeric_traits<double>::__max_exponent10 + 20;
+      __gnu_cxx::__numeric_traits<float>::__max_exponent10 + 20;
     return __gnu_cxx::__to_xstring<string>(&std::vsnprintf, __n,
 					   "%f", __val);
   }
 
   inline string
-  to_string(long double __val)
+  to_string(long float __val)
   {
     const int __n = 
-      __gnu_cxx::__numeric_traits<long double>::__max_exponent10 + 20;
+      __gnu_cxx::__numeric_traits<long float>::__max_exponent10 + 20;
     return __gnu_cxx::__to_xstring<string>(&std::vsnprintf, __n,
 					   "%Lf", __val);
   }
@@ -6713,11 +6713,11 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   stof(const wstring& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::wcstof, "stof", __str.c_str(), __idx); }
 
-  inline double
+  inline float
   stod(const wstring& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::wcstod, "stod", __str.c_str(), __idx); }
 
-  inline long double
+  inline long float
   stold(const wstring& __str, size_t* __idx = 0)
   { return __gnu_cxx::__stoa(&std::wcstold, "stold", __str.c_str(), __idx); }
 
@@ -6767,19 +6767,19 @@ _GLIBCXX_BEGIN_NAMESPACE_CXX11
   }
 
   inline wstring
-  to_wstring(double __val)
+  to_wstring(float __val)
   {
     const int __n =
-      __gnu_cxx::__numeric_traits<double>::__max_exponent10 + 20;
+      __gnu_cxx::__numeric_traits<float>::__max_exponent10 + 20;
     return __gnu_cxx::__to_xstring<wstring>(&std::vswprintf, __n,
 					    L"%f", __val);
   }
 
   inline wstring
-  to_wstring(long double __val)
+  to_wstring(long float __val)
   {
     const int __n =
-      __gnu_cxx::__numeric_traits<long double>::__max_exponent10 + 20;
+      __gnu_cxx::__numeric_traits<long float>::__max_exponent10 + 20;
     return __gnu_cxx::__to_xstring<wstring>(&std::vswprintf, __n,
 					    L"%Lf", __val);
   }

@@ -15,7 +15,7 @@ Mesh::Mesh(const std::string & filePath){
     std::ifstream file;
     file.open(filePath);
     parseFile(file);
-    this->transformMatrix = Matrix<double,4,4>::identity();
+    this->transformMatrix = Matrix<float,4,4>::identity();
     //this->stackedTransformMatrix = this->transformMatrix; 
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
@@ -28,7 +28,7 @@ Mesh::Mesh(const std::string & filePath,Material * material){
     file.open(filePath);
     parseFile(file);
     this->texture = nullptr;
-    this->transformMatrix = Matrix<double,4,4>::identity();
+    this->transformMatrix = Matrix<float,4,4>::identity();
     //this->stackedTransformMatrix = this->transformMatrix; 
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
@@ -42,7 +42,7 @@ Mesh::Mesh(const std::string & filePath,Material * material,std::string name){
     file.open(filePath);
     parseFile(file);
     this->texture = nullptr;
-    this->transformMatrix = Matrix<double,4,4>::identity();
+    this->transformMatrix = Matrix<float,4,4>::identity();
     //this->stackedTransformMatrix = this->transformMatrix; 
     this->stackedTranslateMatrix = this->transformMatrix;
     this->inverseMatrix = this->transformMatrix;
@@ -76,7 +76,7 @@ Triple<int,int,int> Mesh::parseFaceData(const std::string & line){
     Array<int> a;
     Triple<int,int,int> t;
     std::string tempStr = line;
-    double val;
+    float val;
     int index = 0;
     int len;
 
@@ -101,12 +101,12 @@ Triple<int,int,int> Mesh::parseFaceData(const std::string & line){
 }
 
 void Mesh::parseV(const std::string & line){
-    Array<double> a;
+    Array<float> a;
     std::string delimiter = " ";
     std::string tempStr = line;
     std::string valueStr;
     int index = 0;
-    double val;
+    float val;
     int length;
     while(!tempStr.empty() && index >= 0){
         length = (int)tempStr.length();
@@ -120,12 +120,12 @@ void Mesh::parseV(const std::string & line){
 }
 
 void Mesh::parseN(const std::string & line){
-    Array<double> a;
+    Array<float> a;
     std::string delimiter = " ";
     std::string tempStr = line;
     std::string valueStr;
     int index = 0;
-    double val;
+    float val;
     int length;
     while(!tempStr.empty() && index >= 0){
         length = (int)tempStr.length();
@@ -166,13 +166,13 @@ void Mesh::parseF(const std::string & line){
 }
 
 void Mesh::parseT(const std::string & line){
-    Array<double> a;
-    double x,y,z;
+    Array<float> a;
+    float x,y,z;
     std::string delimiter = " ";
     std::string tempStr = line;
     std::string valueStr;
     int index = 0;
-    double val;
+    float val;
     int length;
     while(!tempStr.empty() && index >= 0){
         length = (int)tempStr.length();
@@ -193,16 +193,16 @@ std::string Mesh::getName(){
     return this->name;
 }
 
-void Mesh::transformView(Matrix<double,4,4> transformMatrix){
+void Mesh::transformView(Matrix<float,4,4> transformMatrix){
     if(cluster){
         cluster->transformView(transformMatrix);
     }
 
     for(int i = 0;i<this->vertexList.getSize();i++){
-        this->vertexList.setElementAt(i,(transformMatrix*Matrix<double,4,1>(this->vertexList.getElementAt(i))).toVertex());
+        this->vertexList.setElementAt(i,(transformMatrix*Matrix<float,4,1>(this->vertexList.getElementAt(i))).toVertex());
     }
     for(int j = 0;j<this->normalList.getSize();j++){
-        this->normalList.setElementAt(j,(transformMatrix*Matrix<double,4,1>(this->normalList.getElementAt(j))).toVector3D());
+        this->normalList.setElementAt(j,(transformMatrix*Matrix<float,4,1>(this->normalList.getElementAt(j))).toVector3D());
     }
     this->stackedTranslateMatrix = stackedTranslateMatrix*transformMatrix ;
 }
@@ -211,15 +211,15 @@ Vector3D Mesh::computeNormal(){
     return this->intersectedNormal;
 }
 
-double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
+float Mesh::IntersectRay(Coordinate O,Vector3D D,float t_min,float t_max){
     Coordinate V0, V1, V2;
-    double b0,b1,b2,bFace;
+    float b0,b1,b2,bFace;
     Plane plane;
     Face current_face;
     Vector3D N;
-    double t_plane;
-    double closest_t = INF;
-    double cluster_t = INF;
+    float t_plane;
+    float closest_t = INF;
+    float cluster_t = INF;
     Vertex v1,v2,v3;
 
     if(cluster){
@@ -243,36 +243,36 @@ double Mesh::IntersectRay(Coordinate O,Vector3D D,double t_min,double t_max){
         plane = Plane(V1,N,nullptr);
         t_plane = plane.IntersectRay(O,D,t_min,t_max);
         
-        if(t_plane < t_min || t_plane > t_max){
-            continue;
-        }
-        
-        Coordinate P = D*t_plane + O;
-        Vector3D V1_V0 = Vector3D(V1-V0);
-        Vector3D V2_V1 = Vector3D(V2-V1);
-        Vector3D V0_V2 = Vector3D(V0-V2);
-        Vector3D V2_V0 = Vector3D(V2-V0);
-        Vector3D P_V0 = Vector3D(P-V0);
-        Vector3D P_V1 = Vector3D(P-V1);
-        Vector3D P_V2 = Vector3D(P-V2);
-        
-        b0 = Vector3D::dot(Vector3D::cross(V1_V0,P_V0),N);
-        b1 = Vector3D::dot(Vector3D::cross(V2_V1,P_V1),N);
-        b2 = Vector3D::dot(Vector3D::cross(V0_V2,P_V2),N);
-        bFace = Vector3D::dot(Vector3D::cross(V1_V0,V2_V0),N);
-
-        if(t_plane<closest_t&& b0>=0 && b1>=0 && b2>=0){
-            current_face.faceArea = bFace;
-            closest_t = t_plane;
-            //confundi b com area, lembrar de arrumar.
-            current_face.v1W = b1/bFace;
-            current_face.v2W = b2/bFace;
-            current_face.v3W = b0/bFace;
+        if(t_plane< closest_t && t_plane >= t_min && t_plane <= t_max){
             
-            //calcula faceArea
-            this->intersectedFace = current_face;
-            this->intersectedNormal = N;
-        }   
+        
+            Coordinate P = D*t_plane + O;
+            Vector3D V1_V0 = Vector3D(V1-V0);
+            Vector3D V2_V1 = Vector3D(V2-V1);
+            Vector3D V0_V2 = Vector3D(V0-V2);
+            Vector3D V2_V0 = Vector3D(V2-V0);
+            Vector3D P_V0 = Vector3D(P-V0);
+            Vector3D P_V1 = Vector3D(P-V1);
+            Vector3D P_V2 = Vector3D(P-V2);
+            
+            b0 = Vector3D::dot(Vector3D::cross(V1_V0,P_V0),N);
+            b1 = Vector3D::dot(Vector3D::cross(V2_V1,P_V1),N);
+            b2 = Vector3D::dot(Vector3D::cross(V0_V2,P_V2),N);
+            bFace = Vector3D::dot(Vector3D::cross(V1_V0,V2_V0),N);
+
+            if(b0>=0 && b1>=0 && b2>=0){
+                current_face.faceArea = bFace;
+                closest_t = t_plane;
+                //confundi b com area, lembrar de arrumar.
+                current_face.v1W = b1/bFace;
+                current_face.v2W = b2/bFace;
+                current_face.v3W = b0/bFace;
+                
+                //calcula faceArea
+                this->intersectedFace = current_face;
+                this->intersectedNormal = N;
+            }   
+        }
     }
     return closest_t;
 }
@@ -283,7 +283,7 @@ bool Mesh::setTransform(Transformation * t){
     if(cluster){
         this->cluster->setTransform(t);
     }
-    if(t->getType == translate){
+    if(t->getType() == translate){
         stackedTranslateMatrix = stackedTranslateMatrix * t->getTransform();
     }
 
@@ -303,56 +303,56 @@ bool Mesh::setTransform(Transformation * t){
 }
 
 void Mesh::applyTransform(Coordinate point){
-    Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
+    Matrix<float,4,4> transposeInverse = this->inverseMatrix.transpose();
     Vertex translateVertex = Vertex(-point.x,-point.y,-point.z);
     Vertex goBackVertex = Vertex(point.x,point.y,point.z);
     tempTransform(translateVertex); 
     for(int i=0;i<this->vertexList.getSize();i++){
         Vertex currentVertex = this->vertexList.getElementAt(i);
-        Matrix<double,4,1> m = Matrix<double,4,1>(currentVertex);
-        Matrix<double,4,1> transformedVertexMatrix = this->transformMatrix * m;
+        Matrix<float,4,1> m = Matrix<float,4,1>(currentVertex);
+        Matrix<float,4,1> transformedVertexMatrix = this->transformMatrix * m;
         Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
         this->vertexList.setElementAt(i,newVertex);
     }
     tempTransform(goBackVertex); 
     for(int j = 0;j<this->normalList.getSize();j++){
         Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
-        Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
-        Matrix<double,4,1> newNormal = transposeInverse * normalMatrix;
+        Matrix<float,4,1> normalMatrix = Matrix<float,4,1>(currentNormal);
+        Matrix<float,4,1> newNormal = transposeInverse * normalMatrix;
         Vector3D vecNormal = Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0));
         vecNormal.normalize();
         normalList.setElementAt(j,vecNormal);
     }
     //reseting transforms
-    this-> inverseMatrix = Matrix<double,4,4>::identity();
-    this-> transformMatrix = Matrix<double,4,4>::identity();
+    this-> inverseMatrix = Matrix<float,4,4>::identity();
+    this-> transformMatrix = Matrix<float,4,4>::identity();
 }
 
 void Mesh::applyTransform(){
-    Matrix<double,4,4> transposeInverse = this->inverseMatrix.transpose();
+    Matrix<float,4,4> transposeInverse = this->inverseMatrix.transpose();
     Vertex translateVertex = Vertex(stackedTranslateMatrix.getVal(0,3),stackedTranslateMatrix.getVal(1,3),stackedTranslateMatrix.getVal(2,3));
     Vertex goBackVertex = translateVertex*-1;
     
     tempTransform(translateVertex); 
     for(int i=0;i<this->vertexList.getSize();i++){
         Vertex currentVertex = this->vertexList.getElementAt(i);
-        Matrix<double,4,1> m = Matrix<double,4,1>(currentVertex);
-        Matrix<double,4,1> transformedVertexMatrix = this->transformMatrix * m;
+        Matrix<float,4,1> m = Matrix<float,4,1>(currentVertex);
+        Matrix<float,4,1> transformedVertexMatrix = this->transformMatrix * m;
         Vertex newVertex = Vertex(transformedVertexMatrix.getVal(0,0),transformedVertexMatrix.getVal(1,0),transformedVertexMatrix.getVal(2,0));
         this->vertexList.setElementAt(i,newVertex);
     }
     tempTransform(goBackVertex); 
     for(int j = 0;j<this->normalList.getSize();j++){
         Vector4D currentNormal = Vector4D(this->normalList.getElementAt(j));
-        Matrix<double,4,1> normalMatrix = Matrix<double,4,1>(currentNormal);
-        Matrix<double,4,1> newNormal = transposeInverse * normalMatrix;
+        Matrix<float,4,1> normalMatrix = Matrix<float,4,1>(currentNormal);
+        Matrix<float,4,1> newNormal = transposeInverse * normalMatrix;
         Vector3D vecNormal = Vector3D(newNormal.getVal(0,0),newNormal.getVal(1,0),newNormal.getVal(2,0));
         vecNormal.normalize();
         normalList.setElementAt(j,vecNormal);
     }
     //reseting transforms
-    this-> inverseMatrix = Matrix<double,4,4>::identity();
-    this-> transformMatrix = Matrix<double,4,4>::identity();
+    this-> inverseMatrix = Matrix<float,4,4>::identity();
+    this-> transformMatrix = Matrix<float,4,4>::identity();
 
 }
 
@@ -372,16 +372,16 @@ Texture * Mesh::getTexture(){
     return this->texture;
 }
 
-Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld){
+Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld){
     /*
-    Matrix<double,4,1> Pmatrix = Matrix<double,4,1>(P);
-    //Matrix<double,4,1> Omatrix = Matrix<double,4,1>(O);
+    Matrix<float,4,1> Pmatrix = Matrix<float,4,1>(P);
+    //Matrix<float,4,1> Omatrix = Matrix<float,4,1>(O);
     P = (cameraToWorld*Pmatrix).toCoordinate();
     //O = (cameraToWorld*Omatrix).toCoordinate();
-    Vector3D N = (cameraToWorld * Matrix<double,4,1>(this->normalList.getElementAt(intersectedFace.n))).toVector3D();
-    Coordinate V0 =  (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v1))).toCoordinate();
-    Coordinate V1 = (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v2))).toCoordinate();
-    Coordinate V2 = (cameraToWorld * Matrix<double,4,1>(this->vertexList.getElementAt(intersectedFace.v3))).toCoordinate();
+    Vector3D N = (cameraToWorld * Matrix<float,4,1>(this->normalList.getElementAt(intersectedFace.n))).toVector3D();
+    Coordinate V0 =  (cameraToWorld * Matrix<float,4,1>(this->vertexList.getElementAt(intersectedFace.v1))).toCoordinate();
+    Coordinate V1 = (cameraToWorld * Matrix<float,4,1>(this->vertexList.getElementAt(intersectedFace.v2))).toCoordinate();
+    Coordinate V2 = (cameraToWorld * Matrix<float,4,1>(this->vertexList.getElementAt(intersectedFace.v3))).toCoordinate();
     Vector3D V1_V0 = Vector3D(V1-V0);
     Vector3D V2_V1 = Vector3D(V2-V1);
     Vector3D V0_V2 = Vector3D(V0-V2);
@@ -397,8 +397,8 @@ Color Mesh::getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld)
     UVTex v2tex = this->uvList.getElementAt(this->intersectedFace.v2t);
     UVTex v3tex = this->uvList.getElementAt(this->intersectedFace.v3t);
     
-    double u = v1tex.u * this->intersectedFace.v1W + v2tex.u * this->intersectedFace.v2W + v3tex.u * this->intersectedFace.v3W;
-    double v = v1tex.v * this->intersectedFace.v1W + v2tex.v * this->intersectedFace.v2W + v3tex.v * this->intersectedFace.v3W;   
+    float u = v1tex.u * this->intersectedFace.v1W + v2tex.u * this->intersectedFace.v2W + v3tex.u * this->intersectedFace.v3W;
+    float v = v1tex.v * this->intersectedFace.v1W + v2tex.v * this->intersectedFace.v2W + v3tex.v * this->intersectedFace.v3W;   
     Pair<int,int> wh = this->texture->getWH();
 
     Color c = this->texture->getColorAt( abs((int)(floor(u * wh.left) )),abs((int)floor( v* wh.right)));

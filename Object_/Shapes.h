@@ -19,12 +19,12 @@ public:
   // Vector3D normal;
   Shape3D();
   virtual Texture * getTexture() = 0;
-  virtual Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld) = 0;
+  virtual Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld) = 0;
   virtual bool setTexture(const std::string & filePath,SDL_Renderer * renderer) = 0;
   virtual Material *getMaterial() = 0;
   virtual Vector3D computeNormal(Coordinate P, Vector3D D) = 0;
-  virtual double IntersectRay(Coordinate O, Vector3D D,double, double) = 0;
-  virtual void transformView(Matrix<double,4,4> transformMatrix) = 0;
+  virtual float IntersectRay(Coordinate O, Vector3D D,float, float) = 0;
+  virtual void transformView(Matrix<float,4,4> transformMatrix) = 0;
   virtual bool setTransform(Transformation * t) = 0;
   virtual std::string getName() = 0;
   Material *material;
@@ -35,27 +35,27 @@ public:
 class Sphere : public Shape3D {
 private:
 	AmbientLight l;
-  double radius;
+  float radius;
   Coordinate center;
   
   
 
 public:
   Sphere();
-  Sphere(Coordinate center, double radius, Material *material);
-  Sphere(Coordinate center, double radius, Material *material,std::string name);
+  Sphere(Coordinate center, float radius, Material *material);
+  Sphere(Coordinate center, float radius, Material *material,std::string name);
   Material *getMaterial();
   bool setMaterial(Material *material);
-  bool setRadius(double newRadius);
-  Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
+  bool setRadius(float newRadius);
+  Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld);
   Texture * getTexture();
-  void transformView(Matrix<double,4,4> transformMatrix);
-  double getRadius();
+  void transformView(Matrix<float,4,4> transformMatrix);
+  float getRadius();
   bool setCenter(Coordinate newCenter);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   Coordinate getCenter();
   Vector3D computeNormal(Coordinate P,Vector3D D);
-  double IntersectRay(Coordinate O, Vector3D D,double, double);
+  float IntersectRay(Coordinate O, Vector3D D,float, float);
   bool setTransform(Transformation * t);
   std::string getName();
 };
@@ -69,13 +69,13 @@ public:
   Plane();
   Plane(Coordinate planePoint, Vector3D normal, Material * material);
   Plane(Coordinate planePoint, Vector3D normal, Material * material,std::string name);
-  void transformView(Matrix<double,4,4> transformMatrix);
+  void transformView(Matrix<float,4,4> transformMatrix);
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
-  double IntersectRay(Coordinate O, Vector3D D,double, double);
+  float IntersectRay(Coordinate O, Vector3D D,float, float);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   Texture * getTexture();
-  Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
+  Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld);
   Coordinate getplanePoint();
   bool setplanePoint(Coordinate newplanePoint);
   Vector3D getNormal();
@@ -93,19 +93,19 @@ class Cylinder : public Shape3D{
   Plane topLid;
   Plane baseLid;
 
-  double height;
-  double radius;
-  Matrix<double,3,3> * M;
+  float height;
+  float radius;
+  Matrix<float,3,3> * M;
   public:
   Cylinder();
-  Cylinder(Coordinate, Vector3D, double, double,Material*);
-  Cylinder(Coordinate, Vector3D, double, double,Material*,std::string);
+  Cylinder(Coordinate, Vector3D, float, float,Material*);
+  Cylinder(Coordinate, Vector3D, float, float,Material*,std::string);
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
-  void transformView(Matrix<double,4,4> transformMatrix);
+  void transformView(Matrix<float,4,4> transformMatrix);
   Texture * getTexture();
-  Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
-  double IntersectRay(Coordinate O, Vector3D D,double, double);
+  Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld);
+  float IntersectRay(Coordinate O, Vector3D D,float, float);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   bool setTransform(Transformation * t);
   std::string getName();
@@ -118,19 +118,19 @@ class Cone : public Shape3D{
   IntersectFace intersectSurf;
   Vector3D axis;
   Plane baseLid;
-  double radius;
-  double cosTeta;
-  double height;
+  float radius;
+  float cosTeta;
+  float height;
   public:
   Cone();
-  Cone(Coordinate, Vector3D, double, double,Material*);
-  Cone(Coordinate, Vector3D, double, double,Material*,std::string);
+  Cone(Coordinate, Vector3D, float, float,Material*);
+  Cone(Coordinate, Vector3D, float, float,Material*,std::string);
   Material *getMaterial();
   Vector3D computeNormal(Coordinate P,Vector3D D);
-  void transformView(Matrix<double,4,4> transformMatrix);
+  void transformView(Matrix<float,4,4> transformMatrix);
   Texture * getTexture();
-  Color getTexel(Coordinate P,Coordinate O,Matrix<double,4,4> cameraToWorld);
-  double IntersectRay(Coordinate O, Vector3D D,double, double);
+  Color getTexel(Coordinate P,Coordinate O,Matrix<float,4,4> cameraToWorld);
+  float IntersectRay(Coordinate O, Vector3D D,float, float);
   bool setTexture(const std::string & filePath,SDL_Renderer * renderer);
   bool setTransform(Transformation * t);
   std::string getName();

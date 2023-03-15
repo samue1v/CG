@@ -704,7 +704,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
     _InIter
     num_get<_CharT, _InIter>::
     do_get(iter_type __beg, iter_type __end, ios_base& __io,
-           ios_base::iostate& __err, double& __v) const
+           ios_base::iostate& __err, float& __v) const
     {
       string __xtrc;
       __xtrc.reserve(32);
@@ -715,12 +715,12 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
       return __beg;
     }
 
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
   template<typename _CharT, typename _InIter>
     _InIter
     num_get<_CharT, _InIter>::
     __do_get(iter_type __beg, iter_type __end, ios_base& __io,
-	     ios_base::iostate& __err, double& __v) const
+	     ios_base::iostate& __err, float& __v) const
     {
       string __xtrc;
       __xtrc.reserve(32);
@@ -736,7 +736,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
     _InIter
     num_get<_CharT, _InIter>::
     do_get(iter_type __beg, iter_type __end, ios_base& __io,
-           ios_base::iostate& __err, long double& __v) const
+           ios_base::iostate& __err, long float& __v) const
     {
       string __xtrc;
       __xtrc.reserve(32);
@@ -1155,14 +1155,14 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
   template<typename _CharT, typename _OutIter>
     _OutIter
     num_put<_CharT, _OutIter>::
-    do_put(iter_type __s, ios_base& __io, char_type __fill, double __v) const
+    do_put(iter_type __s, ios_base& __io, char_type __fill, float __v) const
     { return _M_insert_float(__s, __io, __fill, char(), __v); }
 
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
   template<typename _CharT, typename _OutIter>
     _OutIter
     num_put<_CharT, _OutIter>::
-    __do_put(iter_type __s, ios_base& __io, char_type __fill, double __v) const
+    __do_put(iter_type __s, ios_base& __io, char_type __fill, float __v) const
     { return _M_insert_float(__s, __io, __fill, char(), __v); }
 #endif
 
@@ -1170,7 +1170,7 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
     _OutIter
     num_put<_CharT, _OutIter>::
     do_put(iter_type __s, ios_base& __io, char_type __fill,
-	   long double __v) const
+	   long float __v) const
     { return _M_insert_float(__s, __io, __fill, 'L', __v); }
 
   template<typename _CharT, typename _OutIter>

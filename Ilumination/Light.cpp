@@ -61,7 +61,7 @@ bool AmbientLight::getAvaliable(){
   return this->isAvaliable;
 }
 
-void AmbientLight::applyViewTransform(Matrix<double,4,4> transformMatrix){}
+void AmbientLight::applyViewTransform(Matrix<float,4,4> transformMatrix){}
 
 void AmbientLight::setTransform(Transformation * t){}
 
@@ -80,13 +80,13 @@ Intensity DirectionalLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
                                           Material *material) {
   Vector3D L = this->direction*-1.0;
   Intensity i = Intensity();
-  double n_dot_l = Vector3D::dot(N, L);
+  float n_dot_l = Vector3D::dot(N, L);
   if (n_dot_l > 0) {
     i = i + (this->getIntensity() * material->getKd() * n_dot_l);
   }
   Vector3D R = (N * 2.0f * n_dot_l) - L;
   R.normalize();
-  double r_dot_v = Vector3D::dot(R, V);
+  float r_dot_v = Vector3D::dot(R, V);
   if (r_dot_v > 0) {
     i = i + (this->intensity * material->getKe() *
                 pow(r_dot_v, material->getKe().shininess));
@@ -110,13 +110,13 @@ bool DirectionalLight::getAvaliable(){
 
 }
 
-void DirectionalLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
-  this->direction = (transformMatrix * Matrix<double,4,1>(direction)).toVector3D();
+void DirectionalLight::applyViewTransform(Matrix<float,4,4> transformMatrix){
+  this->direction = (transformMatrix * Matrix<float,4,1>(direction)).toVector3D();
   //this->minu
 }
 
 void DirectionalLight::setTransform(Transformation * t){
-  this->direction = (t->getTransform() * Matrix<double,4,1>(direction)).toVector3D();
+  this->direction = (t->getTransform() * Matrix<float,4,1>(direction)).toVector3D();
 }
 
 PointLight::PointLight() {}
@@ -135,13 +135,13 @@ Intensity PointLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,
   Intensity i = Intensity();
   Vector3D L = Vector3D(this->position - P);
   L.normalize();
-  double n_dot_l = Vector3D::dot(N, L);
+  float n_dot_l = Vector3D::dot(N, L);
   if (n_dot_l > 0) {
     i = i + (this->intensity * material->getKd() * n_dot_l);
   }
   Vector3D R = (N * 2.0f * n_dot_l) - L;
   R.normalize();
-  double r_dot_v = Vector3D::dot(R, V);
+  float r_dot_v = Vector3D::dot(R, V);
   if (r_dot_v > 0) {
     i = i + (this->intensity * material->getKe() *
                 pow(r_dot_v, material->getKe().shininess));
@@ -166,17 +166,17 @@ Vector3D PointLight::calcDirection(Coordinate O){
   return Vector3D(this->position - O);
 }
 
-void PointLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
-  this->position = (transformMatrix * Matrix<double,4,1>(position)).toCoordinate();
+void PointLight::applyViewTransform(Matrix<float,4,4> transformMatrix){
+  this->position = (transformMatrix * Matrix<float,4,1>(position)).toCoordinate();
 }
 
 void PointLight::setTransform(Transformation * t){
-  this->position = (t->getTransform() * Matrix<double,4,1>(position)).toCoordinate();
+  this->position = (t->getTransform() * Matrix<float,4,1>(position)).toCoordinate();
 }
 
 SpotLight::SpotLight(){}
 
-SpotLight::SpotLight(Intensity intensity,Coordinate position,Vector3D direction,double angle,std::string name){
+SpotLight::SpotLight(Intensity intensity,Coordinate position,Vector3D direction,float angle,std::string name){
   this->intensity = intensity;
   this->position = position;
   this->direction = direction;
@@ -212,12 +212,12 @@ Intensity SpotLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,Material
   Vector3D L = Vector3D(this->position - P);
   L.normalize();
   Vector3D minusDir = (this->direction)*-1.0;
-  double cosAngle = (cos(this->angle)); 
-  double n_dot_l = Vector3D::dot(N, L);
-  double x = (Vector3D::dot(L,minusDir));
+  float cosAngle = (cos(this->angle)); 
+  float n_dot_l = Vector3D::dot(N, L);
+  float x = (Vector3D::dot(L,minusDir));
   Vector3D R = (N * 2.0f * n_dot_l) - L;
   R.normalize();
-  double r_dot_v = Vector3D::dot(R, V);
+  float r_dot_v = Vector3D::dot(R, V);
   if (n_dot_l > 0 && x>cosAngle) {
     i = i + ((this->intensity*x)* material->getKd() * n_dot_l);
   }
@@ -236,9 +236,9 @@ Intensity SpotLight::calcIntensity(Coordinate P, Vector3D N, Vector3D V,Material
 Vector3D SpotLight::calcDirection(Coordinate P){
   /*
   Vector3D L = Vector3D(this->position - P);
-  double cosAngle = (cos(this->angle));
+  float cosAngle = (cos(this->angle));
   L.normalize();
-  double x = (Vector3D::dot(L,(this->direction)*-1.0));
+  float x = (Vector3D::dot(L,(this->direction)*-1.0));
   if(x>cosAngle){
     this->isAvaliable = false;
     return Vector3D();
@@ -250,20 +250,20 @@ std::string SpotLight::getName(){
   return this->name;
 }
 
-void SpotLight::applyViewTransform(Matrix<double,4,4> transformMatrix){
-  this->position = (transformMatrix * Matrix<double,4,1>(position)).toCoordinate();
-  this->direction = (transformMatrix * Matrix<double,4,1>(direction)).toVector3D();
+void SpotLight::applyViewTransform(Matrix<float,4,4> transformMatrix){
+  this->position = (transformMatrix * Matrix<float,4,1>(position)).toCoordinate();
+  this->direction = (transformMatrix * Matrix<float,4,1>(direction)).toVector3D();
 }
 
 void SpotLight::setTransform(Transformation * t){
   if(t->getType() == translate){
-    this->position = (t->getTransform() * Matrix<double,4,1>(position)).toCoordinate();
+    this->position = (t->getTransform() * Matrix<float,4,1>(position)).toCoordinate();
   }
   else{
-    this->direction = (t->getTransform() * Matrix<double,4,1>(direction)).toVector3D();
+    this->direction = (t->getTransform() * Matrix<float,4,1>(direction)).toVector3D();
   }
 }
 
-void SpotLight::setAngle(double angle){
+void SpotLight::setAngle(float angle){
   this->angle  = angle;
 }

@@ -142,36 +142,36 @@ __BEGIN_DECLS
 
     float_t	floating-point type at least as wide as `float' used
 		to evaluate `float' expressions
-    double_t	floating-point type at least as wide as `double' used
-		to evaluate `double' expressions
+    float_t	floating-point type at least as wide as `float' used
+		to evaluate `float' expressions
 */
 # if __GLIBC_FLT_EVAL_METHOD == 0 || __GLIBC_FLT_EVAL_METHOD == 16
 typedef float float_t;
-typedef double double_t;
+typedef float float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 1
-typedef double float_t;
-typedef double double_t;
+typedef float float_t;
+typedef float float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 2
-typedef long double float_t;
-typedef long double double_t;
+typedef long float float_t;
+typedef long float float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 32
 typedef _Float32 float_t;
-typedef double double_t;
+typedef float float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 33
 typedef _Float32x float_t;
-typedef _Float32x double_t;
+typedef _Float32x float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 64
 typedef _Float64 float_t;
-typedef _Float64 double_t;
+typedef _Float64 float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 65
 typedef _Float64x float_t;
-typedef _Float64x double_t;
+typedef _Float64x float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 128
 typedef _Float128 float_t;
-typedef _Float128 double_t;
+typedef _Float128 float_t;
 # elif __GLIBC_FLT_EVAL_METHOD == 129
 typedef _Float128x float_t;
-typedef _Float128x double_t;
+typedef _Float128x float_t;
 # else
 #  error "Unknown __GLIBC_FLT_EVAL_METHOD"
 # endif
@@ -270,12 +270,12 @@ enum
   __MATHDECL(type, function,suffix, args)
 
 #define __MATHCALL(function,suffix, args)	\
-  __MATHDECL (_Mdouble_,function,suffix, args)
+  __MATHDECL (_Mfloat_,function,suffix, args)
 #define __MATHDECL(type, function,suffix, args) \
   __MATHDECL_1(type, function,suffix, args); \
   __MATHDECL_1(type, __CONCAT(__,function),suffix, args)
 #define __MATHCALLX(function,suffix, args, attrib)	\
-  __MATHDECLX (_Mdouble_,function,suffix, args, attrib)
+  __MATHDECLX (_Mfloat_,function,suffix, args, attrib)
 #define __MATHDECLX(type, function,suffix, args, attrib) \
   __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
   __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
@@ -291,50 +291,50 @@ enum
 #define __MATHREDIR(type, function, suffix, args, to) \
   extern type __REDIRECT_NTH (__MATH_PRECNAME (function, suffix), args, to)
 
-#define _Mdouble_		double
+#define _Mfloat_		float
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
-#define __MATH_DECLARING_DOUBLE  1
+#define __MATH_DECLARING_float  1
 #define __MATH_DECLARING_FLOATN  0
 #include <bits/mathcalls-helper-functions.h>
 #include <bits/mathcalls.h>
-#undef	_Mdouble_
+#undef	_Mfloat_
 #undef	__MATH_PRECNAME
-#undef __MATH_DECLARING_DOUBLE
+#undef __MATH_DECLARING_float
 #undef __MATH_DECLARING_FLOATN
 
 #ifdef __USE_ISOC99
 
 
 /* Include the file of declarations again, this time using `float'
-   instead of `double' and appending f to each function name.  */
+   instead of `float' and appending f to each function name.  */
 
-# define _Mdouble_		float
+# define _Mfloat_		float
 # define __MATH_PRECNAME(name,r) name##f##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  0
 # include <bits/mathcalls-helper-functions.h>
 # include <bits/mathcalls.h>
-# undef	_Mdouble_
+# undef	_Mfloat_
 # undef	__MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 
-# if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC) \
+# if !(defined __NO_LONG_float_MATH && defined _LIBC) \
      || defined __LDBL_COMPAT \
      || defined _LIBC_TEST
 #  ifdef __LDBL_COMPAT
 
 #   ifdef __USE_ISOC99
-extern float __nldbl_nexttowardf (float __x, long double __y)
+extern float __nldbl_nexttowardf (float __x, long float __y)
 				  __THROW __attribute__ ((__const__));
 #    ifdef __REDIRECT_NTH
-extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
+extern float __REDIRECT_NTH (nexttowardf, (float __x, long float __y),
 			     __nldbl_nexttowardf)
      __attribute__ ((__const__));
-extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
+extern float __REDIRECT_NTH (nexttoward, (float __x, long float __y),
 			      nextafter) __attribute__ ((__const__));
-extern long double __REDIRECT_NTH (nexttowardl,
-				   (long double __x, long double __y),
+extern long float __REDIRECT_NTH (nexttowardl,
+				   (long float __x, long float __y),
 				   nextafter) __attribute__ ((__const__));
 #    endif
 #   endif
@@ -343,13 +343,13 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #   define __MATHDECL_1(type, function,suffix, args) \
   __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
 
-#  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+#  elif __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #   ifdef __REDIRECT_NTH
 #    ifdef __USE_ISOC99
-extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
+extern float __REDIRECT_NTH (nexttowardf, (float __x, long float __y),
 			    __nexttowardf_to_ieee128)
   __attribute__ ((__const__));
-extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
+extern float __REDIRECT_NTH (nexttoward, (float __x, long float __y),
 			     __nexttoward_to_ieee128)
   __attribute__ ((__const__));
 
@@ -373,24 +373,24 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
   __MATHREDIR (type, function, suffix, args, __REDIRTO_ALT (alias, suffix))
 #  endif
 
-/* Include the file of declarations again, this time using `long double'
-   instead of `double' and appending l to each function name.  */
+/* Include the file of declarations again, this time using `long float'
+   instead of `float' and appending l to each function name.  */
 
-#  define _Mdouble_		long double
+#  define _Mfloat_		long float
 #  define __MATH_PRECNAME(name,r) name##l##r
-#  define __MATH_DECLARING_DOUBLE  0
+#  define __MATH_DECLARING_float  0
 #  define __MATH_DECLARING_FLOATN  0
-#  define __MATH_DECLARE_LDOUBLE   1
+#  define __MATH_DECLARE_Lfloat   1
 #  include <bits/mathcalls-helper-functions.h>
 #  include <bits/mathcalls.h>
 
-#  undef _Mdouble_
+#  undef _Mfloat_
 #  undef __MATH_PRECNAME
-#  undef __MATH_DECLARING_DOUBLE
+#  undef __MATH_DECLARING_float
 #  undef __MATH_DECLARING_FLOATN
 
 #  if defined __LDBL_COMPAT \
-      || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+      || __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #   undef __REDIRTO
 #   undef __REDIRTO_ALT
 #   undef __MATHDECL_1
@@ -400,7 +400,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #   define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
   __MATHDECL_1(type, function, suffix, args)
 #  endif
-# endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
+# endif /* !(__NO_LONG_float_MATH && _LIBC) || __LDBL_COMPAT */
 
 #endif	/* Use ISO C99.  */
 
@@ -408,9 +408,9 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
    types.  */
 
 #if __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)
-# define _Mdouble_		_Float16
+# define _Mfloat_		_Float16
 # define __MATH_PRECNAME(name,r) name##f16##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT16
 #  include <bits/mathcalls-helper-functions.h>
@@ -418,16 +418,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)
-# define _Mdouble_		_Float32
+# define _Mfloat_		_Float32
 # define __MATH_PRECNAME(name,r) name##f32##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT32
 #  include <bits/mathcalls-helper-functions.h>
@@ -435,16 +435,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)
-# define _Mdouble_		_Float64
+# define _Mfloat_		_Float64
 # define __MATH_PRECNAME(name,r) name##f64##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT64
 #  include <bits/mathcalls-helper-functions.h>
@@ -452,16 +452,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)
-# define _Mdouble_		_Float128
+# define _Mfloat_		_Float128
 # define __MATH_PRECNAME(name,r) name##f128##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT128
 #  include <bits/mathcalls-helper-functions.h>
@@ -469,16 +469,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)
-# define _Mdouble_		_Float32x
+# define _Mfloat_		_Float32x
 # define __MATH_PRECNAME(name,r) name##f32x##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT32X
 #  include <bits/mathcalls-helper-functions.h>
@@ -486,16 +486,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)
-# define _Mdouble_		_Float64x
+# define _Mfloat_		_Float64x
 # define __MATH_PRECNAME(name,r) name##f64x##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT64X
 #  include <bits/mathcalls-helper-functions.h>
@@ -503,16 +503,16 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)
-# define _Mdouble_		_Float128x
+# define _Mfloat_		_Float128x
 # define __MATH_PRECNAME(name,r) name##f128x##r
-# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_float  0
 # define __MATH_DECLARING_FLOATN  1
 # if __HAVE_DISTINCT_FLOAT128X
 #  include <bits/mathcalls-helper-functions.h>
@@ -520,9 +520,9 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if __GLIBC_USE (IEC_60559_TYPES_EXT)
 #  include <bits/mathcalls.h>
 # endif
-# undef _Mdouble_
+# undef _Mfloat_
 # undef __MATH_PRECNAME
-# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_float
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC).  */
 
@@ -547,7 +547,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 
 # define _Mret_ float
-# define _Marg_ double
+# define _Marg_ float
 # define __MATHCALL_NAME(name) f ## name
 # include <bits/mathcalls-narrow.h>
 # undef _Mret_
@@ -555,14 +555,14 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef __MATHCALL_NAME
 
 # define _Mret_ float
-# define _Marg_ long double
+# define _Marg_ long float
 # define __MATHCALL_NAME(name) f ## name ## l
 # ifdef __LDBL_COMPAT
 #  define __MATHCALL_REDIR_NAME(name) f ## name
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
-# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+# elif __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f32 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -573,22 +573,22 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef _Marg_
 # undef __MATHCALL_NAME
 # if defined __LDBL_COMPAT \
-     || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+     || __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_NORMAL (func, nargs)
 # endif
 
-# define _Mret_ double
-# define _Marg_ long double
+# define _Mret_ float
+# define _Marg_ long float
 # define __MATHCALL_NAME(name) d ## name ## l
 # ifdef __LDBL_COMPAT
 #  define __MATHCALL_REDIR_NAME(name) __nldbl_d ## name ## l
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
-# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+# elif __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f64 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -599,7 +599,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef _Marg_
 # undef __MATHCALL_NAME
 # if defined __LDBL_COMPAT \
-     || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+     || __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -845,16 +845,16 @@ extern int signgam;
 
 /* Depending on the type of TG_ARG, call an appropriately suffixed
    version of FUNC with arguments (including parentheses) ARGS.
-   Suffixed functions may not exist for long double if it has the same
-   format as double, or for other types with the same format as float,
-   double or long double.  The behavior is undefined if the argument
+   Suffixed functions may not exist for long float if it has the same
+   format as float, or for other types with the same format as float,
+   float or long float.  The behavior is undefined if the argument
    does not have a real floating type.  The definition may use a
    conditional expression, so all suffixed versions of FUNC must
    return the same type (FUNC may include a cast if necessary rather
    than being a single identifier).  */
-#ifdef __NO_LONG_DOUBLE_MATH
+#ifdef __NO_LONG_float_MATH
 # if __HAVE_DISTINCT_FLOAT128
-#  error "Distinct _Float128 without distinct long double not supported."
+#  error "Distinct _Float128 without distinct long float not supported."
 # endif
 # define __MATH_TG(TG_ARG, FUNC, ARGS)					\
   (sizeof (TG_ARG) == sizeof (float) ? FUNC ## f ARGS : FUNC ARGS)
@@ -866,7 +866,7 @@ extern int signgam;
 #   define __MATH_TG_F32(FUNC, ARGS)
 #  endif
 #  if __HAVE_FLOATN_NOT_TYPEDEF && __HAVE_FLOAT64X
-#   if __HAVE_FLOAT64X_LONG_DOUBLE
+#   if __HAVE_FLOAT64X_LONG_float
 #    define __MATH_TG_F64X(FUNC, ARGS) _Float64x: FUNC ## l ARGS,
 #   else
 #    define __MATH_TG_F64X(FUNC, ARGS) _Float64x: FUNC ## f128 ARGS,
@@ -879,7 +879,7 @@ extern int signgam;
 	       float: FUNC ## f ARGS,		\
 	       __MATH_TG_F32 (FUNC, ARGS)	\
 	       default: FUNC ARGS,		\
-	       long double: FUNC ## l ARGS,	\
+	       long float: FUNC ## l ARGS,	\
 	       __MATH_TG_F64X (FUNC, ARGS)	\
 	       _Float128: FUNC ## f128 ARGS)
 # else
@@ -891,10 +891,10 @@ extern int signgam;
      (__builtin_types_compatible_p (__typeof (TG_ARG), float),		\
       FUNC ## f ARGS,							\
       __builtin_choose_expr						\
-      (__builtin_types_compatible_p (__typeof (TG_ARG), double),	\
+      (__builtin_types_compatible_p (__typeof (TG_ARG), float),	\
        FUNC ARGS,							\
        __builtin_choose_expr						\
-       (__builtin_types_compatible_p (__typeof (TG_ARG), long double),	\
+       (__builtin_types_compatible_p (__typeof (TG_ARG), long float),	\
 	FUNC ## l ARGS,							\
 	FUNC ## f128 ARGS)))
 # endif
@@ -902,7 +902,7 @@ extern int signgam;
 # define __MATH_TG(TG_ARG, FUNC, ARGS)		\
   (sizeof (TG_ARG) == sizeof (float)		\
    ? FUNC ## f ARGS				\
-   : sizeof (TG_ARG) == sizeof (double)		\
+   : sizeof (TG_ARG) == sizeof (float)		\
    ? FUNC ARGS					\
    : FUNC ## l ARGS)
 #endif
@@ -1045,18 +1045,18 @@ enum
       and volatile)).  */
 extern "C++" {
 inline int issignaling (float __val) { return __issignalingf (__val); }
-inline int issignaling (double __val) { return __issignaling (__val); }
+inline int issignaling (float __val) { return __issignaling (__val); }
 inline int
-issignaling (long double __val)
+issignaling (long float __val)
 {
-#  ifdef __NO_LONG_DOUBLE_MATH
+#  ifdef __NO_LONG_float_MATH
   return __issignaling (__val);
 #  else
   return __issignalingl (__val);
 #  endif
 }
 #  if __HAVE_FLOAT128_UNLIKE_LDBL
-/* When using an IEEE 128-bit long double, _Float128 is defined as long double
+/* When using an IEEE 128-bit long float, _Float128 is defined as long float
    in C++.  */
 inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
 #  endif
@@ -1082,21 +1082,21 @@ iszero (float __val)
   return __fpclassifyf (__val) == FP_ZERO;
 }
 inline int
-iszero (double __val)
+iszero (float __val)
 {
   return __fpclassify (__val) == FP_ZERO;
 }
 inline int
-iszero (long double __val)
+iszero (long float __val)
 {
-#   ifdef __NO_LONG_DOUBLE_MATH
+#   ifdef __NO_LONG_float_MATH
   return __fpclassify (__val) == FP_ZERO;
 #   else
   return __fpclassifyl (__val) == FP_ZERO;
 #   endif
 }
 #   if __HAVE_FLOAT128_UNLIKE_LDBL
-  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+  /* When using an IEEE 128-bit long float, _Float128 is defined as long float
      in C++.  */
 inline int
 iszero (_Float128 __val)
@@ -1138,7 +1138,7 @@ iszero (__T __val)
 # define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
 #endif
 
-/* The above constants are not adequate for computation using `long double's.
+/* The above constants are not adequate for computation using `long float's.
    Therefore we provide as an extension constants with similar names as a
    GNU extension.  Provide enough digits for the 128-bit IEEE quad.  */
 #ifdef __USE_GNU
@@ -1334,19 +1334,19 @@ template<> struct __iseqsig_type<float>
   }
 };
 
-template<> struct __iseqsig_type<double>
+template<> struct __iseqsig_type<float>
 {
-  static int __call (double __x, double __y) throw ()
+  static int __call (float __x, float __y) throw ()
   {
     return __iseqsig (__x, __y);
   }
 };
 
-template<> struct __iseqsig_type<long double>
+template<> struct __iseqsig_type<long float>
 {
-  static int __call (long double __x, long double __y) throw ()
+  static int __call (long float __x, long float __y) throw ()
   {
-#  ifndef __NO_LONG_DOUBLE_MATH
+#  ifndef __NO_LONG_float_MATH
     return __iseqsigl (__x, __y);
 #  else
     return __iseqsig (__x, __y);
@@ -1355,7 +1355,7 @@ template<> struct __iseqsig_type<long double>
 };
 
 #  if __HAVE_FLOAT128_UNLIKE_LDBL
-  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+  /* When using an IEEE 128-bit long float, _Float128 is defined as long float
      in C++.  */
 template<> struct __iseqsig_type<_Float128>
 {

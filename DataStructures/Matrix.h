@@ -111,7 +111,7 @@ public:
     return m;
   }
 
-  Matrix<T,rows,columns> operator*(double scalar){
+  Matrix<T,rows,columns> operator*(float scalar){
     Matrix<T,rows,columns> m = Matrix<T,rows,columns>();
     for(int i =0;i<rows;i++){
       for(int j = 0;j<columns;j++){

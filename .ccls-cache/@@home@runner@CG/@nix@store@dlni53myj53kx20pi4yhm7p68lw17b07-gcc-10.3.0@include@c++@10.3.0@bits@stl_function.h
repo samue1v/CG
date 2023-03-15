@@ -80,14 +80,14 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  calls, rather than being created as named variables.
    *
    *  Two examples taken from the standard itself follow.  To perform a
-   *  by-element addition of two vectors @c a and @c b containing @c double,
+   *  by-element addition of two vectors @c a and @c b containing @c float,
    *  and put the result in @c a, use
    *  \code
-   *  transform (a.begin(), a.end(), b.begin(), a.begin(), plus<double>());
+   *  transform (a.begin(), a.end(), b.begin(), a.begin(), plus<float>());
    *  \endcode
    *  To negate every element in @c a, use
    *  \code
-   *  transform(a.begin(), a.end(), a.begin(), negate<double>());
+   *  transform(a.begin(), a.end(), a.begin(), negate<float>());
    *  \endcode
    *  The addition and negation functions will be inlined directly.
    *
@@ -1064,11 +1064,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  Sometimes those typedefs are required, not just optional.
    *
    *  Adaptors are provided to turn pointers to unary (single-argument) and
-   *  binary (double-argument) functions into function objects.  The
+   *  binary (float-argument) functions into function objects.  The
    *  long-winded functor @c pointer_to_unary_function is constructed with a
    *  function pointer @c f, and its @c operator() called with argument @c x
    *  returns @c f(x).  The functor @c pointer_to_binary_function does the same
-   *  thing, but with a double-argument @c f and @c operator().
+   *  thing, but with a float-argument @c f and @c operator().
    *
    *  The function @c ptr_fun takes a pointer-to-function @c f and constructs
    *  an instance of the appropriate functor.

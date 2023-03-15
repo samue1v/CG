@@ -7,15 +7,15 @@
 class Intensity {
 public:
   Intensity();
-  Intensity(double ir, double ig, double ib);
-  double getRed();
-  bool setRed(double red);
-  double getGreen();
-  bool setGreen(double green);
-  double getBlue();
-  bool setBlue(double blue);
+  Intensity(float ir, float ig, float ib);
+  float getRed();
+  bool setRed(float red);
+  float getGreen();
+  bool setGreen(float green);
+  float getBlue();
+  bool setBlue(float blue);
   Intensity normalize();
-  Intensity operator*(double right) {
+  Intensity operator*(float right) {
     return Intensity(ir * right, ig * right, ib * right);
   }
 
@@ -31,9 +31,9 @@ public:
   friend std::ostream& operator<<(std::ostream& os, Intensity &i);
 
 private:
-  double ir;
-  double ig;
-  double ib;
+  float ir;
+  float ig;
+  float ib;
 };
 
 #endif

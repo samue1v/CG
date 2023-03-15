@@ -1,4 +1,4 @@
-/* Properties of long double type.  ldbl-96 version.
+/* Properties of long float type.  ldbl-96 version.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,6 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* long double is distinct from double, so there is nothing to
+/* long float is distinct from float, so there is nothing to
    define here.  */
-#define __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI 0
+#define __Lfloat_REDIRECTS_TO_FLOAT128_ABI 0

@@ -21,7 +21,7 @@
 #define _BITS_FLOATN_COMMON_H
 
 #include <features.h>
-#include <bits/long-double.h>
+#include <bits/long-float.h>
 
 /* This header should be included at the bottom of each bits/floatn.h.
    It defines the following macros for each _FloatN and _FloatNx type,
@@ -39,14 +39,14 @@
 
 /* Defined to 1 if the corresponding __HAVE_<type> macro is 1 and the
    type is the first with its format in the sequence of (the default
-   choices for) float, double, long double, _Float16, _Float32,
+   choices for) float, float, long float, _Float16, _Float32,
    _Float64, _Float128, _Float32x, _Float64x, _Float128x for this
    glibc; that is, if functions present once per floating-point format
    rather than once per type are present for this type.
 
    All configurations supported by glibc have _Float32 the same format
-   as float, _Float64 and _Float32x the same format as double, the
-   _Float64x the same format as either long double or _Float128.  No
+   as float, _Float64 and _Float32x the same format as float, the
+   _Float64x the same format as either long float or _Float128.  No
    configurations support _Float128x or, as of GCC 7, have compiler
    support for a type meeting the requirements for _Float128x.  */
 #define __HAVE_DISTINCT_FLOAT16 __HAVE_FLOAT16
@@ -96,7 +96,7 @@
 
 # if __HAVE_FLOAT64
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   ifdef __NO_LONG_DOUBLE_MATH
+#   ifdef __NO_LONG_float_MATH
 #    define __f64(x) x##l
 #   else
 #    define __f64(x) x
@@ -116,7 +116,7 @@
 
 # if __HAVE_FLOAT64X
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   if __HAVE_FLOAT64X_LONG_DOUBLE
+#   if __HAVE_FLOAT64X_LONG_float
 #    define __f64x(x) x##l
 #   else
 #    define __f64x(x) __f128 (x)
@@ -154,10 +154,10 @@ typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
 
 # if __HAVE_FLOAT64
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   ifdef __NO_LONG_DOUBLE_MATH
-#    define __CFLOAT64 _Complex long double
+#   ifdef __NO_LONG_float_MATH
+#    define __CFLOAT64 _Complex long float
 #   else
-#    define __CFLOAT64 _Complex double
+#    define __CFLOAT64 _Complex float
 #   endif
 #  else
 #   define __CFLOAT64 _Complex _Float64
@@ -166,7 +166,7 @@ typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
 
 # if __HAVE_FLOAT32X
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   define __CFLOAT32X _Complex double
+#   define __CFLOAT32X _Complex float
 #  else
 #   define __CFLOAT32X _Complex _Float32x
 #  endif
@@ -174,8 +174,8 @@ typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
 
 # if __HAVE_FLOAT64X
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   if __HAVE_FLOAT64X_LONG_DOUBLE
-#    define __CFLOAT64X _Complex long double
+#   if __HAVE_FLOAT64X_LONG_float
+#    define __CFLOAT64X _Complex long float
 #   else
 #    define __CFLOAT64X __CFLOAT128
 #   endif
@@ -225,17 +225,17 @@ typedef float _Float32;
 
 # if __HAVE_FLOAT64
 
-/* If double, long double and _Float64 all have the same set of
+/* If float, long float and _Float64 all have the same set of
    values, TS 18661-3 requires the usual arithmetic conversions on
-   long double and _Float64 to produce _Float64.  For this to be the
+   long float and _Float64 to produce _Float64.  For this to be the
    case when building with a compiler without a distinct _Float64
-   type, _Float64 must be a typedef for long double, not for
-   double.  */
+   type, _Float64 must be a typedef for long float, not for
+   float.  */
 
-#  ifdef __NO_LONG_DOUBLE_MATH
+#  ifdef __NO_LONG_float_MATH
 
 #   if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef long double _Float64;
+typedef long float _Float64;
 #   endif
 
 #   if !__GNUC_PREREQ (7, 0)
@@ -248,7 +248,7 @@ typedef long double _Float64;
 #  else
 
 #   if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef double _Float64;
+typedef float _Float64;
 #   endif
 
 #   if !__GNUC_PREREQ (7, 0)
@@ -265,7 +265,7 @@ typedef double _Float64;
 # if __HAVE_FLOAT32X
 
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef double _Float32x;
+typedef float _Float32x;
 #  endif
 
 #  if !__GNUC_PREREQ (7, 0)
@@ -279,10 +279,10 @@ typedef double _Float32x;
 
 # if __HAVE_FLOAT64X
 
-#  if __HAVE_FLOAT64X_LONG_DOUBLE
+#  if __HAVE_FLOAT64X_LONG_float
 
 #   if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef long double _Float64x;
+typedef long float _Float64x;
 #   endif
 
 #   if !__GNUC_PREREQ (7, 0)

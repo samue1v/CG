@@ -9,12 +9,12 @@ Intensity::Intensity(){
   ib = 0;
 }
 
-Intensity::Intensity(double red, double green, double blue)
+Intensity::Intensity(float red, float green, float blue)
     : ir(red), ig(green), ib(blue) {}
 
-double Intensity::getRed() { return this->ir; }
+float Intensity::getRed() { return this->ir; }
 
-bool Intensity::setRed(double red) {
+bool Intensity::setRed(float red) {
   if (red < 0 || red > 1) {
     return false;
   }
@@ -22,9 +22,9 @@ bool Intensity::setRed(double red) {
   return true;
 }
 
-double Intensity::getGreen() { return this->ig; }
+float Intensity::getGreen() { return this->ig; }
 
-bool Intensity::setGreen(double green) {
+bool Intensity::setGreen(float green) {
   if (green < 0 || green > 1) {
     return false;
   }
@@ -32,9 +32,9 @@ bool Intensity::setGreen(double green) {
   return true;
 }
 
-double Intensity::getBlue() { return this->ib; }
+float Intensity::getBlue() { return this->ib; }
 
-bool Intensity::setBlue(double blue) {
+bool Intensity::setBlue(float blue) {
   if (blue < 0 || blue > 1) {
     return false;
   }
@@ -43,7 +43,7 @@ bool Intensity::setBlue(double blue) {
 }
 
 Intensity Intensity::normalize() {
-  double bigger = -INF;
+  float bigger = -INF;
   if (ir > bigger) {
     bigger = ir;
   }

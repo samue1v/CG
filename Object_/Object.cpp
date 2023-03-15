@@ -47,7 +47,7 @@ Shape3D * Object::getShapeAt(int index){
     return (this->shapes).getElementAt(index);
 }
 
-void Object::applyViewTransform(Matrix<double,4,4> transformMatrix){
+void Object::applyViewTransform(Matrix<float,4,4> transformMatrix){
     for(int i = 0;i<this->shapes.getSize();i++){
         shapes.getElementAt(i)->transformView(transformMatrix);
     }

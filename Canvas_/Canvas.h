@@ -15,22 +15,22 @@ class Canvas{
       int getNumberLines();
       int getNumberColumns();
       uint8_t * getColorBuffer();
-      double getCanvasDistance();
-      bool setCanvasDistance(double newCanvasDistance);
+      float getCanvasDistance();
+      bool setCanvasDistance(float newCanvasDistance);
       Color getColorAt(int i,int j);
       bool pushColorBuffer(int i,int j,Color c);
       void clearCanvas();
       Object * getObjectAtCoord(int x,int y);
-      Pair<double,double> getWindowSize();
-      Pair<double,double> getGridSize();
-      bool setWindowsSize(Pair<double,double> newWindowSize);
-      bool setGridSize(Pair<double,double> newGridSize);
+      Pair<float,float> getWindowSize();
+      Pair<float,float> getGridSize();
+      bool setWindowsSize(Pair<float,float> newWindowSize);
+      bool setGridSize(Pair<float,float> newGridSize);
       bool isOrtho;
 
     private:
-      Pair<double,double> windowSize;
-      Pair<double,double> gridSize;
-      double canvasDistance;
+      Pair<float,float> windowSize;
+      Pair<float,float> gridSize;
+      float canvasDistance;
       int colorBufferCount;
       uint8_t * colorBuffer;
       int nLines;
@@ -74,12 +74,12 @@ Color Canvas<l,k>::getColorAt(int i,int j){
 }
 
 template <int l, int k>
-double Canvas<l,k>::getCanvasDistance(){
+float Canvas<l,k>::getCanvasDistance(){
   return canvasDistance;
 }
 
 template <int l, int k>
-bool Canvas<l,k>::setCanvasDistance(double newCanvasDistance){
+bool Canvas<l,k>::setCanvasDistance(float newCanvasDistance){
   this->canvasDistance = newCanvasDistance;
   return true;
 }
@@ -101,24 +101,26 @@ uint8_t * Canvas<l,k>::getColorBuffer(){
 }
 
 template <int l, int k>
-Pair<double,double> Canvas<l,k>::getWindowSize(){
+Pair<float,float> Canvas<l,k>::getWindowSize(){
   return windowSize;
 }
 
 
 template <int l, int k>
-Pair<double,double> Canvas<l,k>::getGridSize(){
+Pair<float,float> Canvas<l,k>::getGridSize(){
   return gridSize;
 }
 
 template <int l, int k>
-bool Canvas<l,k>::setWindowsSize(Pair<double,double> newWindowSize){
-  windowSize = newWindowSize;
+bool Canvas<l,k>::setWindowsSize(Pair<float,float> newWindowSize){
+  this->windowSize = newWindowSize;
+  Pair<float,float> newGridsize = {newWindowSize.left/l,newWindowSize.right/k};
+  this->gridSize = newGridsize;
   return true;
 }
 
 template <int l, int k>
-bool Canvas<l,k>::setGridSize(Pair<double,double> newGridSize){
+bool Canvas<l,k>::setGridSize(Pair<float,float> newGridSize){
   gridSize = newGridSize;
   return true;
 }

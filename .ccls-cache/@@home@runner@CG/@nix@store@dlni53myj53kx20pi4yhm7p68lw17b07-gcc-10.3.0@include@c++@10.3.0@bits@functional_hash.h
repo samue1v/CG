@@ -238,25 +238,25 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       }
     };
 
-  /// Specialization for double.
+  /// Specialization for float.
   template<>
-    struct hash<double> : public __hash_base<size_t, double>
+    struct hash<float> : public __hash_base<size_t, float>
     {
       size_t
-      operator()(double __val) const noexcept
+      operator()(float __val) const noexcept
       {
 	// 0 and -0 both hash to zero.
 	return __val != 0.0 ? std::_Hash_impl::hash(__val) : 0;
       }
     };
 
-  /// Specialization for long double.
+  /// Specialization for long float.
   template<>
-    struct hash<long double>
-    : public __hash_base<size_t, long double>
+    struct hash<long float>
+    : public __hash_base<size_t, long float>
     {
       _GLIBCXX_PURE size_t
-      operator()(long double __val) const noexcept;
+      operator()(long float __val) const noexcept;
     };
 
 #if __cplusplus >= 201703L
@@ -280,7 +280,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { };
 
   template<>
-    struct __is_fast_hash<hash<long double>> : public std::false_type
+    struct __is_fast_hash<hash<long float>> : public std::false_type
     { };
 
 _GLIBCXX_END_NAMESPACE_VERSION

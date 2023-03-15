@@ -10,7 +10,7 @@ Vector3D::Vector3D(){
   this->maxIndex = 2;
 }
 
-Vector3D::Vector3D(double x, double y, double z) {
+Vector3D::Vector3D(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -26,7 +26,7 @@ Vector3D::Vector3D(Coordinate cord) {
   this->maxIndex = 2;
 }
 
-double *Vector3D::getVector() { return this->vector; }
+float *Vector3D::getVector() { return this->vector; }
 
 bool Vector3D::setVector(Coordinate cord) {
   this->vector[0] = cord.x;
@@ -36,7 +36,7 @@ bool Vector3D::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector3D::setVector(double x, double y, double z) {
+bool Vector3D::setVector(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -44,11 +44,11 @@ bool Vector3D::setVector(double x, double y, double z) {
   return true;
 }
 
-double Vector3D::getLength(){
+float Vector3D::getLength(){
   return this->lenght;
 }
 
-bool Vector3D::setLength(double newLength){
+bool Vector3D::setLength(float newLength){
   if(newLength>0){
     this->lenght = newLength;
     return true;
@@ -56,14 +56,14 @@ bool Vector3D::setLength(double newLength){
   return false;
 }
 
-double Vector3D::getElementAt(int index){
+float Vector3D::getElementAt(int index){
   if(index>this->maxIndex){
     return false;
   }
   return vector[index];
 }
 
-double Vector3D::calcLength(){
+float Vector3D::calcLength(){
   Vector3D v = *this;
   return sqrt(Vector3D::dot(v, v));
 }
@@ -96,7 +96,7 @@ Vector4D::Vector4D(){
   this->maxIndex = 3;
 }
 
-Vector4D::Vector4D(double x, double y, double z) {
+Vector4D::Vector4D(float x, float y, float z) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -125,7 +125,7 @@ Vector4D::Vector4D(Coordinate cord) {
   this->maxIndex = 3;
 }
 
-double *Vector4D::getVector() { return this->vector; }
+float *Vector4D::getVector() { return this->vector; }
 
 bool Vector4D::setVector(Coordinate cord) {
   this->vector[0] = cord.x;
@@ -135,7 +135,7 @@ bool Vector4D::setVector(Coordinate cord) {
   return true;
 }
 
-bool Vector4D::setVector(double x, double y, double z,double h) {
+bool Vector4D::setVector(float x, float y, float z,float h) {
   this->vector[0] = x;
   this->vector[1] = y;
   this->vector[2] = z;
@@ -144,11 +144,11 @@ bool Vector4D::setVector(double x, double y, double z,double h) {
   return true;
 }
 
-double Vector4D::getLength(){
+float Vector4D::getLength(){
   return this->lenght;
 }
 
-bool Vector4D::setLength(double newLength){
+bool Vector4D::setLength(float newLength){
   if(newLength>0){
     this->lenght = newLength;
     return true;
@@ -156,14 +156,14 @@ bool Vector4D::setLength(double newLength){
   return false;
 }
 
-double Vector4D::getElementAt(int index){
+float Vector4D::getElementAt(int index){
   if(index>this->maxIndex){
     return false;
   }
   return vector[index];
 }
 
-double Vector4D::calcLength(){
+float Vector4D::calcLength(){
   Vector4D v = *this;
   return sqrt(Vector4D::dot(v, v));
 }

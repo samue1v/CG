@@ -14,34 +14,36 @@
 
 class Space3D {
 public:
-  Coordinate canvasToViewport(double x, double y);
+  Coordinate canvasToViewport(float x, float y);
 
-  static Triple<Object *,Intensity,Color> TraceRay(Scene *scene, Coordinate O, Vector3D D, double t_min,
-                            double t_max) {
-    double closest_t = INF;
-    double closest_shape_t = INF;
-    double closest_mesh_t = INF;
+  static Triple<Object *,Intensity,Color> TraceRay(Scene *scene, Coordinate O, Vector3D D, float t_min,
+                            float t_max) {
+    float closest_t = INF;
+    float closest_shape_t = INF;
+    float closest_mesh_t = INF;
     Color texel = Color();
     Shape3D *closestShape = nullptr;
     Mesh * closestMesh = nullptr;
     Object * closestObject = nullptr;
     Triple<Object *,Intensity,Color> hitData;
+    Mesh * mesh;
+    Shape3D *shape;
+    float t;
     for (int i = 0; i < scene->getNumberOfElements(); i++) {
       Object *object = scene->getObjectAt(i);
-
       for(int k = 0;k<object->getMeshCount();k++){
-        Mesh * mesh = object->getMeshAt(k);
-        double t = mesh->IntersectRay(O,D,t_min,t_max);
-        if (t >= t_min && t <= t_max && t < closest_mesh_t/* && t< closest_shape_t*/) {
+         mesh= object->getMeshAt(k);
+        t = mesh->IntersectRay(O,D,t_min,t_max);
+        if (t < closest_mesh_t && t >= t_min && t <= t_max/* && t< closest_shape_t*/) {
           closest_mesh_t = t;
           closestMesh = mesh;
           closestObject = object;
         }
       }
       for (int j = 0; j < object->getShapeCount(); j++) {
-        Shape3D *shape = object->getShapeAt(j);
-        double t = shape->IntersectRay(O, D,t_min,t_max);
-        if (t >= t_min && t <= t_max && t < closest_shape_t && t<closest_mesh_t) {
+        shape = object->getShapeAt(j);
+        float t = shape->IntersectRay(O, D,t_min,t_max);
+        if (t < closest_shape_t && t<closest_mesh_t && t >= t_min && t <= t_max) {
           closest_shape_t = t;
           closestShape = shape;
           closestObject = object;
@@ -82,21 +84,21 @@ public:
         }
         else if(lightType==point){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = p_lightDir.getLength();
+          float p_lightDirLength = p_lightDir.getLength();
           if(curLight->getSwitchState() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
           }
         }
         else if(lightType==directional){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = 1000;
+          float p_lightDirLength = 50;
           if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
           }
         }
         else if(lightType==spot){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = p_lightDir.getLength();
+          float p_lightDirLength = p_lightDir.getLength();
           if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestShape->getMaterial());
           }
@@ -118,21 +120,21 @@ public:
         }
         else if(lightType==point){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = p_lightDir.getLength();
+          float p_lightDirLength = p_lightDir.getLength();
           if(curLight->getSwitchState() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
           }
         }
         else if(lightType==directional){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = 100000;
+          float p_lightDirLength = 50;
           if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
           }
         }
         else if(lightType==spot){
           Vector3D p_lightDir = curLight->calcDirection(P);
-          double p_lightDirLength = p_lightDir.getLength();
+          float p_lightDirLength = p_lightDir.getLength();
           if(curLight->getSwitchState() && curLight->getAvaliable() && !Space3D::isOfuscated(P,p_lightDir,scene,p_lightDirLength)){
             i = i + curLight->calcIntensity(P, N, V * -1, closestMesh->getMaterial());
           }
@@ -151,21 +153,25 @@ public:
     return hitData;
   }
 
-  static bool isOfuscated(Coordinate O,Vector3D D,Scene* scene,double maxLength){
+  static bool isOfuscated(Coordinate O,Vector3D D,Scene* scene,float maxLength){
     D.normalize();
+    Object *object;
+    Shape3D *shape;
+    Mesh *mesh;
+    float t;
      for (int i = 0; i < scene->getNumberOfElements(); i++) {
-      Object *object = scene->getObjectAt(i);
+      object = scene->getObjectAt(i);
       for (int j = 0; j < object->getShapeCount(); j++) {
-        Shape3D *shape = object->getShapeAt(j);
-        double t = shape->IntersectRay(O, D,1,maxLength);
+        shape = object->getShapeAt(j);
+        t = shape->IntersectRay(O, D,1,maxLength);
         if(t>=1 && t<=maxLength){
           return true;
         }
       }
       for (int k = 0; k < object->getMeshCount(); k++) {
 
-        Mesh *mesh = object->getMeshAt(k);
-        double t = mesh->IntersectRay(O, D,1,maxLength);
+        mesh = object->getMeshAt(k);
+        t = mesh->IntersectRay(O, D,1,maxLength);
         if(t>=1 && t<=maxLength){
           return true;
         }

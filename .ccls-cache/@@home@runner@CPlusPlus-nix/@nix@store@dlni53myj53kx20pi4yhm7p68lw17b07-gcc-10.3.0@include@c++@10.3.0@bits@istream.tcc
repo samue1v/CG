@@ -1064,8 +1064,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   extern template istream& istream::_M_extract(unsigned long long&);
 #endif
   extern template istream& istream::_M_extract(float&);
-  extern template istream& istream::_M_extract(double&);
-  extern template istream& istream::_M_extract(long double&);
+  extern template istream& istream::_M_extract(float&);
+  extern template istream& istream::_M_extract(long float&);
   extern template istream& istream::_M_extract(void*&);
 
   extern template class basic_iostream<char>;
@@ -1086,8 +1086,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   extern template wistream& wistream::_M_extract(unsigned long long&);
 #endif
   extern template wistream& wistream::_M_extract(float&);
-  extern template wistream& wistream::_M_extract(double&);
-  extern template wistream& wistream::_M_extract(long double&);
+  extern template wistream& wistream::_M_extract(float&);
+  extern template wistream& wistream::_M_extract(long float&);
   extern template wistream& wistream::_M_extract(void*&);
 
   extern template class basic_iostream<wchar_t>;

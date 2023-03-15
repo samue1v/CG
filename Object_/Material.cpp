@@ -27,3 +27,7 @@ bool Material::setKe(SpecularReflectiveness newKe){
     this->ke = newKe;
     return true;
 }
+
+std::string Material::getName(){
+    return name;
+}
