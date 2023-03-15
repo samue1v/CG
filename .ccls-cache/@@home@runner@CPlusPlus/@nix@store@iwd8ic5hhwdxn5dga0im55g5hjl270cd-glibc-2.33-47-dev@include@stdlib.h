@@ -98,7 +98,7 @@ extern size_t __ctype_get_mb_cur_max (void) __THROW __wur;
 
 
 /* Convert a string to a floating-point number.  */
-extern double atof (const char *__nptr)
+extern float atof (const char *__nptr)
      __THROW __attribute_pure__ __nonnull ((1)) __wur;
 /* Convert a string to an integer.  */
 extern int atoi (const char *__nptr)
@@ -114,16 +114,16 @@ __extension__ extern long long int atoll (const char *__nptr)
 #endif
 
 /* Convert a string to a floating-point number.  */
-extern double strtod (const char *__restrict __nptr,
+extern float strtod (const char *__restrict __nptr,
 		      char **__restrict __endptr)
      __THROW __nonnull ((1));
 
 #ifdef	__USE_ISOC99
-/* Likewise for `float' and `long double' sizes of floating-point numbers.  */
+/* Likewise for `float' and `long float' sizes of floating-point numbers.  */
 extern float strtof (const char *__restrict __nptr,
 		     char **__restrict __endptr) __THROW __nonnull ((1));
 
-extern long double strtold (const char *__restrict __nptr,
+extern long float strtold (const char *__restrict __nptr,
 			    char **__restrict __endptr)
      __THROW __nonnull ((1));
 #endif
@@ -210,7 +210,7 @@ extern unsigned long long int strtoull (const char *__restrict __nptr,
 /* Convert a floating-point number to a string.  */
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 extern int strfromd (char *__dest, size_t __size, const char *__format,
-		     double __f)
+		     float __f)
      __THROW __nonnull ((3));
 
 extern int strfromf (char *__dest, size_t __size, const char *__format,
@@ -218,7 +218,7 @@ extern int strfromf (char *__dest, size_t __size, const char *__format,
      __THROW __nonnull ((3));
 
 extern int strfroml (char *__dest, size_t __size, const char *__format,
-		     long double __f)
+		     long float __f)
      __THROW __nonnull ((3));
 #endif
 
@@ -292,7 +292,7 @@ extern unsigned long long int strtoull_l (const char *__restrict __nptr,
 					  int __base, locale_t __loc)
      __THROW __nonnull ((1, 4));
 
-extern double strtod_l (const char *__restrict __nptr,
+extern float strtod_l (const char *__restrict __nptr,
 			char **__restrict __endptr, locale_t __loc)
      __THROW __nonnull ((1, 3));
 
@@ -300,7 +300,7 @@ extern float strtof_l (const char *__restrict __nptr,
 		       char **__restrict __endptr, locale_t __loc)
      __THROW __nonnull ((1, 3));
 
-extern long double strtold_l (const char *__restrict __nptr,
+extern long float strtold_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
 			      locale_t __loc)
      __THROW __nonnull ((1, 3));
@@ -463,9 +463,9 @@ extern int rand_r (unsigned int *__seed) __THROW;
 #if defined __USE_MISC || defined __USE_XOPEN
 /* System V style 48-bit random number generator functions.  */
 
-/* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
-extern double drand48 (void) __THROW;
-extern double erand48 (unsigned short int __xsubi[3]) __THROW __nonnull ((1));
+/* Return non-negative, float-precision floating-point value in [0.0,1.0).  */
+extern float drand48 (void) __THROW;
+extern float erand48 (unsigned short int __xsubi[3]) __THROW __nonnull ((1));
 
 /* Return non-negative, long integer in [0,2^31).  */
 extern long int lrand48 (void) __THROW;
@@ -497,12 +497,12 @@ struct drand48_data
 						   formula.  */
   };
 
-/* Return non-negative, double-precision floating-point value in [0.0,1.0).  */
+/* Return non-negative, float-precision floating-point value in [0.0,1.0).  */
 extern int drand48_r (struct drand48_data *__restrict __buffer,
-		      double *__restrict __result) __THROW __nonnull ((1, 2));
+		      float *__restrict __result) __THROW __nonnull ((1, 2));
 extern int erand48_r (unsigned short int __xsubi[3],
 		      struct drand48_data *__restrict __buffer,
-		      double *__restrict __result) __THROW __nonnull ((1, 2));
+		      float *__restrict __result) __THROW __nonnull ((1, 2));
 
 /* Return non-negative, long integer in [0,2^31).  */
 extern int lrand48_r (struct drand48_data *__restrict __buffer,
@@ -869,48 +869,48 @@ __extension__ extern lldiv_t lldiv (long long int __numer,
 /* Convert VALUE to a string with NDIGIT digits and return a pointer to
    this.  Set *DECPT with the position of the decimal character and *SIGN
    with the sign of the number.  */
-extern char *ecvt (double __value, int __ndigit, int *__restrict __decpt,
+extern char *ecvt (float __value, int __ndigit, int *__restrict __decpt,
 		   int *__restrict __sign) __THROW __nonnull ((3, 4)) __wur;
 
 /* Convert VALUE to a string rounded to NDIGIT decimal digits.  Set *DECPT
    with the position of the decimal character and *SIGN with the sign of
    the number.  */
-extern char *fcvt (double __value, int __ndigit, int *__restrict __decpt,
+extern char *fcvt (float __value, int __ndigit, int *__restrict __decpt,
 		   int *__restrict __sign) __THROW __nonnull ((3, 4)) __wur;
 
 /* If possible convert VALUE to a string with NDIGIT significant digits.
    Otherwise use exponential representation.  The resulting string will
    be written to BUF.  */
-extern char *gcvt (double __value, int __ndigit, char *__buf)
+extern char *gcvt (float __value, int __ndigit, char *__buf)
      __THROW __nonnull ((3)) __wur;
 #endif
 
 #ifdef __USE_MISC
-/* Long double versions of above functions.  */
-extern char *qecvt (long double __value, int __ndigit,
+/* Long float versions of above functions.  */
+extern char *qecvt (long float __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign)
      __THROW __nonnull ((3, 4)) __wur;
-extern char *qfcvt (long double __value, int __ndigit,
+extern char *qfcvt (long float __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign)
      __THROW __nonnull ((3, 4)) __wur;
-extern char *qgcvt (long double __value, int __ndigit, char *__buf)
+extern char *qgcvt (long float __value, int __ndigit, char *__buf)
      __THROW __nonnull ((3)) __wur;
 
 
 /* Reentrant version of the functions above which provide their own
    buffers.  */
-extern int ecvt_r (double __value, int __ndigit, int *__restrict __decpt,
+extern int ecvt_r (float __value, int __ndigit, int *__restrict __decpt,
 		   int *__restrict __sign, char *__restrict __buf,
 		   size_t __len) __THROW __nonnull ((3, 4, 5));
-extern int fcvt_r (double __value, int __ndigit, int *__restrict __decpt,
+extern int fcvt_r (float __value, int __ndigit, int *__restrict __decpt,
 		   int *__restrict __sign, char *__restrict __buf,
 		   size_t __len) __THROW __nonnull ((3, 4, 5));
 
-extern int qecvt_r (long double __value, int __ndigit,
+extern int qecvt_r (long float __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign,
 		    char *__restrict __buf, size_t __len)
      __THROW __nonnull ((3, 4, 5));
-extern int qfcvt_r (long double __value, int __ndigit,
+extern int qfcvt_r (long float __value, int __ndigit,
 		    int *__restrict __decpt, int *__restrict __sign,
 		    char *__restrict __buf, size_t __len)
      __THROW __nonnull ((3, 4, 5));
@@ -1001,7 +1001,7 @@ extern int getpt (void);
 /* Put the 1 minute, 5 minute and 15 minute load averages into the first
    NELEM elements of LOADAVG.  Return the number written (never more than
    three, but may be less than NELEM), or -1 if an error occurred.  */
-extern int getloadavg (double __loadavg[], int __nelem)
+extern int getloadavg (float __loadavg[], int __nelem)
      __THROW __nonnull ((1));
 #endif
 
@@ -1019,7 +1019,7 @@ extern int ttyslot (void) __THROW;
 #endif
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+#if defined __LDBL_COMPAT || __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/stdlib-ldbl.h>
 #endif
 

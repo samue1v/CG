@@ -60,11 +60,11 @@ Coordinate Camera::getUp(){
     return up;
 }
 
-Matrix<double,4,4> Camera::getWorldToCamera(){
+Matrix<float,4,4> Camera::getWorldToCamera(){
     return this->worldToCamera;
 }
 
-Matrix<double,4,4> Camera::getCameraToWorld(){
+Matrix<float,4,4> Camera::getCameraToWorld(){
     return this->cameraToWorld;
 }
 
@@ -75,15 +75,15 @@ Coordinate Camera::getEyeTransformed(){
 void Camera::setTransform(Transformation * t){
 
     if(t->getType() == translate){
-        this->eye = (t->getTransform()*Matrix<double,4,1>(this->eye)).toCoordinate();
-        this->lookAt = (t->getTransform()*Matrix<double,4,1>(this->lookAt)).toCoordinate();
-        this->up = (t->getTransform()*Matrix<double,4,1>(this->up)).toCoordinate();
+        this->eye = (t->getTransform()*Matrix<float,4,1>(this->eye)).toCoordinate();
+        this->lookAt = (t->getTransform()*Matrix<float,4,1>(this->lookAt)).toCoordinate();
+        this->up = (t->getTransform()*Matrix<float,4,1>(this->up)).toCoordinate();
     }
 
     else{
-        this->i = (t->getTransform()*Matrix<double,4,1>(this->i)).toVector3D();
-        this->j = (t->getTransform()*Matrix<double,4,1>(this->j)).toVector3D();
-        this->k = (t->getTransform()*Matrix<double,4,1>(this->k)).toVector3D();
+        this->i = (t->getTransform()*Matrix<float,4,1>(this->i)).toVector3D();
+        this->j = (t->getTransform()*Matrix<float,4,1>(this->j)).toVector3D();
+        this->k = (t->getTransform()*Matrix<float,4,1>(this->k)).toVector3D();
 
     }
     
@@ -127,12 +127,12 @@ void Camera::execEyeTransform(){
 
     cameraToWorld.setVal(3,3,1);
 
-    //Matrix<double,4,4> mtc = worldToCamera * cameraToWorld;
+    //Matrix<float,4,4> mtc = worldToCamera * cameraToWorld;
     //std::cout<<mtc;
     //worldToCamera = worldToCamera.transpose();
-    Matrix<double,4,1> eyematrix = Matrix<double,4,1>(eye);
-    //Matrix<double,4,4> cameraMatrix = camera->getWorldToCamera();
-    Matrix<double,4,1> tmatrix = worldToCamera*eyematrix;
+    Matrix<float,4,1> eyematrix = Matrix<float,4,1>(eye);
+    //Matrix<float,4,4> cameraMatrix = camera->getWorldToCamera();
+    Matrix<float,4,1> tmatrix = worldToCamera*eyematrix;
     this->eyeTransformed = (tmatrix).toCoordinate();
     //this->eyeTransformed = eye;
 }

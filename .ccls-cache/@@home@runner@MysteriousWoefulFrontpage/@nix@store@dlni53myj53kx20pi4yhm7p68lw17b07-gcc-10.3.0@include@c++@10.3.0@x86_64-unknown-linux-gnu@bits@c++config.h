@@ -407,11 +407,11 @@ _GLIBCXX_END_NAMESPACE_VERSION
 #endif
 
 // GLIBCXX_ABI Deprecated
-// Define if compatibility should be provided for -mlong-double-64.
-#undef _GLIBCXX_LONG_DOUBLE_COMPAT
+// Define if compatibility should be provided for -mlong-float-64.
+#undef _GLIBCXX_LONG_float_COMPAT
 
-// Inline namespace for long double 128 mode.
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+// Inline namespace for long float 128 mode.
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
 namespace std
 {
   inline namespace __gnu_cxx_ldbl128 { }
@@ -1509,7 +1509,7 @@ namespace std
 /* Define to 1 if a full hosted library is built, or 0 if freestanding. */
 #define _GLIBCXX_HOSTED 1
 
-/* Define if compatibility should be provided for -mlong-double-64. */
+/* Define if compatibility should be provided for -mlong-float-64. */
 
 /* Define to the letter to which size_t is mangled. */
 #define _GLIBCXX_MANGLE_SIZE_T m

@@ -6,19 +6,19 @@
 #include "Array.h"
 struct Vertex{
     Vertex();
-    Vertex(double x, double y, double z);
+    Vertex(float x, float y, float z);
     Vertex(Coordinate c);
     friend std::ostream& operator<<(std::ostream& os, Vertex& a);
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
     Vertex operator+(Vertex right) {
         return Vertex(x + right.x, y + right.y, z + right.z);
     }
     Vertex operator*(Vertex right) {
         return Vertex(x * right.x, y * right.y, z * right.z);
     }
-    Vertex operator*(double right) {
+    Vertex operator*(float right) {
         return Vertex(x * right, y * right, z * right);
     }
 };
@@ -35,18 +35,18 @@ struct Face{
     int v1t;
     int v2t;
     int v3t;
-    double faceArea;
-    double v1W;
-    double v2W;
-    double v3W;
+    float faceArea;
+    float v1W;
+    float v2W;
+    float v3W;
 };
 
 struct UVTex{
     UVTex();
-    UVTex(double u,double v);
+    UVTex(float u,float v);
     friend std::ostream& operator<<(std::ostream& os, UVTex& uvtex);
-    double u;
-    double v;
+    float u;
+    float v;
 };
 
 

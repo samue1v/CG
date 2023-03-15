@@ -105,16 +105,16 @@ bool SDLdraw(Canvas<l,k> *canvas){
 
 void constructScene(){
   SDL_Renderer * renderer = nullptr;
-  double sphereDistance = 60;
+  float sphereDistance = 60;
 
-  Coordinate eye = Coordinate(0,0,0);
-  Coordinate up = Coordinate(0,2000,20);
-  Coordinate lookAt = Coordinate(0,0,-100);  
+  Coordinate eye = Coordinate(10,0,5);
+  Coordinate up = Coordinate(10,20,5);
+  Coordinate lookAt = Coordinate(10,0,-100);  
 
   Camera * camera  = new Camera(eye,lookAt,up);
 
   // inicialização da cena e da esfera
-  double radius = 100;
+  float radius = 100;
 
   Coordinate center = Coordinate(0, 0, -(sphereDistance + radius));
 
@@ -142,7 +142,7 @@ void constructScene(){
   Cylinder * globoBase = new Cylinder(Coordinate(-6,-5.5,6),Vector3D(0,1,0),2,10.6,metal,"base lampada.");
   Object * globo = new Object("globo");
   Sphere * globo_sphere = new Sphere(Coordinate(10,-2.36,1.6),1,plastic,"globo");
-  globo_sphere->setTexture("../TextureFiles/world.png",renderer);
+  //globo_sphere->setTexture("../TextureFiles/world.png",renderer);
   globo->setShape(globo_sphere);
   globo->setShape(globoBase);
 
@@ -152,6 +152,7 @@ void constructScene(){
   Mesh * parede_azul = new Mesh("../MeshFiles/parede_azul.obj",blueconcrete,"parede_azul");
   //Mesh * muros = new Mesh("../MeshFiles/muros.obj",marble,"muros");
   Mesh * teto = new Mesh("../MeshFiles/teto.obj",marble,"teto");
+  Mesh * tetocima = new Mesh("../MeshFiles/tetocima.obj",marble,"teto");
   Mesh * porta_entrada = new Mesh("../MeshFiles/porta_entrada.obj",marble,"porta entrada");
   Mesh * porta_saida = new Mesh("../MeshFiles/porta_saida.obj",marble,"porta saida");
   porta_entrada->setTexture("../TextureFiles/porta.png",renderer);
@@ -163,11 +164,12 @@ void constructScene(){
   paredes->setMesh(porta_saida);
 
   //paredes->setMesh(muros);
+  paredes->setMesh(tetocima);
   paredes->setMesh(teto);
 
   Object * ground = new Object("ground");
   Plane * groundPlane = new Plane(Coordinate(0,-4.95,0),Vector3D(0,1,0),marble,"groundplane");
-  groundPlane->setTexture("../TextureFiles/ground.png",renderer);
+  groundPlane->setTexture("../TextureFiles/grass.png",renderer);
   ground->setShape(groundPlane);
 
 
@@ -272,7 +274,7 @@ void constructScene(){
   //banco pequeno
   Object * bancoPequeno = new Object("banco pequeno");
   Mesh * banco_pequeno_mesh = new Mesh("../MeshFiles/banco_bar.obj",wood,"banco pequeno mesh");
-  banco_pequeno_mesh->setTexture("../TextureFiles/banco_bar.png",renderer);
+  //banco_pequeno_mesh->setTexture("../TextureFiles/banco_bar.png",renderer);
   banco_pequeno_mesh->setCluster(new Mesh("../MeshFiles/banco_bar_cluster.obj"));
   banco_pequeno_mesh->setTransform(new Translate(10,-3.36,1.6));
   bancoPequeno->setMesh(banco_pequeno_mesh);
@@ -302,23 +304,25 @@ void constructScene(){
   SpotLight * spot4 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(18.2,4.2,-4.5),Vector3D(1,-0.6,0),15,"spot4");
   SpotLight * spot5 = new SpotLight(Intensity(0.9,0.9,0.9),Coordinate(18.2,4.2,4.5),Vector3D(1,-0.6,0),15,"spot5");
   
-  PointLight * pointmiddle = new PointLight(Intensity(0.7,0.7,0.7),Coordinate(10,4.8,1.6),"pointlightmiddle");
+  //PointLight * pointmiddle = new PointLight(Intensity(0.7,0.7,0.7),Coordinate(10,4.8,1.6),"pointlightmiddle");
+  PointLight * pointmiddle = new PointLight(Intensity(0.7,0.7,0.7),Coordinate(10,0,10),"pointlightmiddle");
   PointLight * pointdoor = new PointLight(Intensity(0.4,0.4,0.4),Coordinate(-9.63, 4.8, -6),"pointlightdoor");
   DirectionalLight * dirLight = new DirectionalLight(Intensity(0.5,0.5,0.5),Vector3D(0,-1,-0.1),"DirLIght");
   //Creating the scene
-
+  
   scene->setObject(paredes);
   scene->setObject(quadro1);
   scene->setObject(quadro2);
   scene->setObject(quadro3);
   scene->setObject(quadro4);
   scene->setObject(quadro5);
-  scene->setObject(ground);
   scene->setObject(bancoLongo1);
   scene->setObject(bancoLongo2);
   scene->setObject(bancoPequeno);
   scene->setObject(globo);
   scene->setObject(piso);
+  
+  scene->setObject(ground);
 
 
 
@@ -344,14 +348,14 @@ void constructScene(){
 void run(){
   Vector3D dr;
   Vector3D orthoDir = Vector3D(0,0,-1);
-  Vector3D ortho = (scene->getCamera()->getWorldToCamera() * Matrix<double,4,1>(orthoDir)).toVector3D() ;
+  Vector3D ortho = (scene->getCamera()->getWorldToCamera() * Matrix<float,4,1>(orthoDir)).toVector3D() ;
   Coordinate canvasPoint;
-  Pair<double,double> windowSize = canvas->getWindowSize();
-  double wj = windowSize.left;
-  double hj = windowSize.right;
-  Pair<double,double> gridSize = canvas->getGridSize();
-  double dx = gridSize.left;
-  double dy = gridSize.right;
+  Pair<float,float> windowSize = canvas->getWindowSize();
+  float wj = windowSize.left;
+  float hj = windowSize.right;
+  Pair<float,float> gridSize = canvas->getGridSize();
+  float dx = gridSize.left;
+  float dy = gridSize.right;
   bool isO = canvas->isOrtho;
   if(isO){
     wj = 60;
@@ -362,9 +366,9 @@ void run(){
   Coordinate P0 = scene->getCamera()->getEyeTransformed();
   canvas->clearCanvas();
   for (int l = 0; l < nLines; l++) {
-    double y = hj / 2 - dy / 2 - l * dy;
+    float y = hj / 2 - dy / 2 - l * dy;
     for (int c = 0; c < nColumns; c++) {
-      double x = -wj / 2 + dx / 2 + c * dx;
+      float x = -wj / 2 + dx / 2 + c * dx;
       canvasPoint = Coordinate(x, y, canvas->getCanvasDistance());
       if(isO){
         dr = ortho;
@@ -462,7 +466,7 @@ bool menuChangeLight(Light * light){
       flag = menuTransform(light);
   }
   else if(option == 3){
-    double ir,ig,ib;
+    float ir,ig,ib;
     std::cout<<"Digite o valor de ir: \n";
     std::cin>>ir;
     std::cout<<"Digite o valor de ig: \n";
@@ -500,7 +504,7 @@ bool menuTransform(Shape3D * inp){
   std::cout<< "\n" << std::flush;
 
   if(option == 1){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -513,7 +517,7 @@ bool menuTransform(Shape3D * inp){
 
   }
   else if(option == 2){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -525,7 +529,7 @@ bool menuTransform(Shape3D * inp){
     flag =  true;
   }
   else if(option == 3){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
@@ -534,7 +538,7 @@ bool menuTransform(Shape3D * inp){
 
   }
   else if(option == 4){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
@@ -542,7 +546,7 @@ bool menuTransform(Shape3D * inp){
 
   }
   else if(option == 5){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
@@ -550,7 +554,7 @@ bool menuTransform(Shape3D * inp){
 
   }
   else if(option == 6){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -562,7 +566,7 @@ bool menuTransform(Shape3D * inp){
     flag = true;
   }
   else if(option == 7){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -574,7 +578,7 @@ bool menuTransform(Shape3D * inp){
     flag = true;
   }
   else if(option == 8){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -641,7 +645,7 @@ bool menuTransform(Object * inp){
   std::cout<< "\n" << std::flush;
 
   if(option == 1){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -654,7 +658,7 @@ bool menuTransform(Object * inp){
 
   }
   else if(option == 2){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -666,7 +670,7 @@ bool menuTransform(Object * inp){
     flag = true;
   }
   else if(option == 3){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
@@ -675,21 +679,21 @@ bool menuTransform(Object * inp){
 
   }
   else if(option == 4){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
     flag = true;
   }
   else if(option == 5){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
     flag = true;
   }
   else if(option == 6){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -702,7 +706,7 @@ bool menuTransform(Object * inp){
     flag = true;
   }
   else if(option == 7){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -715,7 +719,7 @@ bool menuTransform(Object * inp){
     flag = true;
   }
   else if(option == 8){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -774,7 +778,7 @@ bool menuTransform(Camera * camera){
   std::cout<<"(5)Exit.\n";
   std::cin>>option;
   if(option==1){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -786,21 +790,21 @@ bool menuTransform(Camera * camera){
     flag = true;
   }
   else if(option == 2){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     camera->setTransform(new RotateX(degree));
     flag = true;
   }
   else if(option == 3){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     camera->setTransform(new RotateY(degree));
     flag = true;
   }
   else if(option == 4){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     camera->setTransform(new RotateZ(degree));
@@ -814,7 +818,7 @@ bool menuTransform(Light * light){
   light->applyViewTransform(scene->getCamera()->getCameraToWorld());
   if(light->getLightType() == directional){
     DirectionalLight * dirlight = static_cast<DirectionalLight *>(light);
-    double angle;
+    float angle;
     int option;
     std::cout<<"Choose a transform:\n";
     std::cout<<"(1)RotateX.\n";
@@ -843,7 +847,7 @@ bool menuTransform(Light * light){
     std::cout<<"Choose a transform:\n";
     std::cout<<"(1)Translate";
     if(option == 1){
-      double x,y,z;
+      float x,y,z;
       std::cout<<"Value for X:\n";
       std::cin>>x;
       std::cout<<"Value for Y:\n";
@@ -865,7 +869,7 @@ bool menuTransform(Light * light){
     std::cout<<"(5)Change angle.\n";
     std::cin>>option;
     if(option == 1){
-      double x,y,z;
+      float x,y,z;
       std::cout<<"Value for X:\n";
       std::cin>>x;
       std::cout<<"Value for Y:\n";
@@ -877,28 +881,28 @@ bool menuTransform(Light * light){
       flag = true;
     }
     else if(option == 2){
-      double angle;
+      float angle;
       std::cout<<"Angle:\n";
       std::cin>>angle;
       splight->setTransform(new RotateX(angle));
       flag = true;
     }
     else if(option ==3){
-      double angle;
+      float angle;
       std::cout<<"Angle:\n";
       std::cin>>angle;
       splight->setTransform(new RotateY(angle));
       flag = true;
     }
     else if(option == 4){
-      double angle;
+      float angle;
       std::cout<<"Angle:\n";
       std::cin>>angle;
       splight->setTransform(new RotateZ(angle));
       flag = true;
     }
     else if(option == 5){
-      double angle;
+      float angle;
       std::cout<<"Angle:\n";
       std::cin>>angle;
       splight->setAngle(angle);
@@ -933,7 +937,7 @@ bool menuTransform(Mesh * inp){
   std::cout<< "\n" << std::flush;
 
   if(option == 1){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -946,7 +950,7 @@ bool menuTransform(Mesh * inp){
 
   }
   else if(option == 2){
-    double x,y,z;
+    float x,y,z;
     std::cout<<"Digite o valor de x: \n";
     std::cin>>x;
     std::cout<<"Digite o valor de y: \n";
@@ -958,7 +962,7 @@ bool menuTransform(Mesh * inp){
     flag = true;
   }
   else if(option == 3){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateX(degree));
@@ -966,14 +970,14 @@ bool menuTransform(Mesh * inp){
 
   }
   else if(option == 4){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateY(degree));
     flag = true;
   }
   else if(option == 5){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new RotateZ(degree));
@@ -981,7 +985,7 @@ bool menuTransform(Mesh * inp){
 
   }
   else if(option == 6){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -994,7 +998,7 @@ bool menuTransform(Mesh * inp){
     flag = true;
   }
   else if(option == 7){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -1007,7 +1011,7 @@ bool menuTransform(Mesh * inp){
     flag = true;
   }
   else if(option == 8){
-    double degree,x,y,z;
+    float degree,x,y,z;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     std::cout<<"Digite o valor de x da coordenada: \n";
@@ -1020,42 +1024,42 @@ bool menuTransform(Mesh * inp){
     flag = true;
   }
   else if(option == 9){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearXY(degree));
     flag = true;
   }
   else if(option == 10){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearYX(degree));
     flag = true;
   }
   else if(option == 11){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearXZ(degree));
     flag = true;
   }
   else if(option == 12){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearZX(degree));
     flag = true;
   }
   else if(option == 13){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearYZ(degree));
     flag = true;
   }
   else if(option == 14){
-    double degree;
+    float degree;
     std::cout<<"Digite o valor em graus: \n";
     std::cin>>degree;
     inp->setTransform(new ShearZY(degree));
@@ -1072,14 +1076,14 @@ bool menuMaterial(Shape3D * shape){
   int option;
   bool flag = false;
   Material * material = shape->getMaterial();
-  std::cout<<material;
+  std::cout<<material->getName()<<"\n";
   std::cout<<"(1)Change Ka\n";
   std::cout<<"(2)Change Kd\n";
   std::cout<<"(3)Change Ke\n";
   std::cout<<"(4)Exit\n";
   std::cin>>option;
   if(option == 1){
-    double kr,kg,kb;
+    float kr,kg,kb;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1091,7 +1095,7 @@ bool menuMaterial(Shape3D * shape){
 
   }
   else if(option == 2){
-    double kr,kg,kb;
+    float kr,kg,kb;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1102,7 +1106,7 @@ bool menuMaterial(Shape3D * shape){
     flag = true;
   }
   else if(option == 3){
-    double kr,kg,kb,shininess;
+    float kr,kg,kb,shininess;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1126,14 +1130,14 @@ bool menuMaterial(Mesh * mesh){
   int option;
   bool flag = false;
   Material * material = mesh->getMaterial();
-  std::cout<<material;
+  std::cout<<material->getName()<<"\n";
   std::cout<<"(1)Change Ka\n";
   std::cout<<"(2)Change Kd\n";
   std::cout<<"(3)Change Ke\n";
   std::cout<<"(4)Exit\n";
   std::cin>>option;
   if(option == 1){
-    double kr,kg,kb;
+    float kr,kg,kb;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1145,7 +1149,7 @@ bool menuMaterial(Mesh * mesh){
 
   }
   else if(option == 2){
-    double kr,kg,kb;
+    float kr,kg,kb;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1156,7 +1160,7 @@ bool menuMaterial(Mesh * mesh){
     flag = true;
   }
   else if(option == 3){
-    double kr,kg,kb,shininess;
+    float kr,kg,kb,shininess;
     std::cout<<"kr: \n";
     std::cin>>kr;
     std::cout<<"kg: \n";
@@ -1197,6 +1201,8 @@ bool menuMain(){
   std::cout<<"(1)See Lights.\n";
   std::cout<<"(2)See Camera.\n";
   std::cout<<"(3)Change Projection.\n";
+  std::cout<<"(4)Change viewport distance.\n";
+  std::cout<<"(5)Change window size\n";
   std::cout<<"Option: \n";
   std::cin >> option;
   std::cout<< "\n" << std::flush;
@@ -1215,6 +1221,22 @@ bool menuMain(){
   }
   else if(option == 3){
     canvas->isOrtho = !canvas->isOrtho;
+    flag = true;
+  }
+  else if(option == 4){
+    float d;
+    std::cout<<"New distance:\n";
+    std::cin>>d;
+    canvas->setCanvasDistance(d);
+    flag = true;
+  }
+  else if(option == 5){
+    float wj,hj;
+    std::cout<<"New wj:\n";
+    std::cin>>wj;
+    std::cout<<"New hj:\n";
+    std::cin>>hj;
+    canvas->setWindowsSize({wj,hj});
     flag = true;
   }
   return flag;
@@ -1385,11 +1407,11 @@ void display(){
 }
 
 int main() {
-  double wj = 60;
-  double hj = 60;
-  double canvasDistance = -30;
-  double dx = wj / nColumns;
-  double dy = hj / nLines;
+  float wj = 60;
+  float hj = 60;
+  float canvasDistance = -20;
+  float dx = wj / nColumns;
+  float dy = hj / nLines;
 
   scene = new Scene();
   
@@ -1397,7 +1419,7 @@ int main() {
   // Canvas creation
   canvas = new Canvas<nLines,nColumns>();
   canvas->setCanvasDistance(canvasDistance);
-  canvas->setGridSize({dx,dy});
+  //canvas->setGridSize({dx,dy});
   canvas->setWindowsSize({wj,hj});
   //exit(-1);
   

@@ -17,29 +17,29 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* Classify given number.  */
-__MATHDECL_ALIAS (int, __fpclassify,, (_Mdouble_ __value), fpclassify)
+__MATHDECL_ALIAS (int, __fpclassify,, (_Mfloat_ __value), fpclassify)
      __attribute__ ((__const__));
 
 /* Test for negative number.  */
-__MATHDECL_ALIAS (int, __signbit,, (_Mdouble_ __value), signbit)
+__MATHDECL_ALIAS (int, __signbit,, (_Mfloat_ __value), signbit)
      __attribute__ ((__const__));
 
 /* Return 0 if VALUE is finite or NaN, +1 if it
    is +Infinity, -1 if it is -Infinity.  */
-__MATHDECL_ALIAS (int, __isinf,, (_Mdouble_ __value), isinf)
+__MATHDECL_ALIAS (int, __isinf,, (_Mfloat_ __value), isinf)
   __attribute__ ((__const__));
 
 /* Return nonzero if VALUE is finite and not NaN.  Used by isfinite macro.  */
-__MATHDECL_ALIAS (int, __finite,, (_Mdouble_ __value), finite)
+__MATHDECL_ALIAS (int, __finite,, (_Mfloat_ __value), finite)
   __attribute__ ((__const__));
 
 /* Return nonzero if VALUE is not a number.  */
-__MATHDECL_ALIAS (int, __isnan,, (_Mdouble_ __value), isnan)
+__MATHDECL_ALIAS (int, __isnan,, (_Mfloat_ __value), isnan)
   __attribute__ ((__const__));
 
 /* Test equality.  */
-__MATHDECL_ALIAS (int, __iseqsig,, (_Mdouble_ __x, _Mdouble_ __y), iseqsig);
+__MATHDECL_ALIAS (int, __iseqsig,, (_Mfloat_ __x, _Mfloat_ __y), iseqsig);
 
 /* Test for signaling NaN.  */
-__MATHDECL_ALIAS (int, __issignaling,, (_Mdouble_ __value), issignaling)
+__MATHDECL_ALIAS (int, __issignaling,, (_Mfloat_ __value), issignaling)
      __attribute__ ((__const__));

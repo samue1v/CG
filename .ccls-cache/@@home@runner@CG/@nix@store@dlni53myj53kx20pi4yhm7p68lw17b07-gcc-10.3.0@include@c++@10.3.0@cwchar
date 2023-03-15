@@ -244,7 +244,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 namespace __gnu_cxx
 {
 #if _GLIBCXX_USE_C99_CHECK || _GLIBCXX_USE_C99_DYNAMIC
-  extern "C" long double
+  extern "C" long float
     (wcstold)(const wchar_t * __restrict, wchar_t ** __restrict) throw ();
 #endif
 #if !_GLIBCXX_USE_C99_DYNAMIC

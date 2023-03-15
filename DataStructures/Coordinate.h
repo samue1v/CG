@@ -3,13 +3,13 @@
 #include <iostream>
 
 struct Coordinate {
-  double x;
-  double y;
-  double z;
+  float x;
+  float y;
+  float z;
   Coordinate();
-  Coordinate(double x, double y, double z);
+  Coordinate(float x, float y, float z);
   friend std::ostream& operator<<(std::ostream& os,Coordinate& c);
-  static double dot(Coordinate a, Coordinate b) {
+  static float dot(Coordinate a, Coordinate b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
   }
 //pontos:
@@ -19,7 +19,7 @@ struct Coordinate {
   Coordinate operator-(Coordinate right) {
     return Coordinate(x - right.x, y - right.y, z - right.z);
   }
-  Coordinate operator*(double right) {
+  Coordinate operator*(float right) {
     return Coordinate(x * right, y * right, z * right);
   }
 };

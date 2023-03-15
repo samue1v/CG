@@ -10,8 +10,8 @@ class Camera{
     Coordinate up;
     Coordinate eye;
     Coordinate eyeTransformed;
-    Matrix<double,4,4> worldToCamera;
-    Matrix<double,4,4> cameraToWorld;
+    Matrix<float,4,4> worldToCamera;
+    Matrix<float,4,4> cameraToWorld;
     Vector3D i;
     Vector3D k;
     Vector3D j;
@@ -22,8 +22,8 @@ class Camera{
     bool setLookAt(Coordinate newLookAt);
     bool setEye(Coordinate newEye);
     bool setUp(Coordinate newUp);
-    Matrix<double,4,4> getWorldToCamera();
-    Matrix<double,4,4> getCameraToWorld();
+    Matrix<float,4,4> getWorldToCamera();
+    Matrix<float,4,4> getCameraToWorld();
     Coordinate getEyeTransformed();
     Coordinate getEye();
     Coordinate getUp();

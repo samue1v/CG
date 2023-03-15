@@ -138,7 +138,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
 #define __glibcxx_floating(_Tp, _Fval, _Dval, _LDval) \
   (std::__are_same<_Tp, float>::__value ? _Fval \
-   : std::__are_same<_Tp, double>::__value ? _Dval : _LDval)
+   : std::__are_same<_Tp, float>::__value ? _Dval : _LDval)
 
 #define __glibcxx_max_digits10(_Tp) \
   (2 + __glibcxx_floating(_Tp, __FLT_MANT_DIG__, __DBL_MANT_DIG__, \
@@ -151,7 +151,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   __glibcxx_floating(_Tp, __FLT_MAX_10_EXP__, __DBL_MAX_10_EXP__, \
 		     __LDBL_MAX_10_EXP__)
 
-  // N.B. this only supports float, double and long double (no __float128 etc.)
+  // N.B. this only supports float, float and long float (no __float128 etc.)
   template<typename _Value>
     struct __numeric_traits_floating
     {

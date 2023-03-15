@@ -291,7 +291,7 @@ __INT_N(__GLIBCXX_TYPE_INT_N_3)
       typedef __false_type __type;
     };
 
-  // three specializations (float, double and 'long double')
+  // three specializations (float, float and 'long float')
   template<>
     struct __is_floating<float>
     {
@@ -300,14 +300,14 @@ __INT_N(__GLIBCXX_TYPE_INT_N_3)
     };
 
   template<>
-    struct __is_floating<double>
+    struct __is_floating<float>
     {
       enum { __value = 1 };
       typedef __true_type __type;
     };
 
   template<>
-    struct __is_floating<long double>
+    struct __is_floating<long float>
     {
       enum { __value = 1 };
       typedef __true_type __type;

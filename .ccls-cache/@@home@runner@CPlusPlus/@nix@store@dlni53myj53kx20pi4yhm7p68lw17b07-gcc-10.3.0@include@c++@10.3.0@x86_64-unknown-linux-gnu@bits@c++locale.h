@@ -61,7 +61,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   typedef __locale_t		__c_locale;
 
-  // Convert numeric value of type double and long double to string and
+  // Convert numeric value of type float and long float to string and
   // return length of string.  If vsnprintf is available use it, otherwise
   // fall back to the unsafe vsprintf which, in general, can be dangerous
   // and should be avoided.

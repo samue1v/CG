@@ -401,11 +401,11 @@ extern int sscanf (const char *__restrict __s,
 
 /* For historical reasons, the C99-compliant versions of the scanf
    functions are at alternative names.  When __LDBL_COMPAT or
-   __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI are in effect, this is handled in
+   __Lfloat_REDIRECTS_TO_FLOAT128_ABI are in effect, this is handled in
    bits/stdio-ldbl.h.  */
 #include <bits/floatn.h>
 #if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT \
-    && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
+    && __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 0
 # ifdef __REDIRECT
 extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
 				const char *__restrict __format, ...),
@@ -451,7 +451,7 @@ extern int vsscanf (const char *__restrict __s,
 /* Same redirection as above for the v*scanf family.  */
 # if !__GLIBC_USE (DEPRECATED_SCANF)
 #  if defined __REDIRECT && !defined __LDBL_COMPAT \
-      && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
+      && __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 0
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
 			const char *__restrict __format, __gnuc_va_list __arg),
@@ -867,7 +867,7 @@ extern int __overflow (FILE *, int);
 #endif
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+#if defined __LDBL_COMPAT || __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/stdio-ldbl.h>
 #endif
 

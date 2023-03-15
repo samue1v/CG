@@ -20,7 +20,7 @@ class Object{
         bool setTransform(Transformation * t);
         Mesh * getMeshAt(int index);
         Shape3D * getShapeAt(int index);
-        void applyViewTransform(Matrix<double,4,4> transformMatrix);
+        void applyViewTransform(Matrix<float,4,4> transformMatrix);
 
 
     private:

@@ -4,7 +4,7 @@
 
 Vertex::Vertex(){}
 
-Vertex::Vertex(double x, double y, double z){
+Vertex::Vertex(float x, float y, float z){
     this->x = x;
     this->y = y;
     this->z = z;
@@ -60,7 +60,7 @@ std::ostream& operator<<(std::ostream& os,Face& f){
 
 UVTex::UVTex(){}
 
-UVTex::UVTex(double u, double v) : u(u), v(v){}
+UVTex::UVTex(float u, float v) : u(u), v(v){}
 
 std::ostream& operator<<(std::ostream& os,UVTex& uvtex){
     os << "UVCoords:\n";

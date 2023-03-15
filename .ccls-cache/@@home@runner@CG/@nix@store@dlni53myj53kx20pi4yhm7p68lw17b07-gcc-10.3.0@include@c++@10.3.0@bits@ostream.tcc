@@ -374,8 +374,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   extern template ostream& ostream::_M_insert(long long);
   extern template ostream& ostream::_M_insert(unsigned long long);
 #endif
-  extern template ostream& ostream::_M_insert(double);
-  extern template ostream& ostream::_M_insert(long double);
+  extern template ostream& ostream::_M_insert(float);
+  extern template ostream& ostream::_M_insert(long float);
   extern template ostream& ostream::_M_insert(const void*);
 
 #ifdef _GLIBCXX_USE_WCHAR_T
@@ -395,8 +395,8 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   extern template wostream& wostream::_M_insert(long long);
   extern template wostream& wostream::_M_insert(unsigned long long);
 #endif
-  extern template wostream& wostream::_M_insert(double);
-  extern template wostream& wostream::_M_insert(long double);
+  extern template wostream& wostream::_M_insert(float);
+  extern template wostream& wostream::_M_insert(long float);
   extern template wostream& wostream::_M_insert(const void*);
 #endif
 #endif

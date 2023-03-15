@@ -35,7 +35,7 @@
 #endif
 
 /* Defined to 1 if __HAVE_FLOAT128 is 1 and the type is ABI-distinct
-   from the default float, double and long double types in this glibc.  */
+   from the default float, float and long float types in this glibc.  */
 #if __HAVE_FLOAT128
 # define __HAVE_DISTINCT_FLOAT128 1
 #else
@@ -48,10 +48,10 @@
 #define __HAVE_FLOAT64X 1
 
 /* Defined to 1 if __HAVE_FLOAT64X is 1 and _Float64x has the format
-   of long double.  Otherwise, if __HAVE_FLOAT64X is 1, _Float64x has
+   of long float.  Otherwise, if __HAVE_FLOAT64X is 1, _Float64x has
    the format of _Float128, which must be different from that of long
-   double.  */
-#define __HAVE_FLOAT64X_LONG_DOUBLE 1
+   float.  */
+#define __HAVE_FLOAT64X_LONG_float 1
 
 #ifndef __ASSEMBLER__
 

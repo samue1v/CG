@@ -81,12 +81,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   template<>
     void
-    __convert_to_v(const char*, double&, ios_base::iostate&,
+    __convert_to_v(const char*, float&, ios_base::iostate&,
 		   const __c_locale&) throw();
 
   template<>
     void
-    __convert_to_v(const char*, long double&, ios_base::iostate&,
+    __convert_to_v(const char*, long float&, ios_base::iostate&,
 		   const __c_locale&) throw();
 
   // NB: __pad is a struct, rather than a function, so it can be
@@ -2099,12 +2099,12 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 
       iter_type
       get(iter_type __in, iter_type __end, ios_base& __io,
-	  ios_base::iostate& __err, double& __v) const
+	  ios_base::iostate& __err, float& __v) const
       { return this->do_get(__in, __end, __io, __err, __v); }
 
       iter_type
       get(iter_type __in, iter_type __end, ios_base& __io,
-	  ios_base::iostate& __err, long double& __v) const
+	  ios_base::iostate& __err, long float& __v) const
       { return this->do_get(__in, __end, __io, __err, __v); }
       //@}
 
@@ -2248,27 +2248,27 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&,
-	     double&) const;
+	     float&) const;
 
       // XXX GLIBCXX_ABI Deprecated
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
       virtual iter_type
       __do_get(iter_type, iter_type, ios_base&, ios_base::iostate&,
-	       double&) const;
+	       float&) const;
 #else
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&,
-	     long double&) const;
+	     long float&) const;
 #endif
 
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&, void*&) const;
 
       // XXX GLIBCXX_ABI Deprecated
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
       virtual iter_type
       do_get(iter_type, iter_type, ios_base&, ios_base::iostate&,
-	     long double&) const;
+	     long float&) const;
 #endif
       //@}
     };
@@ -2409,8 +2409,8 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
        *  %g or %G.
        *
        *  The output precision is given by io.precision().  This precision is
-       *  capped at numeric_limits::digits10 + 2 (different for double and
-       *  long double).  The default precision is 6.
+       *  capped at numeric_limits::digits10 + 2 (different for float and
+       *  long float).  The default precision is 6.
        *
        *  If ios_base::showpos is set, '+' is output before positive values.
        *  If ios_base::showpoint is set, a decimal point will always be
@@ -2434,12 +2434,12 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
        *  @return  Iterator after writing.
       */
       iter_type
-      put(iter_type __s, ios_base& __io, char_type __fill, double __v) const
+      put(iter_type __s, ios_base& __io, char_type __fill, float __v) const
       { return this->do_put(__s, __io, __fill, __v); }
 
       iter_type
       put(iter_type __s, ios_base& __io, char_type __fill,
-	  long double __v) const
+	  long float __v) const
       { return this->do_put(__s, __io, __fill, __v); }
       //@}
 
@@ -2531,24 +2531,24 @@ _GLIBCXX_BEGIN_NAMESPACE_LDBL
 #endif
 
       virtual iter_type
-      do_put(iter_type, ios_base&, char_type, double) const;
+      do_put(iter_type, ios_base&, char_type, float) const;
 
       // XXX GLIBCXX_ABI Deprecated
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
       virtual iter_type
-      __do_put(iter_type, ios_base&, char_type, double) const;
+      __do_put(iter_type, ios_base&, char_type, float) const;
 #else
       virtual iter_type
-      do_put(iter_type, ios_base&, char_type, long double) const;
+      do_put(iter_type, ios_base&, char_type, long float) const;
 #endif
 
       virtual iter_type
       do_put(iter_type, ios_base&, char_type, const void*) const;
 
       // XXX GLIBCXX_ABI Deprecated
-#if defined _GLIBCXX_LONG_DOUBLE_COMPAT && defined __LONG_DOUBLE_128__
+#if defined _GLIBCXX_LONG_float_COMPAT && defined __LONG_float_128__
       virtual iter_type
-      do_put(iter_type, ios_base&, char_type, long double) const;
+      do_put(iter_type, ios_base&, char_type, long float) const;
 #endif
       //@}
     };

@@ -27,7 +27,7 @@ public:
   bool setIntensity(Intensity);
   virtual Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *) = 0;
   virtual Vector3D calcDirection(Coordinate o) = 0;
-  virtual void applyViewTransform(Matrix<double,4,4> transformMatrix) = 0;
+  virtual void applyViewTransform(Matrix<float,4,4> transformMatrix) = 0;
   virtual bool getAvaliable() = 0;
   virtual void setTransform(Transformation * t) = 0;
   Light();
@@ -49,7 +49,7 @@ public:
   bool setIntensity(Intensity newIntensity);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D calcDirection(Coordinate o);
-  void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  void applyViewTransform(Matrix<float,4,4> transformMatrix);
   bool getAvaliable();
   void setTransform(Transformation * t);
 private:
@@ -65,7 +65,7 @@ public:
   bool setDirection(Vector3D);
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
-  void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  void applyViewTransform(Matrix<float,4,4> transformMatrix);
   bool getAvaliable();
   void setTransform(Transformation * t);
   
@@ -82,7 +82,7 @@ public:
   bool setPosition(Coordinate);
   bool setIntensity(Intensity newIntensity);
   Vector3D calcDirection(Coordinate o);
-  void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  void applyViewTransform(Matrix<float,4,4> transformMatrix);
   bool getAvaliable();
   void setTransform(Transformation * t);
 private:
@@ -92,18 +92,18 @@ private:
 class SpotLight : public Light{
 public:
   SpotLight();
-  SpotLight(Intensity intensity, Coordinate position, Vector3D direction, double angle,std::string name);
+  SpotLight(Intensity intensity, Coordinate position, Vector3D direction, float angle,std::string name);
   Intensity getIntensity();
   bool setIntensity(Intensity);
   Intensity calcIntensity(Coordinate, Vector3D, Vector3D,Material *);
   Vector3D calcDirection(Coordinate P);
   std::string getName();
-  void applyViewTransform(Matrix<double,4,4> transformMatrix);
+  void applyViewTransform(Matrix<float,4,4> transformMatrix);
   bool getAvaliable();
   void setTransform(Transformation * t);
-  void setAngle(double angle);
+  void setAngle(float angle);
 private:
-  double angle;
+  float angle;
   Coordinate position;
   Vector3D direction;
 

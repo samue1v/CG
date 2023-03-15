@@ -21,7 +21,7 @@
 #endif
 
 #ifdef __USE_EXTERN_INLINES
-__extern_inline double
+__extern_inline float
 __NTH (atof (const char *__nptr))
 {
   return strtod (__nptr, (char **) NULL);

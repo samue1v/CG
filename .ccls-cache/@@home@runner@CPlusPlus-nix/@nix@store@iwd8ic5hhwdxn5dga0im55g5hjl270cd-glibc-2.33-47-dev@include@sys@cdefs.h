@@ -460,9 +460,9 @@
 #endif
 
 #include <bits/wordsize.h>
-#include <bits/long-double.h>
+#include <bits/long-float.h>
 
-#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+#if __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 1
 # ifdef __REDIRECT
 
 /* Alias name defined automatically.  */
@@ -490,9 +490,9 @@
 #  define __LDBL_REDIR_NTH(name, proto) ... unused__ldbl_redir_nth
 
 # else
-_Static_assert (0, "IEEE 128-bits long double requires redirection on this platform");
+_Static_assert (0, "IEEE 128-bits long float requires redirection on this platform");
 # endif
-#elif defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
+#elif defined __LONG_float_MATH_OPTIONAL && defined __NO_LONG_float_MATH
 # define __LDBL_COMPAT 1
 # ifdef __REDIRECT
 #  define __LDBL_REDIR1(name, proto, alias) __REDIRECT (name, proto, alias)
@@ -513,7 +513,7 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
   __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
 # endif
 #endif
-#if (!defined __LDBL_COMPAT && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0) \
+#if (!defined __LDBL_COMPAT && __Lfloat_REDIRECTS_TO_FLOAT128_ABI == 0) \
     || !defined __REDIRECT
 # define __LDBL_REDIR1(name, proto, alias) name proto
 # define __LDBL_REDIR(name, proto) name proto

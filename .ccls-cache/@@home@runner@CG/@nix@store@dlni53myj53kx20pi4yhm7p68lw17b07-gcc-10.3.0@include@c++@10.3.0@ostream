@@ -217,7 +217,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
        *  @c num_get facet) to perform numeric formatting.
       */
       __ostream_type&
-      operator<<(double __f)
+      operator<<(float __f)
       { return _M_insert(__f); }
 
       __ostream_type&
@@ -225,11 +225,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
       {
 	// _GLIBCXX_RESOLVE_LIB_DEFECTS
 	// 117. basic_ostream uses nonexistent num_put member functions.
-	return _M_insert(static_cast<double>(__f));
+	return _M_insert(static_cast<float>(__f));
       }
 
       __ostream_type&
-      operator<<(long double __f)
+      operator<<(long float __f)
       { return _M_insert(__f); }
       //@}
 

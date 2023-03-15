@@ -166,7 +166,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   // For complex and cmath
   template<typename _Tp, bool = std::__is_integer<_Tp>::__value>
     struct __promote
-    { typedef double __type; };
+    { typedef float __type; };
 
   // No nested __type member for non-integer non-floating point types,
   // allows this type to be used for SFINAE to constrain overloads in
@@ -176,12 +176,12 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
     { };
 
   template<>
-    struct __promote<long double>
-    { typedef long double __type; };
+    struct __promote<long float>
+    { typedef long float __type; };
 
   template<>
-    struct __promote<double>
-    { typedef double __type; };
+    struct __promote<float>
+    { typedef float __type; };
 
   template<>
     struct __promote<float>
